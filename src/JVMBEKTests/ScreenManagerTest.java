@@ -16,8 +16,8 @@ public class ScreenManagerTest {
 	public void getProjectManagerShouldReturnProjectManager() {
 		
 		ScreenManager tester = new ScreenManager();
-		ProjectManager dummy = new ProjectManager(new User(0, "", "", UserRole.MANAGER));
-		tester.setProjectManager(dummy);
+		User dummy = new User(0, "", "", UserRole.MANAGER);
+		tester.setUser(dummy);
 		assertEquals(dummy, tester.getProjectManager());
 		
 	}
@@ -26,8 +26,8 @@ public class ScreenManagerTest {
 	public void hasProjectManagerShouldReturnBoolean() {
 		
 		ScreenManager tester = new ScreenManager();
-		ProjectManager dummy = new ProjectManager(new User(0, "", "", UserRole.MANAGER));
-		tester.setProjectManager(dummy);
+		User dummy = new User(0, "", "", UserRole.MANAGER);
+		tester.setUser(dummy);
 		assertEquals(true, tester.hasProjectManager());
 		
 	}

@@ -24,7 +24,7 @@ public class TaskScreen extends Screen {
 
 	@Override
 	public void SetupGUI() {
-		setLayout ( new BorderLayout());
+		setLayout (new BorderLayout());
 		_lblProjectHeader = new JLabel();
 		
 		JButton backBtt = new JButton("Back");
@@ -37,8 +37,7 @@ public class TaskScreen extends Screen {
 		
 		_tblTasks = new JTable();
 		_tblTasks.setPreferredScrollableViewportSize(new Dimension(350,150));
-		_tblTasks.setFillsViewportHeight(true);	 
-		
+		_tblTasks.setFillsViewportHeight(true);
 		
 		JScrollPane scrollPane = new JScrollPane(_tblTasks);
 		scrollPane.setOpaque(true);
@@ -47,7 +46,6 @@ public class TaskScreen extends Screen {
 		southPanel.add(backBtt);
 		southPanel.add(delBtt);
 		southPanel.add(addBtt);
-		
 		
 		add(BorderLayout.NORTH,northPanel);
 		add(BorderLayout.CENTER,centerPanel);

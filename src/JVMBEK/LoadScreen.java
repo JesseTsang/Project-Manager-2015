@@ -24,15 +24,15 @@ public class LoadScreen extends Screen {
 	    JButton btnReturn = new JButton("Cancel");
 		JButton nameModify = new JButton("Modify ");
 		JButton btnDelete = new JButton("Delete ");
-	    JButton btnOk = new JButton("Load");
-	    JPanel col2 = new JPanel();
-	    col2.add(btnOk);
-	    col2.add(btnReturn);
-	    col2.add(nameModify);
-	    col2.add(btnDelete);
+	    JButton btnLoad = new JButton("Load");
+	    JPanel col = new JPanel();
+	    col.add(btnLoad);
+	    col.add(btnReturn);
+	    col.add(nameModify);
+	    col.add(btnDelete);
 	    setLayout(new GridLayout(0,2));
 	    add(_combo_panel);
-	    add(col2);
+	    add(col);
 	    
 	    nameModify.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae){
@@ -53,13 +53,13 @@ public class LoadScreen extends Screen {
 	            }
 		    }); 
 	    
-	    btnOk.addActionListener(new ActionListener() {
+	    btnLoad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae){
 				_manager.showAndResize(TaskScreen.IDENTIFIER, TaskScreen.WIDTH, TaskScreen.HEIGHT);
 			}
 	    });
 	    
-	     btnReturn.addActionListener(new ActionListener() {
+	    btnReturn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae){
 				_manager.show(ManagerMainScreen.IDENTIFIER);
 			}

@@ -75,14 +75,15 @@ public class LoginScreen extends Screen {
 				User user = ProjectManager.login(uid, pw);
 				if(user == null)
 					return;
-				else if(user.getRole() == UserRole.MANAGER) {
-					ProjectManager pm = new ProjectManager(user);
-					_manager.setProjectManager(pm);
+				else {
+					_manager.setUser(user);
+				}
+				if(user.getRole() == UserRole.MANAGER) {
+					_manager.show(ManagerMainScreen.IDENTIFIER);
 				}
 				else {
-					
+					_manager.show(MemberMainScreen.IDENTIFIER);
 				}
-				_manager.show(ManagerMainScreen.IDENTIFIER);
 			}
 		});    
 	 

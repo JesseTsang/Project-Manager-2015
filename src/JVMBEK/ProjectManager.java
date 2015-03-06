@@ -59,8 +59,8 @@ public class ProjectManager {
 	    {
 			stmt = DB.getInstance().createStatement();
 			  
-			ResultSet rs = stmt.executeQuery( "SELECT * FROM users WHERE id == " + 
-										uid + " AND password == '" + password + "';" );
+			ResultSet rs = stmt.executeQuery( "SELECT * FROM users WHERE id == '" + 
+										uid + "' AND password == '" + password + "';" );
 			  
 			if ( !rs.next() ) 
 			{
@@ -73,17 +73,19 @@ public class ProjectManager {
 			}
 			
 			String role = rs.getString("role");
-			if ( !role.equals("manager") ) {
-				//Logged in user is not a manager
+			User user;
+			if (!role.equals("manager") ) {
+/*				//Logged in user is not a manager
 				JOptionPane.showMessageDialog(null,
 					  "You do not have the permission to log onto this system. Please"
 					  + " contact your project manager for further assistance.",
 					  "Invalid permissions",
-					  JOptionPane.ERROR_MESSAGE);
-				return null;
+					  JOptionPane.ERROR_MESSAGE);*/
+			  	user = new User(rs.getInt("id"), rs.getString("fname"), rs.getString("lname"), UserRole.MEMBER);
 			}
-			
-		  	User user = new User(rs.getInt("id"), rs.getString("fname"), rs.getString("lname"), UserRole.MANAGER);
+			else {
+			  	user = new User(rs.getInt("id"), rs.getString("fname"), rs.getString("lname"), UserRole.MANAGER);
+			}
 			return user;
 		} 
 		catch ( Exception e ) 
