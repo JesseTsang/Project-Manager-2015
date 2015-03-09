@@ -10,7 +10,9 @@ import javax.swing.JPanel;
 //Manager class in charge of handling all interactions with
 //interface "screens" (i.e. different states the interface can be in)
 public class ScreenManager {
+	User user;
 	ProjectManager _pm;
+	Boolean projectManager;
 	Map <String, Screen> _screens;
 	JFrame _frame;
 	CardLayout _layout;
@@ -39,20 +41,34 @@ public class ScreenManager {
 	}
 	
 	//Register all screens within this function
-	public void setProjectManager(ProjectManager pm) {
-		_pm = pm;
-		
-		//Once we have a project manager, we can create all other screens (since they rely on the PM)
-		_screens.put(ManagerMainScreen.IDENTIFIER, new ManagerMainScreen(this));
-		_screens.put(LoadScreen.IDENTIFIER, new LoadScreen(this));
-		_screens.put(CreateScreen.IDENTIFIER, new CreateScreen(this));
-		_screens.put(ModifyScreen.IDENTIFIER, new ModifyScreen(this));
-		_screens.put(TaskScreen.IDENTIFIER, new TaskScreen(this));
-		_screens.put(CreateTaskScreen.IDENTIFIER, new CreateTaskScreen(this));
+	public void setUser(User temp) {
+		user = temp;
+		if(user.getRole() == UserRole.MANAGER) {
+			_pm = new ProjectManager(user);
+			System.out.println("yay");
+			//Once we have a project manager, we can create all other screens (since they rely on the PM)
+			_screens.put(ManagerMainScreen.IDENTIFIER, new ManagerMainScreen(this));
+			_screens.put(LoadScreen.IDENTIFIER, new LoadScreen(this));
+			_screens.put(CreateScreen.IDENTIFIER, new CreateScreen(this));
+			_screens.put(ModifyScreen.IDENTIFIER, new ModifyScreen(this));
+			_screens.put(TaskScreen.IDENTIFIER, new TaskScreen(this));
+			_screens.put(CreateTaskScreen.IDENTIFIER, new CreateTaskScreen(this));
+			_screens.put(ShowMembersScreen.IDENTIFIER, new ShowMembersScreen(this));
+			_screens.put(AddMemberScreen.IDENTIFIER, new AddMemberScreen(this));
+		}
+		else {
+			System.out.println("boo");
+			_screens.put(MemberMainScreen.IDENTIFIER, new MemberMainScreen(this));
+			_screens.put(ViewScreen.IDENTIFIER, new ViewScreen(this));
+		}
 		
 		for(Entry<String, Screen> entry : _screens.entrySet()) {
 			_parent.add(entry.getKey(), entry.getValue());
 		}
+	}
+	
+	public User getUser() {
+		return user;
 	}
 	
 	public ProjectManager getProjectManager() {
