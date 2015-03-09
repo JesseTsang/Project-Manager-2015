@@ -27,10 +27,12 @@ public class TaskScreen extends Screen {
 		setLayout(new BorderLayout());
 		_lblProjectHeader = new JLabel();
 
-		JButton btnAdd = new JButton("Add");
-		JButton btnDelete = new JButton("Delete");
+		JButton btnAdd = new JButton("Add Task");
+		JButton btnDelete = new JButton("Delete Task");
 		JButton btnGenerate = new JButton("Generate GANTT Chart");
 		JButton btnBack = new JButton("Back");
+		JButton showMembersBtt = new JButton("Show Members");
+
 
 		JPanel northPanel = new JPanel();
 		JPanel centerPanel = new JPanel();
@@ -48,6 +50,8 @@ public class TaskScreen extends Screen {
 		buttonPanel.add(btnDelete);
 		buttonPanel.add(btnGenerate);
 		buttonPanel.add(btnBack);
+		buttonPanel.add(showMembersBtt);
+
 
 		add(BorderLayout.NORTH, northPanel);
 		add(BorderLayout.CENTER, centerPanel);
@@ -113,6 +117,12 @@ public class TaskScreen extends Screen {
 							"You must select a task for which to generate a GANTT chart.",
 							"No Task Selected", JOptionPane.ERROR_MESSAGE);
 				}
+			}
+		});
+				
+		showMembersBtt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae){
+				_manager.show(ShowMembersScreen.IDENTIFIER);
 			}
 		});
 	}
