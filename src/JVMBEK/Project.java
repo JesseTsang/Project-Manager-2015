@@ -5,6 +5,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.swing.JOptionPane;
+
 //A class that encapsulates all data in a row of the "projects" table 
 public class Project {
 	private int _id;
@@ -122,37 +124,33 @@ public class Project {
 		}
 	}
 	
-	// INCOMPLETE
-/*	public void assignMember(User member, Task activity) {
+	// Assigns a member to a task and returns a boolean based on whether or not an error occurs
+	public boolean assignMember(User member, int taskId) {
+		int memberId = member.getId();
+		
 		Statement stmt = null;
 	    try 
 	    {
 			stmt = DB.getInstance().createStatement();
-			String sql = "INSERT INTO tasks (name, description, start_date, duration) VALUES ('"
-					   + name + "', '" + description + "', " + date.getTime() + ", " + duration + ");";
-		    stmt.executeUpdate(sql);
-		    
-		    //Grab latest autoincrement id
-		    sql = "SELECT last_insert_rowid() as id";
+			
+		    String sql = "SELECT * FROM tasks_members WHERE user_id == " + memberId + " AND task_id == " + taskId;
 		    ResultSet rs = stmt.executeQuery(sql);
 		    
-		    if(!rs.next()) {
-		    	System.err.println("Error while creating table '" + name + "'");
-		    	return;
+		    if(rs.next()) {
+				JOptionPane.showMessageDialog(null,
+						"This member is already assigned to this task.", "Invalid Assignment",
+						JOptionPane.ERROR_MESSAGE);
+		    	return false;
 		    }
 		    
-		    int task_id = rs.getInt("id");
-		    
-		    sql = "INSERT INTO project_tasks VALUES (" + _id + ", " + task_id + ")";
+			sql = "INSERT INTO tasks_members VALUES (" + taskId + ", " + memberId + ")";
 		    stmt.executeUpdate(sql);
-		    
-		    _tasks.add(new Task(task_id, name, description, TaskProgress.IN_QUEUE, date, duration));
-		    
 		} 
 		catch ( Exception e ) 
 		{
 		  System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 		  System.exit(0);
 		}
-	}*/
+	    return true;
+	}
 }

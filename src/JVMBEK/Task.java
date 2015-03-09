@@ -35,22 +35,21 @@ public class Task {
 		_duration = dur;		
 		_members = new ArrayList<User>();
 		
-		populateMembers();
+		loadMembers();
 	}
 	
 	//Loads all members assigned to this project in the database
-		private void populateMembers() {
+		private void loadMembers() {
 			try
 			{
 				//Get members for each task
 				Statement member_stmt = DB.getInstance().createStatement();
-				ResultSet member_set = member_stmt.executeQuery( "SELECT id, fname, lname, role,"
-						+ "WHERE tasks_members.taks_id == " + _id
-						+ " AND users.id == tasks_members.user_id;");
+				ResultSet member_set = member_stmt.executeQuery( "SELECT id, fname, lname FROM users, tasks_members "
+						+ "WHERE user_id == id");
 				
 				while(member_set.next()) {
 
-					User m = new User(member_set.getInt("id"), member_set.getString("fname"), member_set.getString("lname"), UserRole.valueOf(member_set.getString("role")));
+					User m = new User(member_set.getInt("id"), member_set.getString("fname"), member_set.getString("lname"), UserRole.MEMBER);
 					
 					_members.add(m);
 				}
@@ -59,12 +58,12 @@ public class Task {
 				e.printStackTrace();
 			}
 		}
-	
+
 	public int getId() { return _id; }
 	public String getName() { return _name; }
 	public String getDescription() { return _description; }
 	public String getComment() { return _comment; }
 	public TaskProgress getProgress() { return _progress; }
-	public ArrayList<User> getMembers() { return _members; }
+	public ArrayList<User> getAssignedMembers() { return _members; }
 
 }

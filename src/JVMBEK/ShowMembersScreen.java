@@ -78,8 +78,6 @@ public class ShowMembersScreen extends Screen{
 			}
 	    });
 
-
-
 	}
 	
 	@Override
@@ -96,13 +94,17 @@ public class ShowMembersScreen extends Screen{
 		String[] columnNames = {
 				"Member ID",
 				"Member Name",
-//				"Tasks",
-				"Role"};
+				"Tasks"};
 		
-		ArrayList<User> members = null;
+		ArrayList<User> members = new ArrayList();
+		System.out.println(members.size());
+		System.out.println(_manager.getProjectManager().getSelectedProject().getTasks().size());
 		
 		for (int i=0; i<_manager.getProjectManager().getSelectedProject().getTasks().size(); i++){
-			members.addAll(_manager.getProjectManager().getSelectedProject().getTasks().get(i).getMembers());
+			for(User u : _manager.getProjectManager().getSelectedProject().getTasks().get(i).getAssignedMembers()) {
+				members.add(u);
+				System.out.println(u.getUserName());
+			}
 		}
 		
 		Object[][] data = new Object[members.size()][];
@@ -110,7 +112,7 @@ public class ShowMembersScreen extends Screen{
 		
 		for(int i = 0; i < members.size(); i++ ) {
 			User u = members.get(i);
-			data[i] = new Object[] { u.getId(), u.getUserName(), u.getRole()};
+			data[i] = new Object[] { u.getId(), u.getUserName()/*, u.getRole()*/};
 		}
 
 		_model = new DefaultTableModel(data, columnNames);
