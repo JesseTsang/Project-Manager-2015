@@ -35,7 +35,6 @@ public class MemberMainScreen extends Screen {
 		 JLabel welcomeP = new JLabel(message);
 		 centerPanel.add(welcomeP);
 		 
-		 
 		 JButton btnView = new JButton("View Assigned Tasks");
 		 add(btnView);
 		 

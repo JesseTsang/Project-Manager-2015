@@ -121,4 +121,38 @@ public class Project {
 		  System.exit(0);
 		}
 	}
+	
+	// INCOMPLETE
+/*	public void assignMember(User member, Task activity) {
+		Statement stmt = null;
+	    try 
+	    {
+			stmt = DB.getInstance().createStatement();
+			String sql = "INSERT INTO tasks (name, description, start_date, duration) VALUES ('"
+					   + name + "', '" + description + "', " + date.getTime() + ", " + duration + ");";
+		    stmt.executeUpdate(sql);
+		    
+		    //Grab latest autoincrement id
+		    sql = "SELECT last_insert_rowid() as id";
+		    ResultSet rs = stmt.executeQuery(sql);
+		    
+		    if(!rs.next()) {
+		    	System.err.println("Error while creating table '" + name + "'");
+		    	return;
+		    }
+		    
+		    int task_id = rs.getInt("id");
+		    
+		    sql = "INSERT INTO project_tasks VALUES (" + _id + ", " + task_id + ")";
+		    stmt.executeUpdate(sql);
+		    
+		    _tasks.add(new Task(task_id, name, description, TaskProgress.IN_QUEUE, date, duration));
+		    
+		} 
+		catch ( Exception e ) 
+		{
+		  System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+		  System.exit(0);
+		}
+	}*/
 }

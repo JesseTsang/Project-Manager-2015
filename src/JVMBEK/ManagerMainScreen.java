@@ -15,7 +15,7 @@ import javax.swing.JTextField;
 
 public class ManagerMainScreen extends Screen {
 	public final static String IDENTIFIER = "MANAGER_MAIN";
-	private JButton _btnLoad;
+	private JButton btnLoad;
 	
 	public ManagerMainScreen(ScreenManager manager) {
 		super(manager);
@@ -34,26 +34,25 @@ public class ManagerMainScreen extends Screen {
 		 JLabel welcomeP = new JLabel(message);
 		 centerPanel.add(welcomeP);
 		 
+		 JButton btnCreate = new JButton("Create Project");
+		 btnLoad = new JButton("Load Project");
+		 add(btnCreate);
+		 add(btnLoad);
 		 
-		 JButton createBtt = new JButton("Create");
-		 _btnLoad = new JButton("Load");
-		 add(createBtt);
-		 add(_btnLoad);
-		 
-		 southPanel.add(createBtt);
-		 southPanel.add(_btnLoad);
+		 southPanel.add(btnCreate);
+		 southPanel.add(btnLoad);
 		 southPanel.setLayout(new FlowLayout());
 		 
 		 add(BorderLayout.CENTER,centerPanel);
 		 add(BorderLayout.SOUTH,southPanel);
 	 
-		 _btnLoad.addActionListener(new ActionListener() {
+		 btnLoad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae){
 				_manager.show(LoadScreen.IDENTIFIER);
 			}
 	    });
 	    
-	    createBtt.addActionListener(new ActionListener() {
+	    btnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae){
 				_manager.showAndResize(CreateScreen.IDENTIFIER, CreateScreen.WIDTH, CreateScreen.HEIGHT);
 			}
@@ -62,7 +61,7 @@ public class ManagerMainScreen extends Screen {
 
 	@Override
 	public void Update() {
-		_btnLoad.setEnabled(_manager.getProjectManager().getProjects().size() > 0);
+		btnLoad.setEnabled(_manager.getProjectManager().getProjects().size() > 0);
 	}
 
 }

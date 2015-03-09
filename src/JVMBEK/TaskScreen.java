@@ -37,6 +37,7 @@ public class TaskScreen extends Screen {
 		JPanel northPanel = new JPanel();
 		JPanel centerPanel = new JPanel();
 		JPanel buttonPanel = new JPanel(new GridLayout(2, 2));
+		
 
 		_tblTasks = new JTable();
 		_tblTasks.setPreferredScrollableViewportSize(new Dimension(350, 150));
@@ -51,7 +52,6 @@ public class TaskScreen extends Screen {
 		buttonPanel.add(btnGenerate);
 		buttonPanel.add(btnBack);
 		buttonPanel.add(showMembersBtt);
-
 
 		add(BorderLayout.NORTH, northPanel);
 		add(BorderLayout.CENTER, centerPanel);
@@ -104,14 +104,7 @@ public class TaskScreen extends Screen {
 
 				// check for selected row first
 				if (_tblTasks.getSelectedRow() != -1) {
-					// Delete the task from the database
-					Integer t_id = (Integer) _model.getValueAt(row, 0);
-
-					_manager.getProjectManager().getSelectedProject()
-							.deleteTask(t_id);
-
-					// remove selected row from the model
-					_model.removeRow(_tblTasks.getSelectedRow());
+					
 				} else {
 					JOptionPane.showMessageDialog(null,
 							"You must select a task for which to generate a GANTT chart.",

@@ -1,6 +1,6 @@
 package JVMBEK;
 
-//Class that encapsulates all date from a row in the "users" table
+// Class that encapsulates all data from a row in the "users" table
 public class User {
 
 	private int _id;

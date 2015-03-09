@@ -9,13 +9,15 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 
 public class ModifyScreen extends Screen {
 	public final static String IDENTIFIER = "MODIFY";
 	private JTextField _nameField;
-	private JTextField _descField;
+	private JTextArea _descField;
 	//private JTextField _durField;
 
 	public ModifyScreen(ScreenManager manager) {
@@ -28,24 +30,27 @@ public class ModifyScreen extends Screen {
 		JPanel centerPanel = new JPanel();
 		JPanel southPanel = new JPanel();
 		
-		JLabel pjName = new JLabel("Project Name: ");
-		JLabel pjDis  = new JLabel("Project Description: ");
+		JLabel pjName = new JLabel("Project Name:");
+		JLabel pjDis = new JLabel("Project Description:");
 		
 		_nameField = new JTextField(10);
-		_descField = new JTextField(30);
+		_descField = new JTextArea();
+		JScrollPane scroll = new JScrollPane(_descField);
+		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		
-		JButton createBtt = new JButton("Update Project");
-		JButton cancelBtt = new JButton("Cancel ");
+		JButton btnUpdate = new JButton("Update Project");
+		JButton btnCancel = new JButton("Cancel");
 		northPanel.add(pjName);
 		northPanel.add(_nameField);
 		northPanel.setLayout(new GridLayout(2,2,5,5));
 		
 		centerPanel.add(pjDis);
-		centerPanel.add(_descField);
+		centerPanel.add(scroll);
 		centerPanel.setLayout(new GridLayout(2,1));
 		
-		southPanel.add(createBtt);
-		southPanel.add(cancelBtt);
+		southPanel.add(btnUpdate);
+		southPanel.add(btnCancel);
 		southPanel.setLayout(new FlowLayout());;
 		
 		setLayout(new BorderLayout());
@@ -53,7 +58,7 @@ public class ModifyScreen extends Screen {
 		add(BorderLayout.CENTER,centerPanel);
 		add(BorderLayout.SOUTH,southPanel);
 		
-		 createBtt.addActionListener(new ActionListener() {
+		 btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae){
 				if(_nameField.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null,
@@ -76,7 +81,7 @@ public class ModifyScreen extends Screen {
 			}
 		 });
 		 
-		 cancelBtt.addActionListener(new ActionListener() {
+		 btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae){
 				_manager.showAndResize(LoadScreen.IDENTIFIER, 300, 180);
 			}

@@ -39,8 +39,8 @@ public class LoginScreen extends Screen {
 		welcomeUser.setForeground(new Color(255,0,0));
 		instructUser.setForeground(new Color(255,0,0));
 
-		JLabel userName = new JLabel("Username");
-		JLabel passWord = new JLabel("Password");
+		JLabel userName = new JLabel("Username:");
+		JLabel passWord = new JLabel("Password:");
 		
 		final JTextField userField = new JTextField(10);
 		final JPasswordField passField = new JPasswordField(10);

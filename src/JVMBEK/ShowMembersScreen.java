@@ -37,14 +37,14 @@ public class ShowMembersScreen extends Screen{
 		JPanel southPanel = new JPanel();
 		
 		_lblProjectHeader = new JLabel();
-		JLabel memberName = new JLabel("Member Name: ");
-		JLabel activityId = new JLabel("Activity ID: ");
+		JLabel memberName = new JLabel("Member Name:");
+		JLabel activityId = new JLabel("Activity ID:");
 		
 		_memberNameTField = new JTextField(15);
 		_activityIdTField = new JTextField(15);
 		
-		JButton addMemberBtt = new JButton("Add Member");
-		JButton backBtt = new JButton("Back");
+		JButton btnAdd = new JButton("Assign Members");
+		JButton btnCancel = new JButton("Cancel");
 		
 		northPanel.add(_lblProjectHeader);
 		
@@ -52,17 +52,13 @@ public class ShowMembersScreen extends Screen{
 		_tblMembers.setPreferredScrollableViewportSize(new Dimension(350,150));
 		_tblMembers.setFillsViewportHeight(true);
 		
-		
 		//Members are shown here
 		JScrollPane scrollPane = new JScrollPane(_tblMembers);
 		scrollPane.setOpaque(true);
 		centerPanel.add(scrollPane);
 		
-		southPanel.add(backBtt);
-		southPanel.add(addMemberBtt);
-
-		
-		
+		southPanel.add(btnAdd);
+		southPanel.add(btnCancel);
 		
 		setLayout(new BorderLayout());
 		add(BorderLayout.NORTH,northPanel);
@@ -70,14 +66,13 @@ public class ShowMembersScreen extends Screen{
 		add(BorderLayout.SOUTH,southPanel);
 		
 		
-		backBtt.addActionListener(new ActionListener() {
+		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae){
 				_manager.show(TaskScreen.IDENTIFIER);
 			}
 	    });
-
 		
-		addMemberBtt.addActionListener(new ActionListener() {
+		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae){
 				_manager.show(AddMemberScreen.IDENTIFIER);
 			}
