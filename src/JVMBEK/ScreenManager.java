@@ -53,9 +53,6 @@ public class ScreenManager {
 			_screens.put(ModifyScreen.IDENTIFIER, new ModifyScreen(this));
 			_screens.put(TaskScreen.IDENTIFIER, new TaskScreen(this));
 			_screens.put(CreateTaskScreen.IDENTIFIER, new CreateTaskScreen(this));
-			_screens.put(ShowMembersScreen.IDENTIFIER, new ShowMembersScreen(this));
-			_screens.put(AddMemberScreen.IDENTIFIER, new AddMemberScreen(this));
-
 		}
 		else {
 			System.out.println("boo");
