@@ -82,28 +82,21 @@ public class ShowMembersScreen extends Screen{
 	
 	@Override
 	public void Update() {	
-//		_nameTField.setText("");
-//		_descTField.setText("");
-//		_durTField.setText("");
 		
 		_lblProjectHeader.setText(_manager.getProjectManager().getSelectedProject().getName().toUpperCase() + " Members");
-
-		
-		
-		
+			
 		String[] columnNames = {
 				"Member ID",
 				"Member Name",
 				"Tasks"};
 		
 		ArrayList<User> members = new ArrayList();
-		System.out.println(members.size());
-		System.out.println(_manager.getProjectManager().getSelectedProject().getTasks().size());
+		ArrayList<Task> tasks = new ArrayList();
 		
-		for (int i=0; i<_manager.getProjectManager().getSelectedProject().getTasks().size(); i++){
+		for (int i = 0 ; i<_manager.getProjectManager().getSelectedProject().getTasks().size(); i++){
 			for(User u : _manager.getProjectManager().getSelectedProject().getTasks().get(i).getAssignedMembers()) {
+				tasks.add(_manager.getProjectManager().getSelectedProject().getTasks().get(i));
 				members.add(u);
-				System.out.println(u.getUserName());
 			}
 		}
 		
@@ -112,7 +105,8 @@ public class ShowMembersScreen extends Screen{
 		
 		for(int i = 0; i < members.size(); i++ ) {
 			User u = members.get(i);
-			data[i] = new Object[] { u.getId(), u.getUserName()/*, u.getRole()*/};
+			Task t = tasks.get(i);
+			data[i] = new Object[] { u.getId(), u.getUserName(), t.getId() };
 		}
 
 		_model = new DefaultTableModel(data, columnNames);

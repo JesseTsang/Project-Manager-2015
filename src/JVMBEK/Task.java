@@ -35,17 +35,19 @@ public class Task {
 		_duration = dur;		
 		_members = new ArrayList<User>();
 		
-		loadMembers();
+
 	}
 	
 	//Loads all members assigned to this project in the database
 		private void loadMembers() {
 			try
 			{
+				_members.clear();
+				
 				//Get members for each task
 				Statement member_stmt = DB.getInstance().createStatement();
 				ResultSet member_set = member_stmt.executeQuery( "SELECT id, fname, lname FROM users, tasks_members "
-						+ "WHERE user_id == id");
+						+ "WHERE user_id == id AND task_id ==" + _id);
 				
 				while(member_set.next()) {
 
@@ -64,6 +66,6 @@ public class Task {
 	public String getDescription() { return _description; }
 	public String getComment() { return _comment; }
 	public TaskProgress getProgress() { return _progress; }
-	public ArrayList<User> getAssignedMembers() { return _members; }
+	public ArrayList<User> getAssignedMembers() { loadMembers(); return _members; }
 
 }
