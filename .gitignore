@@ -1,0 +1,9 @@
+bin
+obj
+config
+COMP354/bin
+COMP354\bin
+bin/
+bin/*
+bin/**
+
