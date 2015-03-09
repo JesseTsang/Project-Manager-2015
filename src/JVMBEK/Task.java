@@ -1,4 +1,7 @@
 package JVMBEK;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
 
 //A class that encapsulates all data from one row of the "tasks" table
@@ -19,6 +22,8 @@ public class Task {
 	private TaskProgress _progress;
 	private Date _start_date;
 	private int _duration;
+	ArrayList<User> _members;
+
 	
 	public Task(int id, String name, String description, TaskProgress progress, Date start, int dur) {
 		_id = id;
@@ -27,12 +32,39 @@ public class Task {
 		_progress = progress;
 		//_comment = comment;
 		_start_date = start;
-		_duration = dur;
+		_duration = dur;		
+		_members = new ArrayList<User>();
+		
+		populateMembers();
 	}
+	
+	//Loads all members assigned to this project in the database
+		private void populateMembers() {
+			try
+			{
+				//Get members for each task
+				Statement member_stmt = DB.getInstance().createStatement();
+				ResultSet member_set = member_stmt.executeQuery( "SELECT id, fname, lname, role,"
+						+ "WHERE tasks_members.taks_id == " + _id
+						+ " AND users.id == tasks_members.user_id;");
+				
+				while(member_set.next()) {
+
+					User m = new User(member_set.getInt("id"), member_set.getString("fname"), member_set.getString("lname"), UserRole.valueOf(member_set.getString("role")));
+					
+					_members.add(m);
+				}
+			}
+			catch( Exception e) {
+				e.printStackTrace();
+			}
+		}
 	
 	public int getId() { return _id; }
 	public String getName() { return _name; }
 	public String getDescription() { return _description; }
 	public String getComment() { return _comment; }
 	public TaskProgress getProgress() { return _progress; }
+	public ArrayList<User> getMembers() { return _members; }
+
 }

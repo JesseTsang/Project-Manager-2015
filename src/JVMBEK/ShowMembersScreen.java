@@ -93,22 +93,28 @@ public class ShowMembersScreen extends Screen{
 		
 		
 		
-//		String[] columnNames = {
-//				"Member ID",
-//				"Member Name",
+		String[] columnNames = {
+				"Member ID",
+				"Member Name",
 //				"Tasks",
-//				"Role"};
-//		
-////		ArrayList<User> members =  _manager.getProjectManager().getSelectedProject().getMembers();
-////		Object[][] data = new Object[members.size()][];
-////		
-////		for(int i = 0; i < members.size(); i++ ) {
-////			User u = members.get(i);
-////			data[i] = new Object[] { u.getId(), u.getUserName(), u.getTask(), u.getRole()};
-////		}
-//
-////		_model = new DefaultTableModel(data, columnNames);
-//		_tblMembers.setModel(_model);
+				"Role"};
+		
+		ArrayList<User> members = null;
+		
+		for (int i=0; i<_manager.getProjectManager().getSelectedProject().getTasks().size(); i++){
+			members.addAll(_manager.getProjectManager().getSelectedProject().getTasks().get(i).getMembers());
+		}
+		
+		Object[][] data = new Object[members.size()][];
+		
+		
+		for(int i = 0; i < members.size(); i++ ) {
+			User u = members.get(i);
+			data[i] = new Object[] { u.getId(), u.getUserName(), u.getRole()};
+		}
+
+		_model = new DefaultTableModel(data, columnNames);
+		_tblMembers.setModel(_model);
 	}
 
 }
