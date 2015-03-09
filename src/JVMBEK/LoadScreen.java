@@ -22,10 +22,10 @@ public class LoadScreen extends Screen {
 	public void SetupGUI() {
 		_combo_panel = new JPanel();
 
-		JButton btnBack = new JButton("Back");
-		JButton btnModify = new JButton("Modify ");
-		JButton btnDelete = new JButton("Delete ");
 		JButton btnLoad = new JButton("Load");
+		JButton btnModify = new JButton("Modify");
+		JButton btnDelete = new JButton("Delete");
+		JButton btnBack = new JButton("Back");
 		JPanel col = new JPanel();
 		col.add(btnLoad);
 		col.add(btnModify);

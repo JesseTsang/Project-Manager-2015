@@ -23,7 +23,7 @@ public class ViewScreen extends Screen {
 
 	@Override
 	public void SetupGUI() {
-	    JButton btnReturn = new JButton("Back");
+	    JButton btnBack = new JButton("Back");
 	    JLabel lblAssignedTasks = new JLabel("Assigned Tasks");
 		setLayout(new BorderLayout());
 		
@@ -48,13 +48,13 @@ public class ViewScreen extends Screen {
 		
 		northPanel.add(lblAssignedTasks);
 		centerPanel.add(scrollPane);
-		southPanel.add(btnReturn);
+		southPanel.add(btnBack);
 		
 		add(BorderLayout.NORTH,northPanel);
 		add(BorderLayout.CENTER,centerPanel);
 		add(BorderLayout.SOUTH,southPanel);
 	    
-	    btnReturn.addActionListener(new ActionListener() {
+	    btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae){
 				_manager.showAndResize(MemberMainScreen.IDENTIFIER, MemberMainScreen.WIDTH, MemberMainScreen.HEIGHT);
 			}

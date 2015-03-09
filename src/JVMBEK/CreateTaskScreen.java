@@ -28,16 +28,16 @@ public class CreateTaskScreen extends Screen {
 		JPanel centerPanel = new JPanel();
 		JPanel southPanel = new JPanel();
 		
-		JLabel pjName = new JLabel("Task Name: ");
-		JLabel pjDis  = new JLabel("Task Description: ");
-		JLabel pjDur = new JLabel("Task Duration: ");
+		JLabel pjName = new JLabel("Task Name:");
+		JLabel pjDis  = new JLabel("Task Description:");
+		JLabel pjDur = new JLabel("Task Duration:");
 		
 		_nameTField = new JTextField(10);
 		_descTField = new JTextField(30);
 		_durTField = new JTextField(10);
 		
-		JButton createBtt = new JButton("Create Task");
-		JButton cancelBtt = new JButton("Cancel ");
+		JButton btnCreate = new JButton("Create Task");
+		JButton btnCancel = new JButton("Cancel");
 		northPanel.add(pjName);
 		northPanel.add(_nameTField);
 		northPanel.add(pjDur);
@@ -48,8 +48,8 @@ public class CreateTaskScreen extends Screen {
 		centerPanel.add(_descTField);
 		centerPanel.setLayout(new GridLayout(2,1));
 		
-		southPanel.add(createBtt);
-		southPanel.add(cancelBtt);
+		southPanel.add(btnCreate);
+		southPanel.add(btnCancel);
 		southPanel.setLayout(new FlowLayout());;
 		
 		setLayout(new BorderLayout());
@@ -58,11 +58,11 @@ public class CreateTaskScreen extends Screen {
 		add(BorderLayout.SOUTH,southPanel);
 		
 
-		createBtt.addActionListener(new ActionListener() {
+		btnCreate.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent ae){
 					if(_nameTField.getText().isEmpty()) {
 						JOptionPane.showMessageDialog(null,
-								  "Please enter a name for your project.",
+								  "Please enter a name for your task.",
 								  "Missing field",
 								  JOptionPane.ERROR_MESSAGE);
 							return;
@@ -90,11 +90,11 @@ public class CreateTaskScreen extends Screen {
 						.getSelectedProject()
 						.addTask(_nameTField.getText(), _descTField.getText(), dur);
 					
-					_manager.showAndResize(TaskScreen.IDENTIFIER,  TaskScreen.WIDTH, TaskScreen.HEIGHT);
+					_manager.showAndResize(TaskScreen.IDENTIFIER, TaskScreen.WIDTH, TaskScreen.HEIGHT);
 				}
 			});
 		 
-		 cancelBtt.addActionListener(new ActionListener() {
+		 btnCancel.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent ae){
 					_manager.showAndResize(TaskScreen.IDENTIFIER, TaskScreen.WIDTH, TaskScreen.HEIGHT);
 				}

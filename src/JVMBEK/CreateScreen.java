@@ -9,6 +9,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 
@@ -18,7 +20,7 @@ public class CreateScreen extends Screen {
 	public final static int HEIGHT = 300;
 	
 	private JTextField _nameField;
-	private JTextField _descField;
+	private JTextArea _descField;
 	//private JTextField _durField;
 
 	public CreateScreen(ScreenManager manager) {
@@ -31,16 +33,19 @@ public class CreateScreen extends Screen {
 		JPanel centerPanel = new JPanel();
 		JPanel southPanel = new JPanel();
 		
-		JLabel pjName = new JLabel("Project Name: ");
-		JLabel pjDis  = new JLabel("Project Description: ");
+		JLabel pjName = new JLabel("Project Name:");
+		JLabel pjDis  = new JLabel("Project Description:");
 		//JLabel pjDur = new JLabel("Project Duration: ");
 		
 		_nameField = new JTextField(10);
-		_descField = new JTextField(30);
+		_descField = new JTextArea();
+		JScrollPane scroll = new JScrollPane(_descField);
+		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		//_durField = new JTextField(10);
 		
-		JButton createBtt = new JButton("Create Project");
-		JButton cancelBtt = new JButton("Cancel ");
+		JButton btnCreate = new JButton("Create Project");
+		JButton btnCancel = new JButton("Cancel");
 		northPanel.add(pjName);
 		northPanel.add(_nameField);
 		//northPanel.add(pjDur);
@@ -48,11 +53,11 @@ public class CreateScreen extends Screen {
 		northPanel.setLayout(new GridLayout(2,2,5,5));
 		
 		centerPanel.add(pjDis);
-		centerPanel.add(_descField);
+		centerPanel.add(scroll);
 		centerPanel.setLayout(new GridLayout(2,1));
 		
-		southPanel.add(createBtt);
-		southPanel.add(cancelBtt);
+		southPanel.add(btnCreate);
+		southPanel.add(btnCancel);
 		southPanel.setLayout(new FlowLayout());;
 		
 		setLayout(new BorderLayout());
@@ -60,7 +65,7 @@ public class CreateScreen extends Screen {
 		add(BorderLayout.CENTER,centerPanel);
 		add(BorderLayout.SOUTH,southPanel);
 		
-		 createBtt.addActionListener(new ActionListener() {
+		 btnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae){
 				if(_nameField.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null,
@@ -82,7 +87,7 @@ public class CreateScreen extends Screen {
 			}
 		 });
 		 
-		 cancelBtt.addActionListener(new ActionListener() {
+		 btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae){
 				_manager.showAndResize(ManagerMainScreen.IDENTIFIER, 300, 180);
 			}
