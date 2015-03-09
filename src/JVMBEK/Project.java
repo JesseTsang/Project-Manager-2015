@@ -12,6 +12,8 @@ public class Project {
 	private String _description;
 	private Date _created;
 	ArrayList<Task> _tasks;
+	ArrayList<User> _members;
+
 	
 	public Project(int id, String name, String descr, Date created) {
 		_id = id;
@@ -21,6 +23,7 @@ public class Project {
 		_tasks = new ArrayList<Task>();
 		
 		populateTasks();
+//		populateMembers();
 	}
 	
 	//Loads all tasks assigned to this project in the database
@@ -28,18 +31,18 @@ public class Project {
 		try
 		{
 			//Get tasks for each project
-			Statement task_stmt = DB.getInstance().createStatement();
-			ResultSet task_set = task_stmt.executeQuery( "SELECT id, name, description, comment, start_date, "
+			Statement member_stmt = DB.getInstance().createStatement();
+			ResultSet member_set = member_stmt.executeQuery( "SELECT id, fname, lname, role, "
 					+ "duration, progress FROM tasks, project_tasks "
 					+ "WHERE project_tasks.project_id == " + _id
 					+ " AND tasks.id == project_tasks.task_id;");
 			
-			while(task_set.next()) {
-				TaskProgress prog = Task.StringToProgress(task_set.getString("progress"));
+			while(member_set.next()) {
+				TaskProgress prog = Task.StringToProgress(member_set.getString("progress"));
 				
-				//TODO: get dates such as task_set.getDate("start_date"),
-				Task t = new Task(task_set.getInt("id"), task_set.getString("name"), task_set.getString("description"),
-						 prog, task_set.getDate("start_date"), task_set.getInt("duration"));
+				//TODO: get dates such as member_set.getDate("start_date"),
+				Task t = new Task(member_set.getInt("id"), member_set.getString("name"), member_set.getString("description"),
+						 prog, member_set.getDate("start_date"), member_set.getInt("duration"));
 				
 				_tasks.add(t);
 			}
@@ -48,6 +51,31 @@ public class Project {
 			e.printStackTrace();
 		}
 	}
+	
+//	private void populateMembers() {
+//		try
+//		{
+//			//Get tasks for each project
+//			Statement member_stmt = DB.getInstance().createStatement();
+//			ResultSet member_set = member_stmt.executeQuery( "SELECT id, name, description, comment, start_date, "
+//					+ "duration, progress FROM tasks, project_tasks "
+//					+ "WHERE project_tasks.project_id == " + _id
+//					+ " AND tasks.id == project_tasks.task_id;");
+//			
+//			while(member_set.next()) {
+//				TaskProgress prog = Task.StringToProgress(member_set.getString("progress"));
+//				
+//				//TODO: get dates such as member_set.getDate("start_date"),
+//				Task t = new Task(member_set.getInt("id"), member_set.getString("name"), member_set.getString("description"),
+//						 prog, member_set.getDate("start_date"), member_set.getInt("duration"));
+//				
+//				_tasks.add(t);
+//			}
+//		}
+//		catch( Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 	
 	public int getId() { return _id; }
 	
