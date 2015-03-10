@@ -1,6 +1,5 @@
 package JVMBEK;
 
-
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -17,38 +16,39 @@ public class MemberMainScreen extends Screen {
 	public final static String IDENTIFIER = "MEMBER_MAIN";
 	public static final int WIDTH = 300;
 	public static final int HEIGHT = 180;
-	
+
 	public MemberMainScreen(ScreenManager manager) {
 		super(manager);
 	}
 
-//	@Override
+	// @Override
 	public void SetupGUI() {
 		setLayout(new BorderLayout());
-		
+
 		JPanel centerPanel = new JPanel();
 		JPanel southPanel = new JPanel();
-		
-		//This should maybe be in "UPDATE" instead
-		String message = new String("Welcome, member " +
-		_manager.getUser().getUserName() + "!");
-		 JLabel welcomeP = new JLabel(message);
-		 centerPanel.add(welcomeP);
-		 
-		 JButton btnView = new JButton("View Assigned Tasks");
-		 add(btnView);
-		 
-		 southPanel.add(btnView);
-		 southPanel.setLayout(new FlowLayout());
-		 
-		 add(BorderLayout.CENTER,centerPanel);
-		 add(BorderLayout.SOUTH,southPanel);
-	 
-		 btnView.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae){
-				_manager.showAndResize(MemberViewScreen.IDENTIFIER, MemberViewScreen.WIDTH, MemberViewScreen.HEIGHT);
+
+		// This should perhaps be in "UPDATE" instead
+		String strWelcome = new String("Welcome, member "
+				+ _manager.getUser().getUserName() + "!");
+		JLabel lblWelcome = new JLabel(strWelcome);
+		centerPanel.add(lblWelcome);
+
+		JButton btnView = new JButton("View Assigned Tasks");
+		add(btnView);
+
+		southPanel.add(btnView);
+		southPanel.setLayout(new FlowLayout());
+
+		add(BorderLayout.CENTER, centerPanel);
+		add(BorderLayout.SOUTH, southPanel);
+
+		btnView.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				_manager.showAndResize(MemberViewScreen.IDENTIFIER,
+						MemberViewScreen.WIDTH, MemberViewScreen.HEIGHT);
 			}
-	    });
+		});
 	}
 
 	@Override

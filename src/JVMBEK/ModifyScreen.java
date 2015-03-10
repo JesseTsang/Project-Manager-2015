@@ -16,8 +16,8 @@ import javax.swing.JTextField;
 
 public class ModifyScreen extends Screen {
 	public final static String IDENTIFIER = "MODIFY";
-	private JTextField _nameField;
-	private JTextArea _descField;
+	private JTextField tfProjectName;
+	private JTextArea taDescription;
 	//private JTextField _durField;
 
 	public ModifyScreen(ScreenManager manager) {
@@ -30,22 +30,22 @@ public class ModifyScreen extends Screen {
 		JPanel centerPanel = new JPanel();
 		JPanel southPanel = new JPanel();
 		
-		JLabel pjName = new JLabel("Project Name:");
-		JLabel pjDis = new JLabel("Project Description:");
+		JLabel lblProjectName = new JLabel("Project Name:");
+		JLabel lblDescription = new JLabel("Project Description:");
 		
-		_nameField = new JTextField(10);
-		_descField = new JTextArea();
-		JScrollPane scroll = new JScrollPane(_descField);
+		tfProjectName = new JTextField(10);
+		taDescription = new JTextArea();
+		JScrollPane scroll = new JScrollPane(taDescription);
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		
 		JButton btnUpdate = new JButton("Update Project");
 		JButton btnCancel = new JButton("Cancel");
-		northPanel.add(pjName);
-		northPanel.add(_nameField);
+		northPanel.add(lblProjectName);
+		northPanel.add(tfProjectName);
 		northPanel.setLayout(new GridLayout(2,2,5,5));
 		
-		centerPanel.add(pjDis);
+		centerPanel.add(lblDescription);
 		centerPanel.add(scroll);
 		centerPanel.setLayout(new GridLayout(2,1));
 		
@@ -60,7 +60,7 @@ public class ModifyScreen extends Screen {
 		
 		 btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae){
-				if(_nameField.getText().isEmpty()) {
+				if(tfProjectName.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null,
 							  "Please enter a name for your project.",
 							  "Missing field",
@@ -68,15 +68,15 @@ public class ModifyScreen extends Screen {
 						return;
 				}
 				
-				if(!Character.isLetter(_nameField.getText().charAt(0))) {
+				if(!Character.isLetter(tfProjectName.getText().charAt(0))) {
 					JOptionPane.showMessageDialog(null,
 							  "Project name must begin with a letter.",
 							  "Incorrect naming",
 							  JOptionPane.ERROR_MESSAGE);
 						return;
 				}
-				_manager.getProjectManager().updateProjectName(_nameField.getText());
-				_manager.getProjectManager().updateProjectDescription(_descField.getText());
+				_manager.getProjectManager().updateProjectName(tfProjectName.getText());
+				_manager.getProjectManager().updateProjectDescription(taDescription.getText());
 				_manager.showAndResize(LoadScreen.IDENTIFIER, 300, 180);
 			}
 		 });
@@ -91,8 +91,8 @@ public class ModifyScreen extends Screen {
 	
 	@Override
 	public void Update() {
-		_nameField.setText(_manager.getProjectManager().getSelectedProject().getName());
-		_descField.setText(_manager.getProjectManager().getSelectedProject().getDescription());
+		tfProjectName.setText(_manager.getProjectManager().getSelectedProject().getName());
+		taDescription.setText(_manager.getProjectManager().getSelectedProject().getDescription());
 	}
 
 }

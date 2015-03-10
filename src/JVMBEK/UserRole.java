@@ -1,3 +1,5 @@
 package JVMBEK;
 
-public enum UserRole { MANAGER, MEMBER }
+public enum UserRole {
+	MANAGER, MEMBER
+}

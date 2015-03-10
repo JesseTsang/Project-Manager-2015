@@ -68,7 +68,8 @@ public class ScreenManager {
 			System.out.println("boo");
 			_screens.put(MemberMainScreen.IDENTIFIER,
 					new MemberMainScreen(this));
-			_screens.put(MemberViewScreen.IDENTIFIER, new MemberViewScreen(this));
+			_screens.put(MemberViewScreen.IDENTIFIER,
+					new MemberViewScreen(this));
 		}
 
 		for (Entry<String, Screen> entry : _screens.entrySet()) {
@@ -105,27 +106,28 @@ public class ScreenManager {
 		try {
 			Statement stmt = DB.getInstance().createStatement();
 
-			ResultSet rs = stmt.executeQuery("SELECT id, fname, lname, role FROM users");
+			ResultSet rs = stmt
+					.executeQuery("SELECT id, fname, lname, role FROM users");
 
 			while (rs.next()) {
 				int id = rs.getInt("id");
 				UserRole role = null;
-				if(rs.getString("role").equals("manager")) {
+				if (rs.getString("role").equals("manager")) {
 					role = UserRole.MANAGER;
-				} else if(rs.getString("role").equals("user")) {
+				} else if (rs.getString("role").equals("user")) {
 					role = UserRole.MEMBER;
 				}
-				_users.add(new User(id, rs.getString("fname"), rs.getString("lname"), role));
+				_users.add(new User(id, rs.getString("fname"), rs
+						.getString("lname"), role));
 			}
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
 		}
 	}
-	
+
 	public ArrayList<User> getUsers() {
 		return _users;
 	}
-	
-	
+
 }

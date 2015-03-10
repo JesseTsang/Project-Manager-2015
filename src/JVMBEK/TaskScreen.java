@@ -15,7 +15,7 @@ public class TaskScreen extends Screen {
 	public static final int HEIGHT = 300;
 
 	private JLabel _lblProjectHeader;
-	private JTable _tblTasks;
+	private JTable tblTasks;
 	private DefaultTableModel _model;
 
 	public TaskScreen(ScreenManager manager) {
@@ -31,19 +31,17 @@ public class TaskScreen extends Screen {
 		JButton btnDelete = new JButton("Delete Task");
 		JButton btnGenerate = new JButton("Generate GANTT Chart");
 		JButton btnBack = new JButton("Back");
-		JButton showMembersBtt = new JButton("Show Members");
-
+		JButton btnShow = new JButton("Show Members");
 
 		JPanel northPanel = new JPanel();
 		JPanel centerPanel = new JPanel();
 		JPanel buttonPanel = new JPanel(new GridLayout(2, 2));
-		
 
-		_tblTasks = new JTable();
-		_tblTasks.setPreferredScrollableViewportSize(new Dimension(350, 150));
-		_tblTasks.setFillsViewportHeight(true);
+		tblTasks = new JTable();
+		tblTasks.setPreferredScrollableViewportSize(new Dimension(350, 150));
+		tblTasks.setFillsViewportHeight(true);
 
-		JScrollPane scrollPane = new JScrollPane(_tblTasks);
+		JScrollPane scrollPane = new JScrollPane(tblTasks);
 		scrollPane.setOpaque(true);
 		northPanel.add(_lblProjectHeader);
 		centerPanel.add(scrollPane);
@@ -51,7 +49,7 @@ public class TaskScreen extends Screen {
 		buttonPanel.add(btnDelete);
 		buttonPanel.add(btnGenerate);
 		buttonPanel.add(btnBack);
-		buttonPanel.add(showMembersBtt);
+		buttonPanel.add(btnShow);
 
 		add(BorderLayout.NORTH, northPanel);
 		add(BorderLayout.CENTER, centerPanel);
@@ -72,10 +70,10 @@ public class TaskScreen extends Screen {
 
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				int row = _tblTasks.getSelectedRow();
+				int row = tblTasks.getSelectedRow();
 
 				// check for selected row first
-				if (_tblTasks.getSelectedRow() != -1) {
+				if (tblTasks.getSelectedRow() != -1) {
 
 					int dialogButton = JOptionPane.YES_NO_OPTION;
 					if (JOptionPane.showConfirmDialog(null,
@@ -88,7 +86,7 @@ public class TaskScreen extends Screen {
 								.deleteTask(t_id);
 
 						// remove selected row from the model
-						_model.removeRow(_tblTasks.getSelectedRow());
+						_model.removeRow(tblTasks.getSelectedRow());
 					}
 				} else {
 					JOptionPane.showMessageDialog(null,
@@ -100,21 +98,24 @@ public class TaskScreen extends Screen {
 
 		btnGenerate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				int row = _tblTasks.getSelectedRow();
+				int row = tblTasks.getSelectedRow();
 
 				// check for selected row first
-				if (_tblTasks.getSelectedRow() != -1) {
-					
+				if (tblTasks.getSelectedRow() != -1) {
+
 				} else {
-					JOptionPane.showMessageDialog(null,
-							"You must select a task for which to generate a GANTT chart.",
-							"No Task Selected", JOptionPane.ERROR_MESSAGE);
+					JOptionPane
+							.showMessageDialog(
+									null,
+									"You must select a task for which to generate a GANTT chart.",
+									"No Task Selected",
+									JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
-				
-		showMembersBtt.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae){
+
+		btnShow.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
 				_manager.show(ShowMembersScreen.IDENTIFIER);
 			}
 		});
@@ -141,6 +142,6 @@ public class TaskScreen extends Screen {
 		}
 
 		_model = new DefaultTableModel(data, columnNames);
-		_tblTasks.setModel(_model);
+		tblTasks.setModel(_model);
 	}
 }

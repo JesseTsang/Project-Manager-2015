@@ -12,13 +12,11 @@ public class AddMemberScreen extends Screen {
 	public final static String IDENTIFIER = "ADDMEMBERS";
 
 	private JComboBox cmbMembers;
-	private JTable _tblTasks;
-	private DefaultTableModel _model;
+	private JTable tblTasks;
+	private DefaultTableModel model;
 
-	private JTextField _memberNameTField;
-	private JTextField _taskIdTField;
-
-	private JPanel centerPanel;
+	private JTextField tfMemberName;
+	private JTextField tfTaskId;
 
 	private ArrayList<User> members = new ArrayList<User>();
 
@@ -29,30 +27,30 @@ public class AddMemberScreen extends Screen {
 	@Override
 	public void SetupGUI() {
 		JPanel northPanel = new JPanel();
-		centerPanel = new JPanel();
+		JPanel centerPanel = new JPanel();
 		JPanel southPanel = new JPanel();
 
 		JLabel memberName = new JLabel("Member Name:");
 		JLabel taskId = new JLabel("Task ID:");
-		
-		_taskIdTField = new JTextField(15);
+
+		tfTaskId = new JTextField(15);
 
 		JButton btnAdd = new JButton("Assign");
 		JButton btnCancel = new JButton("Cancel");
 
-		_tblTasks = new JTable();
-		_tblTasks.setPreferredScrollableViewportSize(new Dimension(350, 150));
-		//_tblTasks.setPreferredScrollableViewportSize(_tblTasks.getPreferredSize());
-		_tblTasks.setFillsViewportHeight(true);
+		tblTasks = new JTable();
+		tblTasks.setPreferredScrollableViewportSize(new Dimension(350, 150));
+		// _tblTasks.setPreferredScrollableViewportSize(_tblTasks.getPreferredSize());
+		tblTasks.setFillsViewportHeight(true);
 
-		JScrollPane scroll = new JScrollPane(_tblTasks);
+		JScrollPane scroll = new JScrollPane(tblTasks);
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		northPanel.add(scroll);
 
 		cmbMembers = new JComboBox();
 
 		centerPanel.add(taskId);
-		centerPanel.add(_taskIdTField);
+		centerPanel.add(tfTaskId);
 		centerPanel.add(memberName);
 		centerPanel.add(cmbMembers);
 		centerPanel.setLayout(new GridLayout(2, 2, 5, 5));
@@ -74,8 +72,8 @@ public class AddMemberScreen extends Screen {
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 
-				if (_taskIdTField.getText().isEmpty()
-						|| !_taskIdTField.getText().matches("-?\\d+")) {
+				if (tfTaskId.getText().isEmpty()
+						|| !tfTaskId.getText().matches("-?\\d+")) {
 					JOptionPane.showMessageDialog(null,
 							"Please enter a valid ID number.", "Incorrect ID",
 							JOptionPane.ERROR_MESSAGE);
@@ -90,8 +88,8 @@ public class AddMemberScreen extends Screen {
 
 				for (int i = 0; i < tasks.size(); i++) {
 					Task t = tasks.get(i);
-					if (Integer.parseInt(_taskIdTField.getText()) == t.getId()) {
-						taskId = Integer.parseInt(_taskIdTField.getText());
+					if (Integer.parseInt(tfTaskId.getText()) == t.getId()) {
+						taskId = Integer.parseInt(tfTaskId.getText());
 					}
 				}
 
@@ -102,10 +100,14 @@ public class AddMemberScreen extends Screen {
 					return;
 				}
 
-				boolean validAssignment = _manager.getProjectManager().getSelectedProject()
-						.assignMember(members.get(cmbMembers.getSelectedIndex()), taskId);
-				
-				if(validAssignment) {
+				boolean validAssignment = _manager
+						.getProjectManager()
+						.getSelectedProject()
+						.assignMember(
+								members.get(cmbMembers.getSelectedIndex()),
+								taskId);
+
+				if (validAssignment) {
 					_manager.show(ShowMembersScreen.IDENTIFIER);
 				}
 			}
@@ -114,7 +116,7 @@ public class AddMemberScreen extends Screen {
 
 	private void updateCombo() {
 
-		if(members.isEmpty() == false) {
+		if (members.isEmpty() == false) {
 			members.clear();
 		}
 		cmbMembers.removeAllItems();
@@ -147,10 +149,10 @@ public class AddMemberScreen extends Screen {
 					Task.PROGRESS_STRINGS[t.getProgress().ordinal()] };
 		}
 
-		_model = new DefaultTableModel(data, columnNames);
-		_tblTasks.setModel(_model);
-		
-		_taskIdTField.setText("");
+		model = new DefaultTableModel(data, columnNames);
+		tblTasks.setModel(model);
+
+		tfTaskId.setText("");
 
 	}
 }
