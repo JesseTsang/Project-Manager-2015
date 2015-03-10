@@ -3,6 +3,8 @@ package JVMBEK;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -13,14 +15,16 @@ public class Project {
 	private int _id;
 	private String _name;
 	private String _description;
-	private Date _created;
+	private Date _created_date;
+	private Date _start_date;
 	private ArrayList<Task> _tasks;
 
-	public Project(int id, String name, String descr, Date created) {
+	public Project(int id, String name, String descr, Date created, Date start) {
 		_id = id;
 		_name = name;
 		_description = descr;
-		_created = created;
+		_created_date = created;
+		_start_date = start;
 		_tasks = new ArrayList<Task>();
 
 		populateTasks();
@@ -32,8 +36,7 @@ public class Project {
 			// Get tasks for each project
 			Statement task_stmt = DB.getInstance().createStatement();
 			ResultSet task_set = task_stmt
-					.executeQuery("SELECT id, name, description, comment, start_date, "
-							+ "duration, progress FROM tasks, project_tasks "
+					.executeQuery("SELECT * FROM tasks, project_tasks "
 							+ "WHERE project_tasks.project_id == "
 							+ _id
 							+ " AND tasks.id == project_tasks.task_id;");
@@ -45,9 +48,10 @@ public class Project {
 				// TODO: get dates such as task_set.getDate("start_date"),
 				Task t = new Task(task_set.getInt("id"),
 						task_set.getString("name"),
-						task_set.getString("description"), prog,
-						task_set.getDate("start_date"),
-						task_set.getInt("duration"));
+						task_set.getString("description"), 
+						prog,
+						task_set.getInt("duration")
+						);
 
 				_tasks.add(t);
 			}
@@ -80,8 +84,9 @@ public class Project {
 				// TODO: get dates such as task_set.getDate("start_date"),
 				Task t = new Task(task_set.getInt("id"),
 						task_set.getString("name"),
-						task_set.getString("description"), prog,
-						task_set.getDate("start_date"),
+						task_set.getString("description"), 
+						prog,
+//						task_set.getDate("start_date"),
 						task_set.getInt("duration"));
 
 				assignedTasks.add(t);
@@ -110,7 +115,14 @@ public class Project {
 	public String getDescription() {
 		return _description;
 	}
-
+	
+	public Date getStartDate(){
+		return _start_date;
+	}
+	
+	public Date getCreatedDate(){
+		return _created_date;
+	}
 	public void setDescription(String desc) {
 		_description = desc;
 	}
@@ -123,6 +135,17 @@ public class Project {
 	public String toString() {
 		return _name;
 	}
+	
+	public String dateToString(){
+		String dateString = new SimpleDateFormat("dd-MM-yyyy").format(this);
+		return dateString;
+	}
+	
+//	public Date stringToDate(){
+//		DateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+//		Date date = format.parse(this);
+//		return date;
+//	}
 
 	// **********************************************************************
 	// TASK DATABASE FUNCTIONS
@@ -153,13 +176,14 @@ public class Project {
 		Statement stmt = null;
 		try {
 			stmt = DB.getInstance().createStatement();
-			String sql = "INSERT INTO tasks  (name, description, start_date, duration) VALUES ('"
+			String sql = "INSERT INTO tasks  (name, description, duration) VALUES ('"
 					+ name
 					+ "', '"
 					+ description
 					+ "', "
-					+ date.getTime()
-					+ ", " + duration + ");";
+//					+ date.getTime()
+//					+ ", " 
+					+ duration + ");";
 			stmt.executeUpdate(sql);
 
 			// Grab latest autoincrement id
@@ -178,7 +202,7 @@ public class Project {
 			stmt.executeUpdate(sql);
 
 			_tasks.add(new Task(task_id, name, description,
-					TaskProgress.IN_QUEUE, date, duration));
+					TaskProgress.IN_QUEUE, /*date, */duration));
 
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());

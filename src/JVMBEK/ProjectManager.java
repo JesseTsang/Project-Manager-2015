@@ -109,7 +109,7 @@ public class ProjectManager {
 			Statement stmt = DB.getInstance().createStatement();
 
 			ResultSet rs = stmt
-					.executeQuery("SELECT id, name, description, date_created FROM projects, project_managers "
+					.executeQuery("SELECT * FROM projects, project_managers "
 							+ "WHERE project_managers.manager_id == "
 							+ _owner.getId()
 							+ " AND projects.id == project_managers.project_id;");
@@ -117,7 +117,7 @@ public class ProjectManager {
 			while (rs.next()) {
 				int id = rs.getInt("id");
 				Project p = new Project(id, rs.getString("name"),
-						rs.getString("description"), rs.getDate("date_created"));
+						rs.getString("description"), rs.getDate("date_created"), rs.getDate("start_date"));
 				_projects.put(id, p);
 			}
 
@@ -181,18 +181,20 @@ public class ProjectManager {
 		}
 	}
 
-	public void addNewProject(String name, String description) {
-		Date date = new Date();
+	public void addNewProject(String name, String description, Date startDate) {
+		Date dateCreated = new Date();
 		Statement stmt = null;
 		try {
 			stmt = DB.getInstance().createStatement();
-			String sql = "INSERT INTO projects (name, description, date_created) VALUES ('"
+			String sql = "INSERT INTO projects (name, description, date_created, start_date) VALUES ('"
 					+ name
 					+ "', '"
 					+ description
-					+ "', "
-					+ date.getTime()
-					+ ");";
+					+ "', '"
+					+ dateCreated.getTime()
+					+ "', '"
+					+ startDate.getTime()
+					+ "');";
 			stmt.executeUpdate(sql);
 
 			// Grab latest autoincrement id
@@ -212,7 +214,7 @@ public class ProjectManager {
 
 			_selected_project = proj_id;
 			_projects.put(proj_id,
-					new Project(proj_id, name, description, date));
+					new Project(proj_id, name, description, dateCreated, startDate));
 
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
