@@ -68,7 +68,7 @@ public class ScreenManager {
 			System.out.println("boo");
 			_screens.put(MemberMainScreen.IDENTIFIER,
 					new MemberMainScreen(this));
-			_screens.put(ViewScreen.IDENTIFIER, new ViewScreen(this));
+			_screens.put(MemberViewScreen.IDENTIFIER, new MemberViewScreen(this));
 		}
 
 		for (Entry<String, Screen> entry : _screens.entrySet()) {
@@ -126,4 +126,6 @@ public class ScreenManager {
 	public ArrayList<User> getUsers() {
 		return _users;
 	}
+	
+	
 }

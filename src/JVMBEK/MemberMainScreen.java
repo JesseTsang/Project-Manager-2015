@@ -46,7 +46,7 @@ public class MemberMainScreen extends Screen {
 	 
 		 btnView.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae){
-				_manager.showAndResize(ViewScreen.IDENTIFIER, ViewScreen.WIDTH, ViewScreen.HEIGHT);
+				_manager.showAndResize(MemberViewScreen.IDENTIFIER, MemberViewScreen.WIDTH, MemberViewScreen.HEIGHT);
 			}
 	    });
 	}

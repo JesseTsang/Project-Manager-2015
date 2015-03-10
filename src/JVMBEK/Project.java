@@ -13,7 +13,8 @@ public class Project {
 	private String _name;
 	private String _description;
 	private Date _created;
-	ArrayList<Task> _tasks;
+	private static ArrayList<Task> _tasks;
+
 	
 	public Project(int id, String name, String descr, Date created) {
 		_id = id;
@@ -51,13 +52,51 @@ public class Project {
 		}
 	}
 	
+	
+	//Members only to get the tasks they have been assigned to.
+	//Used in MemberViewScree,java
+	
+	public static ArrayList<Task> getAssignedTasks(int user_id){
+		
+		ArrayList<Task> assignedTasks = new ArrayList();
+		
+		try
+		{
+			
+			//Get tasks for each member
+			Statement member_stmt = DB.getInstance().createStatement();
+			ResultSet task_set = member_stmt.executeQuery( "SELECT * FROM tasks_members, tasks "
+					+ "WHERE user_id == "
+					+ user_id +" AND task_id = id");
+						
+			while(task_set.next()) {
+
+				TaskProgress prog = Task.StringToProgress(task_set.getString("progress"));
+				
+				//TODO: get dates such as task_set.getDate("start_date"),
+				Task t = new Task(task_set.getInt("id"), task_set.getString("name"), task_set.getString("description"),
+						 prog, task_set.getDate("start_date"), task_set.getInt("duration"));
+				
+				assignedTasks.add(t);
+			}		
+		}
+		catch( Exception e) {
+			e.printStackTrace();
+		}
+		
+		return assignedTasks;
+	}
+
+	
+//	public ArrayList<Task> 
+	
 	public int getId() { return _id; }
 	
 	public String getName() { return _name; }
 	public void setName(String name) { _name = name; }
 	public String getDescription() { return _description; }
 	public void setDescription(String desc) { _description = desc; }
-	public ArrayList<Task> getTasks() { return _tasks; }
+	public static ArrayList<Task> getTasks() { return _tasks; }
 	
 	@Override
 	public String toString() {

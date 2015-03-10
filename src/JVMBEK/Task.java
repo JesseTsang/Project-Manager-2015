@@ -38,6 +38,29 @@ public class Task {
 
 	}
 	
+	public Project getProject(){
+		Project p = null;
+		
+		try		
+		{
+			Statement project_stmt = DB.getInstance().createStatement();
+			ResultSet project_set = project_stmt.executeQuery( "SELECT * FROM projects, project_tasks "
+					+ "WHERE project_id == id AND task_id ==" + _id);
+			
+			while(project_set.next()) {
+
+				p = new Project(project_set.getInt("id"), project_set.getString("name"), 
+						project_set.getString("description"), project_set.getDate("date_created"));
+				
+			}
+		}
+		catch( Exception e) {
+			e.printStackTrace();
+		}
+	
+		return p;
+	}
+	
 	//Loads all members assigned to this project in the database
 		private void loadMembers() {
 			try

@@ -8,16 +8,16 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-public class ViewScreen extends Screen {
+public class MemberViewScreen extends Screen {
 	public static final String IDENTIFIER = "VIEW";
 	public static final int WIDTH = 450;
 	public static final int HEIGHT = 300;
 	
-	private JLabel _lblProjectHeader;
-	private JTable _tblProjects;
+	private JLabel lblAssignedTasks;
+	private JTable _tblTasks;
 	private DefaultTableModel _model;
 	
-	public ViewScreen(ScreenManager manager) {
+	public MemberViewScreen(ScreenManager manager) {
 		super(manager);
 	}
 
@@ -31,20 +31,13 @@ public class ViewScreen extends Screen {
 		JPanel centerPanel = new JPanel();
 		JPanel southPanel = new JPanel();
 		
-		String[] columnNames = {"Task Name", "Project Name",
-				"Start Date",
-				"Due Date",
-				"Description"};
 		
-		Object[][] data = new Object[][] { {"Sample Task", "Sample Project", "01/01/2015", "03/03/2015", "DefaultString"} };
+		_tblTasks = new JTable();
+		_tblTasks.setPreferredScrollableViewportSize(new Dimension(350, 150));
+		_tblTasks.setFillsViewportHeight(true);
 
-/*		_model = new DefaultTableModel(data, columnNames);
-		_tblTasks.setModel(_model);*/
-		_tblProjects = new JTable(data, columnNames);
-		_tblProjects.setPreferredScrollableViewportSize(new Dimension(350,150));
-		JScrollPane scrollPane = new JScrollPane(_tblProjects);
-		_tblProjects.setFillsViewportHeight(true);
-		
+		JScrollPane scrollPane = new JScrollPane(_tblTasks);
+		scrollPane.setOpaque(true);
 		
 		northPanel.add(lblAssignedTasks);
 		centerPanel.add(scrollPane);
@@ -63,19 +56,30 @@ public class ViewScreen extends Screen {
 
 	@Override
 	public void Update() {
-/*		_lblProjectHeader.setText("Test");
+//		lblAssignedTasks.setText("Test");
 		
-		String[] columnNames = {"Project Name",
+		String[] columnNames = {"Project Name", "Task ID", "Task Name",
 				"Start Date",
 				"Due Date",
 				"Description"};
 		
-		Object[][] data = new Object[][] { {"Hello", "2", "dunno", "test"} };
+		ArrayList<Task> tasks = Project.getAssignedTasks(_manager.getUser().getId());
+		Object[][] data = new Object[tasks.size()][];
+
+		for (int i = 0; i < tasks.size(); i++) {
+			Task t = tasks.get(i);
+			data[i] = new Object[] { 					
+					t.getProject().getName(),
+					t.getId(),
+					t.getName(),
+					"StartDate",
+					"EndDate",
+					t.getDescription()
+			};
+		}
+
 
 		_model = new DefaultTableModel(data, columnNames);
 		_tblTasks.setModel(_model);
-		_tblProjects = new JTable(data, columnNames);
-		_tblProjects.setPreferredScrollableViewportSize(new Dimension(350,150));
-		_tblProjects.setFillsViewportHeight(true);*/
 	}
 }
