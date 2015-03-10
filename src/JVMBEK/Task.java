@@ -27,17 +27,9 @@ public class Task {
 	private TaskProgress _progress;
 //	private Date _start_date;
 //	private Date _end_date;
-	ArrayList<User> _members;
+	ArrayList<User> _members = new ArrayList<User>();
 	
-	//String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
-	
-//	Date date = ...; // wherever you get this from
-//	 
-//	Calendar cal = Calendar.getInstance();
-//	cal.setTime(date);
-//	cal.add(Calendar.DATE, 10); // add 10 days
-//	 
-//	date = cal.getTime();
+
 
 	public Task(int id, String name, String description, TaskProgress progress, int dur) {
 		_id = id;
@@ -78,7 +70,9 @@ public class Task {
 	// Loads all members assigned to this project in the database
 	private void loadMembers() {
 		try {
-			_members.clear();
+			if(_members != null) {
+				_members.clear();
+			}
 
 			// Get members for each task
 			Statement member_stmt = DB.getInstance().createStatement();

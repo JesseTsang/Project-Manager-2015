@@ -11,8 +11,9 @@ public class LoadScreen extends Screen {
 	public static final int HEIGHT = 180;
 
 	private JComboBox cmbProjects;
-	private JPanel comboPabel;
+	private JPanel comboPanel;
 	private JLabel lblDescription;
+	private JLabel lblStartDate;
 
 	public LoadScreen(ScreenManager manager) {
 		super(manager);
@@ -20,7 +21,7 @@ public class LoadScreen extends Screen {
 
 	@Override
 	public void SetupGUI() {
-		comboPabel = new JPanel();
+		comboPanel = new JPanel();
 
 		JButton btnLoad = new JButton("Load");
 		JButton btnModify = new JButton("Modify");
@@ -32,7 +33,7 @@ public class LoadScreen extends Screen {
 		columnPanel.add(btnDelete);
 		columnPanel.add(btnBack);
 		setLayout(new GridLayout(0, 2));
-		add(comboPabel);
+		add(comboPanel);
 		add(columnPanel);
 
 		btnModify.addActionListener(new ActionListener() {
@@ -69,27 +70,40 @@ public class LoadScreen extends Screen {
 	}
 
 	private void updateCombo() {
-		if (cmbProjects != null) {
-			comboPabel.remove(cmbProjects);
-		}
+		if (cmbProjects != null)
+			comboPanel.remove(cmbProjects);	
+		
 		if (lblDescription != null)
-			comboPabel.remove(lblDescription);
+			comboPanel.remove(lblDescription);
+		
+		if (lblStartDate != null)
+			comboPanel.remove(lblStartDate);
 
 		cmbProjects = new JComboBox();
 		lblDescription = new JLabel();
+		lblStartDate = new JLabel();
 
 		cmbProjects.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				Project proj = (Project) cmbProjects.getSelectedItem();
+				Project proj = (Project) cmbProjects.getSelectedItem();				
 				_manager.getProjectManager().setSelectedProject(proj.getId());
-				String text = String.format(
+				
+				String descriptionText = String.format(
 						"<html><div WIDTH=%d>%s</div><html>", 80,
 						proj.getDescription());
-				lblDescription.setText(text);
-			}
+				lblDescription.setText(descriptionText);
+
+				String startDateText = String.format(
+						"<html><div WIDTH=%d>%s</div><html>", 80,
+						"Start Date: "+proj.getStartDateString());
+				lblStartDate.setText(startDateText);
+				}
 		});
-		comboPabel.add(cmbProjects);
-		comboPabel.add(lblDescription);
+		
+		comboPanel.add(cmbProjects);
+		comboPanel.add(lblDescription);
+		comboPanel.add(lblStartDate);
+
 
 		for (Project proj : _manager.getProjectManager().getProjects().values()) {
 			cmbProjects.addItem(proj);

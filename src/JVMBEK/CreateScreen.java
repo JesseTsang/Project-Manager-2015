@@ -21,7 +21,7 @@ import javax.swing.JTextField;
 
 public class CreateScreen extends Screen {
 	public final static String IDENTIFIER = "CREATE";
-	public final static int WIDTH = 300;
+	public final static int WIDTH = 350;
 	public final static int HEIGHT = 300;
 
 	private JTextField textFieldProjectName;

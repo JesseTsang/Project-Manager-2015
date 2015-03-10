@@ -135,10 +135,11 @@ public class Project {
 	public String toString() {
 		return _name;
 	}
-	
-	public String dateToString(){
-		String dateString = new SimpleDateFormat("dd-MM-yyyy").format(this);
+		
+	public String getStartDateString(){
+		String dateString = new SimpleDateFormat("dd-MM-yyyy").format(_start_date);
 		return dateString;
+
 	}
 	
 //	public Date stringToDate(){
