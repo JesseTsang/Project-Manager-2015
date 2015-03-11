@@ -113,6 +113,48 @@ public class Task {
 		return _progress;
 	}
 	
+	public ArrayList<Integer> getPrecedingIds(){
+		ArrayList<Integer> preceding_tasks = new ArrayList<Integer>();
+		Statement stmt = null;
+		try {
+			stmt = DB.getInstance().createStatement();
+			ResultSet id_set = stmt.executeQuery("SELECT preceding_task FROM task_sequence "
+					+ "WHERE task_id ==" + _id);
+			
+			while(id_set.next()){
+				preceding_tasks.add(id_set.getInt("preceding_task"));
+			}
+			
+			
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.exit(0);
+		}
+		
+		return preceding_tasks;
+	}
+	
+	public String getPrecedingIdsAsString(){
+		String preceding_tasks = "";
+		Statement stmt = null;
+		try {
+			stmt = DB.getInstance().createStatement();
+			ResultSet id_set = stmt.executeQuery("SELECT preceding_task FROM task_sequence "
+					+ "WHERE task_id ==" + _id);
+			
+			while(id_set.next()){
+				preceding_tasks += (id_set.getInt("preceding_task") + " ");
+			}
+			
+			
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.exit(0);
+		}
+		
+		return preceding_tasks;
+	}
+	
 //	public Date getStartDate(){
 //		return _start_date;
 //	}

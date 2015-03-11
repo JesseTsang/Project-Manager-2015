@@ -41,10 +41,11 @@ public class TaskScreen extends Screen {
 		tblTasks.setPreferredScrollableViewportSize(new Dimension(350, 150));
 		tblTasks.setFillsViewportHeight(true);
 
-		JScrollPane scrollPane = new JScrollPane(tblTasks);
-		scrollPane.setOpaque(true);
+		JScrollPane tasksScrollPane = new JScrollPane(tblTasks);
+		tasksScrollPane.setOpaque(true);
+		
 		northPanel.add(_lblProjectHeader);
-		centerPanel.add(scrollPane);
+		centerPanel.add(tasksScrollPane);
 		buttonPanel.add(btnAdd);
 		buttonPanel.add(btnDelete);
 		buttonPanel.add(btnGenerate);
@@ -64,7 +65,8 @@ public class TaskScreen extends Screen {
 
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				_manager.show(CreateTaskScreen.IDENTIFIER);
+				_manager.showAndResize(CreateTaskScreen.IDENTIFIER, CreateTaskScreen.WIDTH,
+						CreateTaskScreen.HEIGHT);
 			}
 		});
 
@@ -98,7 +100,6 @@ public class TaskScreen extends Screen {
 
 		btnGenerate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				int row = tblTasks.getSelectedRow();
 
 				// check for selected row first
 				if (tblTasks.getSelectedRow() != -1) {
@@ -128,7 +129,7 @@ public class TaskScreen extends Screen {
 				+ "\" Tasks");
 
 		String[] columnNames = { "Task ID", "Task Name", "Description",
-				"Progress" };
+				"Precedence", "Progress" };
 
 		ArrayList<Task> tasks = _manager.getProjectManager()
 				.getSelectedProject().getTasks();
@@ -137,7 +138,7 @@ public class TaskScreen extends Screen {
 		for (int i = 0; i < tasks.size(); i++) {
 			Task t = tasks.get(i);
 			data[i] = new Object[] { t.getId(), t.getName(),
-					t.getDescription(),
+					t.getDescription(), t.getPrecedingIdsAsString(),
 					Task.PROGRESS_STRINGS[t.getProgress().ordinal()] };
 		}
 

@@ -99,6 +99,19 @@ public class Project {
 	}
 
 	// public ArrayList<Task>
+	
+	
+	public Task getTaskById(int task_id){
+		Task task = null;
+//		ArrayList<Task> tasksList = new ArrayList();
+//		tasksList = this.getTasks();
+		
+		for (Task t : _tasks)
+			if (t.getId() == task_id)
+				task = t;		
+		
+		return task;
+	}
 
 	public int getId() {
 		return _id;

@@ -135,7 +135,7 @@ public class AddMemberScreen extends Screen {
 	public void Update() {
 		updateCombo();
 
-		String[] columnNames = { "Task ID", "Task Name", "Description",
+		String[] columnNames = { "Task ID", "Task Name", "Description", 
 				"Progress" };
 
 		ArrayList<Task> tasks = _manager.getProjectManager()
