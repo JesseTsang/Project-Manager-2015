@@ -70,6 +70,8 @@ public class ScreenManager {
 					new MemberMainScreen(this));
 			_screens.put(MemberViewScreen.IDENTIFIER,
 					new MemberViewScreen(this));
+			_screens.put(MemberTaskInformationScreen.IDENTIFIER,
+					new MemberTaskInformationScreen(this));
 		}
 
 		for (Entry<String, Screen> entry : _screens.entrySet()) {

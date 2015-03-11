@@ -2,6 +2,7 @@ package JVMBEK;
 
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -57,7 +58,6 @@ public class Task {
 						project_set.getDate("date_created"),
 						project_set.getDate("start_date")
 						);
-				
 
 			}
 		} catch (Exception e) {
@@ -93,8 +93,30 @@ public class Task {
 		}
 	}
 
+	public void setTaskProgress(String progress) {
+		// Making sure the given string is one of our presets
+		if(!progress.equals("In Queue") && !progress.equals("In Progress") && !progress.equals("Finished")) {
+			return;
+		}
+		Statement stmt = null;
+		try {
+			stmt = DB.getInstance().createStatement();
+			String sql = "UPDATE tasks SET progress='" + progress 
+					+ "' WHERE id='" + _id + "';";
+			stmt.executeUpdate(sql);
+
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.exit(0);
+		}
+	}
+
 	public int getId() {
 		return _id;
+	}
+	
+	public int getDuration() {
+		return _duration;
 	}
 
 	public String getName() {
@@ -162,11 +184,116 @@ public class Task {
 //	public Date getEndDate(){
 //		return _end_date;
 //	}
-		
 
 	public ArrayList<User> getAssignedMembers() {
 		loadMembers();
 		return _members;
+	}
+	
+	public Date getTaskStart() {
+		Date taskStart = this.getProject().getStartDate();
+		ArrayList<Integer> precedingIds = this.getPrecedingIds();
+		if(precedingIds.size() > 1) {
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(taskStart);
+			
+			// Used to save the duration of chains of tasks linked together
+			int chain = 0;
+			
+			Task temp = getLongestPrecedingTask();
+			
+			while(temp != null) {
+				chain += temp.getDuration();
+				temp = getLongestPrecedingTask();
+			}
+			
+			// For multiple precedence (one task with two or more tasks directly preceding it),
+			// take the preceding task that is the longest for calculations
+			int longest = 0;
+
+			for (int i : precedingIds) {
+				if(longest < this.getProject().getTaskById(i).getDuration()) {
+					longest = this.getProject().getTaskById(i).getDuration();
+					chain += longest;
+					
+				}
+				cal.add(Calendar.DATE, this.getProject().getTaskById(i).getDuration());
+			}
+			cal.add(Calendar.DATE, longest);
+			taskStart = cal.getTime();
+		}
+		return taskStart;
+	}
+	
+	// Returns the longest immediately-preceding task, null if none
+	public Task getLongestPrecedingTask() {
+		ArrayList<Integer> precedingIds = this.getPrecedingIds();
+		if(precedingIds.size() != 0) {
+			return null;
+		}
+		else {
+			int longest = 0;
+			int longestId = 0;
+			for(int i : precedingIds) {
+				if(longest < this.getProject().getTaskById(i).getDuration()) {
+					longest = this.getProject().getTaskById(i).getDuration();
+					longestId = i;
+				}
+			}
+			return this.getProject().getTaskById(longestId);
+		}
+	}
+	
+	// Returns the duration of the longest task chain, counting the current task's duration
+/*	public int getLongestChain() {
+		ArrayList<Integer> precedingIds = this.getPrecedingIds();
+		
+		// Checking if it actually has any preceding tasks, return 0 if it doesn't
+		if(precedingIds.get(0) == _id) {
+			return _duration;
+		}
+		else {
+			ArrayList<Integer> longestChain = new ArrayList<Integer>();
+			Task[] t = new Task[precedingIds.size()];
+			for(int i = 0; i < t.length; i++) {
+				t[i].getLongestChain();
+			}
+		}
+	}*/
+	
+	// Returns the total number of preceding tasks; recursive
+	// DOES NOT WORK PROPERLY YET
+	public int getTotalPrecedingTasks() {
+		int temp = getNumberOfImmediatelyPrecedingTasks();
+		
+		if(temp == 0) {
+			return temp;
+		}
+		else if(temp == 1) {
+			return temp = 1;//this.getProject().getTaskById(0).getTotalPrecedingTasks();
+		}
+		else {
+			int counter = 0;
+			ArrayList<Integer> precedingIds = this.getPrecedingIds();
+			for(int i: precedingIds) {
+				counter += this.getProject().getTaskById(i).getTotalPrecedingTasks();
+			System.out.println("counter: " + counter);
+			}
+			
+			System.out.println("final counter: " + counter);
+			return counter;
+		}
+	}
+	
+	// Returns the number of immediately preceding tasks, counting itself
+	public int getNumberOfImmediatelyPrecedingTasks() {
+		ArrayList<Integer> precedingIds = this.getPrecedingIds();
+		if(precedingIds.get(0) == _id) {
+			return 1;
+		}
+		else {
+			return precedingIds.size();
+		}
 	}
 	
 //	public Date addDaysToDate(int duration){

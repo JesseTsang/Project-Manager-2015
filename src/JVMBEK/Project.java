@@ -18,6 +18,9 @@ public class Project {
 	private Date _created_date;
 	private Date _start_date;
 	private ArrayList<Task> _tasks;
+	
+	// For member use, when selecting a task to view information for
+	public static int selectedTaskId;
 
 	public Project(int id, String name, String descr, Date created, Date start) {
 		_id = id;
@@ -98,13 +101,8 @@ public class Project {
 		return assignedTasks;
 	}
 
-	// public ArrayList<Task>
-	
-	
 	public Task getTaskById(int task_id){
 		Task task = null;
-//		ArrayList<Task> tasksList = new ArrayList();
-//		tasksList = this.getTasks();
 		
 		for (Task t : _tasks)
 			if (t.getId() == task_id)
@@ -190,14 +188,17 @@ public class Project {
 		Statement stmt = null;
 		try {
 			stmt = DB.getInstance().createStatement();
-			String sql = "INSERT INTO tasks  (name, description, duration) VALUES ('"
+			String sql = "INSERT INTO tasks  (name, description, duration, progress) VALUES ('"
 					+ name
 					+ "', '"
 					+ description
 					+ "', "
 //					+ date.getTime()
 //					+ ", " 
-					+ duration + ");";
+					+ duration
+					
+					// Tasks are set as "In Queue" by default
+					+ ", 'In Queue');";
 			stmt.executeUpdate(sql);
 
 			// Grab latest autoincrement id

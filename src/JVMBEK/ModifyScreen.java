@@ -16,6 +16,9 @@ import javax.swing.JTextField;
 
 public class ModifyScreen extends Screen {
 	public final static String IDENTIFIER = "MODIFY";
+	public static final int WIDTH = 350;
+	public static final int HEIGHT = 400;
+	
 	private JTextField tfProjectName;
 	private JTextArea taDescription;
 	//private JTextField _durField;
@@ -36,8 +39,9 @@ public class ModifyScreen extends Screen {
 		tfProjectName = new JTextField(10);
 		taDescription = new JTextArea();
 		JScrollPane scroll = new JScrollPane(taDescription);
-		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scroll.setOpaque(true);
+//		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+//		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		
 		JButton btnUpdate = new JButton("Update Project");
 		JButton btnCancel = new JButton("Cancel");

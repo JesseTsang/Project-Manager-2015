@@ -40,11 +40,12 @@ public class AddMemberScreen extends Screen {
 
 		tblTasks = new JTable();
 		tblTasks.setPreferredScrollableViewportSize(new Dimension(350, 150));
-		// _tblTasks.setPreferredScrollableViewportSize(_tblTasks.getPreferredSize());
+//		tblTasks.setPreferredScrollableViewportSize(tblTasks.getPreferredSize());
 		tblTasks.setFillsViewportHeight(true);
 
 		JScrollPane scroll = new JScrollPane(tblTasks);
-		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scroll.setOpaque(true);
+//		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		northPanel.add(scroll);
 
 		cmbMembers = new JComboBox();
@@ -151,6 +152,7 @@ public class AddMemberScreen extends Screen {
 
 		model = new DefaultTableModel(data, columnNames);
 		tblTasks.setModel(model);
+		tblTasks.setEnabled(false);
 
 		tfTaskId.setText("");
 

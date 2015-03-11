@@ -38,7 +38,8 @@ public class LoadScreen extends Screen {
 
 		btnModify.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				_manager.show(ModifyScreen.IDENTIFIER);
+				_manager.showAndResize(ModifyScreen.IDENTIFIER, ModifyScreen.WIDTH,
+						ModifyScreen.HEIGHT);
 			}
 		});
 		btnDelete.addActionListener(new ActionListener() {

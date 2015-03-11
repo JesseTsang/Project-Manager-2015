@@ -23,7 +23,7 @@ public class LoginScreen extends Screen {
 	@Override
 	public void SetupGUI() {
 
-		String strWelcome = "Hello and wlcome! This is JVMBEK v1.0";
+		String strWelcome = "Hello and welcome! This is JVMBEK v1.0";
 		String strInstructions = "Please enter your username and password.";
 		/*
 		 * Separate into 3 parts, north, south and center; North is used for

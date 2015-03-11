@@ -4,14 +4,17 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 public class MemberViewScreen extends Screen {
 	public static final String IDENTIFIER = "VIEW";
-	public static final int WIDTH = 450;
+	public static final int WIDTH = 600;
 	public static final int HEIGHT = 300;
 
 	private JLabel lblAssignedTasks;
@@ -24,6 +27,7 @@ public class MemberViewScreen extends Screen {
 
 	@Override
 	public void SetupGUI() {
+		JButton btnView = new JButton("View Detailed Task Information");
 		JButton btnBack = new JButton("Back");
 		JLabel lblAssignedTasks = new JLabel("Assigned Tasks");
 		setLayout(new BorderLayout());
@@ -33,19 +37,38 @@ public class MemberViewScreen extends Screen {
 		JPanel southPanel = new JPanel();
 
 		tblTasks = new JTable();
-		tblTasks.setPreferredScrollableViewportSize(new Dimension(350, 150));
+		tblTasks.setPreferredScrollableViewportSize(new Dimension(550, 150));
 		tblTasks.setFillsViewportHeight(true);
 
 		JScrollPane scroll = new JScrollPane(tblTasks);
 		scroll.setOpaque(true);
+		// scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
 		northPanel.add(lblAssignedTasks);
 		centerPanel.add(scroll);
+		southPanel.add(btnView);
 		southPanel.add(btnBack);
 
 		add(BorderLayout.NORTH, northPanel);
 		add(BorderLayout.CENTER, centerPanel);
 		add(BorderLayout.SOUTH, southPanel);
+		
+		btnView.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				if (tblTasks.getSelectedRow() == -1) {
+					JOptionPane.showMessageDialog(null,
+							"You must select a task to view information for.",
+							"No Task Selected", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				Integer t_id = (Integer) model.getValueAt(tblTasks.getSelectedRow(), 1);
+				Project.selectedTaskId = t_id;
+				
+				_manager.showAndResize(MemberTaskInformationScreen.IDENTIFIER,
+						MemberTaskInformationScreen.WIDTH, MemberTaskInformationScreen.HEIGHT);
+			}
+		});
 
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
@@ -57,19 +80,27 @@ public class MemberViewScreen extends Screen {
 
 	@Override
 	public void Update() {
-		// lblAssignedTasks.setText("Test");
-
 		String[] columnNames = { "Project Name", "Task ID", "Task Name",
-				"Start Date", "Due Date", "Description" };
+				"Start Date", "Due Date", "Progress"};
 
 		ArrayList<Task> tasks = Project.getAssignedTasks(_manager.getUser()
 				.getId());
 		Object[][] data = new Object[tasks.size()][];
+		
+		DateFormat formatter = new SimpleDateFormat("d-MM-yyyy");
+		formatter.setLenient(false);
+		Calendar cal = Calendar.getInstance();
+		String formattedStart, formattedEnd;
 
 		for (int i = 0; i < tasks.size(); i++) {
 			Task t = tasks.get(i);
+			cal.setTime(t.getTaskStart());
+			formattedStart = formatter.format(cal.getTime());
+			cal.add(Calendar.DATE, t.getDuration());
+			formattedEnd = formatter.format(cal.getTime());
 			data[i] = new Object[] { t.getProject().getName(), t.getId(),
-					t.getName(), "StartDate", "EndDate", t.getDescription() };
+					t.getName(), formattedStart, formattedEnd, /*t.getDescription(),*/ 
+					Task.PROGRESS_STRINGS[t.getProgress().ordinal()] };
 		}
 
 		model = new DefaultTableModel(data, columnNames);

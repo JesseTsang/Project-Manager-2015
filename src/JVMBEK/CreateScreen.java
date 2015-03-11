@@ -48,8 +48,8 @@ public class CreateScreen extends Screen {
 		textFieldProjectStartDate = new JTextField();
 		
 		JScrollPane scroll = new JScrollPane(textAreaDescription);
-		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+//		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+//		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
 		JButton btnCreate = new JButton("Create Project");
 		JButton btnCancel = new JButton("Cancel");
@@ -57,8 +57,6 @@ public class CreateScreen extends Screen {
 		northPanel.add(textFieldProjectName);		
 		northPanel.add(lblProjectStartDate);
 		northPanel.add(textFieldProjectStartDate);
-		// northPanel.add(pjDur);
-		// northPanel.add(_durField);
 		northPanel.setLayout(new GridLayout(2, 2, 5, 5));
 
 		centerPanel.add(lblDescription);
@@ -90,16 +88,16 @@ public class CreateScreen extends Screen {
 					return;
 				}
 				
-				DateFormat formater = new SimpleDateFormat("d-MM-yyyy"/*, Locale.ENGLISH*/);
-				formater.setLenient(false);
+				DateFormat formatter = new SimpleDateFormat("d-MM-yyyy"/*, Locale.ENGLISH*/);
+				formatter.setLenient(false);
 				Calendar cal = Calendar.getInstance();
 				String startDateString = textFieldProjectStartDate.getText();
 				Date startDateEntry;
 				
 				if(!textFieldProjectStartDate.getText().isEmpty()){
 					try {
-					    cal.setTime(formater.parse(startDateString));
-					    startDateEntry = formater.parse(startDateString);
+					    cal.setTime(formatter.parse(startDateString));
+					    startDateEntry = formatter.parse(startDateString);
 					}
 					catch (Exception e) {
 						JOptionPane.showMessageDialog(null,

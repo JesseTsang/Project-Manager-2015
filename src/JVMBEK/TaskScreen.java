@@ -14,9 +14,9 @@ public class TaskScreen extends Screen {
 	public static final int WIDTH = 450;
 	public static final int HEIGHT = 300;
 
-	private JLabel _lblProjectHeader;
+	private JLabel lblProjectHeader;
 	private JTable tblTasks;
-	private DefaultTableModel _model;
+	private DefaultTableModel model;
 
 	public TaskScreen(ScreenManager manager) {
 		super(manager);
@@ -25,7 +25,7 @@ public class TaskScreen extends Screen {
 	@Override
 	public void SetupGUI() {
 		setLayout(new BorderLayout());
-		_lblProjectHeader = new JLabel();
+		lblProjectHeader = new JLabel();
 
 		JButton btnAdd = new JButton("Add Task");
 		JButton btnDelete = new JButton("Delete Task");
@@ -41,11 +41,12 @@ public class TaskScreen extends Screen {
 		tblTasks.setPreferredScrollableViewportSize(new Dimension(350, 150));
 		tblTasks.setFillsViewportHeight(true);
 
-		JScrollPane tasksScrollPane = new JScrollPane(tblTasks);
-		tasksScrollPane.setOpaque(true);
+		JScrollPane scroll = new JScrollPane(tblTasks);
+		scroll.setOpaque(true);
+//		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		
-		northPanel.add(_lblProjectHeader);
-		centerPanel.add(tasksScrollPane);
+		northPanel.add(lblProjectHeader);
+		centerPanel.add(scroll);
 		buttonPanel.add(btnAdd);
 		buttonPanel.add(btnDelete);
 		buttonPanel.add(btnGenerate);
@@ -82,13 +83,13 @@ public class TaskScreen extends Screen {
 							"Do you really want to delete this task?",
 							"Warning", dialogButton) == JOptionPane.YES_OPTION) {
 						// Delete the task from the database
-						Integer t_id = (Integer) _model.getValueAt(row, 0);
+						Integer t_id = (Integer) model.getValueAt(row, 0);
 
 						_manager.getProjectManager().getSelectedProject()
 								.deleteTask(t_id);
 
 						// remove selected row from the model
-						_model.removeRow(tblTasks.getSelectedRow());
+						model.removeRow(tblTasks.getSelectedRow());
 					}
 				} else {
 					JOptionPane.showMessageDialog(null,
@@ -124,9 +125,8 @@ public class TaskScreen extends Screen {
 
 	@Override
 	public void Update() {
-		_lblProjectHeader.setText("\""
-				+ _manager.getProjectManager().getSelectedProject().getName()
-				+ "\" Tasks");
+		lblProjectHeader.setText(_manager.getProjectManager().getSelectedProject().getName()
+				+ " Tasks");
 
 		String[] columnNames = { "Task ID", "Task Name", "Description",
 				"Precedence", "Progress" };
@@ -137,12 +137,16 @@ public class TaskScreen extends Screen {
 
 		for (int i = 0; i < tasks.size(); i++) {
 			Task t = tasks.get(i);
+			String strPrecedence = t.getPrecedingIdsAsString();
+			if((Integer.toString(t.getId()) + " ").equals(strPrecedence)) {
+				strPrecedence = "None";
+			}
 			data[i] = new Object[] { t.getId(), t.getName(),
-					t.getDescription(), t.getPrecedingIdsAsString(),
+					t.getDescription(), strPrecedence,
 					Task.PROGRESS_STRINGS[t.getProgress().ordinal()] };
 		}
 
-		_model = new DefaultTableModel(data, columnNames);
-		tblTasks.setModel(_model);
+		model = new DefaultTableModel(data, columnNames);
+		tblTasks.setModel(model);
 	}
 }

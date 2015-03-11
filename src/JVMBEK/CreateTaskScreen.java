@@ -29,11 +29,9 @@ public class CreateTaskScreen extends Screen {
 	private JTextField tfTaskName;
 	private JTextArea taDescription;
 	private JTextField tfDuration;
-	private JCheckBox cbFirstTask; 
+	private JCheckBox cbFirstTask;
 	private JTable tblTasks;
 	private DefaultTableModel _model;
-
-	
 
 	public CreateTaskScreen(ScreenManager manager) {
 		super(manager);
@@ -47,23 +45,24 @@ public class CreateTaskScreen extends Screen {
 
 		JLabel lblTaskName = new JLabel("Task Name:");
 		JLabel lblDescription = new JLabel("Task Description:");
-		JLabel lblFirstTaskCheckBox = new JLabel(/*"Check if no preceding taks:"*/);
+		JLabel lblFirstTaskCheckBox = new JLabel(/* "Check if no preceding tasks:" */);
 		JLabel lblPrecedingTasks = new JLabel("Select Preceding Tasks:");
 		JLabel lblDuration = new JLabel("Task Duration:");
-		
+
 		tblTasks = new JTable();
 		tblTasks.setPreferredScrollableViewportSize(new Dimension(350, 150));
 		tblTasks.setFillsViewportHeight(true);
 
 		JScrollPane tasksScrollPane = new JScrollPane(tblTasks);
 		tasksScrollPane.setOpaque(true);
-
+		// tasksScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
 		tfTaskName = new JTextField(10);
 		taDescription = new JTextArea();
 		JScrollPane descriptionScrollPane = new JScrollPane(taDescription);
-//		descriptionScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-//		descriptionScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		descriptionScrollPane.setOpaque(true);
+		// descriptionScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		// descriptionScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		tfDuration = new JTextField(10);
 
 		JButton btnCreate = new JButton("Create Task");
@@ -73,13 +72,11 @@ public class CreateTaskScreen extends Screen {
 		northPanel.add(lblDuration);
 		northPanel.add(tfDuration);
 		northPanel.add(lblFirstTaskCheckBox);
-		cbFirstTask = new JCheckBox("No Preceding Task"); 
+		cbFirstTask = new JCheckBox("No Preceding Task");
 		northPanel.add(cbFirstTask);
 		northPanel.setLayout(new GridLayout(3, 2, 5, 5));
 
-
-
-centerPanel.add(lblPrecedingTasks);
+		centerPanel.add(lblPrecedingTasks);
 		centerPanel.add(tasksScrollPane);
 		centerPanel.add(lblDescription);
 		centerPanel.add(descriptionScrollPane);
@@ -88,7 +85,6 @@ centerPanel.add(lblPrecedingTasks);
 		southPanel.add(btnCreate);
 		southPanel.add(btnCancel);
 		southPanel.setLayout(new FlowLayout());
-		
 
 		setLayout(new BorderLayout());
 		add(BorderLayout.NORTH, northPanel);
@@ -105,7 +101,10 @@ centerPanel.add(lblPrecedingTasks);
 				}
 
 				if (tfDuration.getText().isEmpty()
-						|| !tfDuration.getText().matches("-?\\d+(\\.\\d+)?")) {
+						|| //!tfDuration.getText().matches("-?\\d+(\\.\\d+)?")) {
+						
+						// Accepting positive integers only; anything else is rejected
+						!tfDuration.getText().matches("\\d+") || Integer.parseInt(tfDuration.getText()) < 1) {
 					JOptionPane.showMessageDialog(null,
 							"Please enter a valid duration (# of days).",
 							"Incorrect duration", JOptionPane.ERROR_MESSAGE);
@@ -118,46 +117,50 @@ centerPanel.add(lblPrecedingTasks);
 							"Incorrect naming", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				
+
 				boolean isFirstTask = false;
 
 				ArrayList<Integer> precedingTasks = new ArrayList<Integer>();
-				
-				if (cbFirstTask.isSelected()){
-//					precedingTasks.add(-1);
+
+				if (cbFirstTask.isSelected()) {
+					// precedingTasks.add(-1);
 					isFirstTask = true;
-					
-				}else if (tblTasks.getSelectedRow() == -1){
-					JOptionPane.showMessageDialog(null,
-							"Please set the preceding task(s) or select no preceding task.",
-							"Missing preceding task", JOptionPane.ERROR_MESSAGE);
+
+				} else if (tblTasks.getSelectedRow() == -1) {
+					JOptionPane
+							.showMessageDialog(
+									null,
+									"Please select the preceding task(s) or check the box \"No preceding tasks\".",
+									"Missing preceding task",
+									JOptionPane.ERROR_MESSAGE);
 					return;
-				}else{
+				} else {
 					isFirstTask = false;
 					int[] selectedTasksIndices = tblTasks.getSelectedRows();
-					
-					for (int i =0; i<tblTasks.getSelectedRowCount(); i++){
+
+					for (int i = 0; i < tblTasks.getSelectedRowCount(); i++) {
 						int j = selectedTasksIndices[i];
 						ArrayList<Task> tasks = _manager.getProjectManager()
 								.getSelectedProject().getTasks();
 
-						precedingTasks.add((_manager.getProjectManager().getSelectedProject()
-								.getTaskById( tasks.get(j).getId() ))
-								.getId());
+						precedingTasks.add((_manager.getProjectManager()
+								.getSelectedProject().getTaskById(tasks.get(j)
+								.getId())).getId());
 					}
 				}
-				
-//				
-//
-//precedingTasks is an ArrayList of integers
-//will be entered into the task_sequence table in sql
-//row preceding_task
-//
-//if no precedingTask, boolean isFirstTask is true and the preceding_task in task_sequence will be itself
-//Cannot be assigned until after addTask()
-//
-//
-//			
+
+				//
+				//
+				// precedingTasks is an ArrayList of integers
+				// will be entered into the task_sequence table in sql
+				// row preceding_task
+				//
+				// if no precedingTask, boolean isFirstTask is true and the
+				// preceding_task in task_sequence will be itself
+				// Cannot be assigned until after addTask()
+				//
+				//
+				//
 
 				int dur = Integer.parseInt(tfDuration.getText());
 
@@ -165,27 +168,28 @@ centerPanel.add(lblPrecedingTasks);
 						.getSelectedProject()
 						.addTask(tfTaskName.getText(), taDescription.getText(),
 								dur);
-				
-//				
-//				
-//Getting the id of the task that just got created
-//in order to setup the preceding tasks relation in the db
-//				
-//				
-							
+
+				//
+				//
+				// Getting the id of the task that just got created
+				// in order to setup the preceding tasks relation in the db
+				//
+				//
+
 				ArrayList<Task> tList;
-				int current_id;	
-				tList = _manager.getProjectManager().getSelectedProject().getTasks();
-				current_id = tList.get(tList.size()-1).getId();
-				
-				if (isFirstTask == true){
+				int current_id;
+				tList = _manager.getProjectManager().getSelectedProject()
+						.getTasks();
+				current_id = tList.get(tList.size() - 1).getId();
+
+				if (isFirstTask == true) {
 					precedingTasks.clear();
 					precedingTasks.add(current_id);
 				}
-				
-//insertion into the table
-				
-				for(int i=0; i<precedingTasks.size();i++){
+
+				// insertion into the table
+
+				for (int i = 0; i < precedingTasks.size(); i++) {
 					Statement stmt = null;
 					try {
 						stmt = DB.getInstance().createStatement();
@@ -195,17 +199,13 @@ centerPanel.add(lblPrecedingTasks);
 								+ precedingTasks.get(i)
 								+ "');";
 						stmt.executeUpdate(sql);
-	
+
 					} catch (Exception e) {
-						System.err.println(e.getClass().getName() + ": " + e.getMessage());
+						System.err.println(e.getClass().getName() + ": "
+								+ e.getMessage());
 						System.exit(0);
 					}
 				}
-			
-
-				
-				
-				
 
 				_manager.showAndResize(TaskScreen.IDENTIFIER, TaskScreen.WIDTH,
 						TaskScreen.HEIGHT);
@@ -225,8 +225,7 @@ centerPanel.add(lblPrecedingTasks);
 		tfTaskName.setText("");
 		taDescription.setText("");
 		tfDuration.setText("");
-		
-	
+
 		String[] columnNames = { "Task ID", "Task Name", "Description",
 				"Progress" };
 

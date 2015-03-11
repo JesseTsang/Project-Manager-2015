@@ -55,9 +55,10 @@ public class ShowMembersScreen extends Screen {
 		tblMembers.setEnabled(false);
 
 		// Members are shown here
-		JScrollPane scrollPane = new JScrollPane(tblMembers);
-		scrollPane.setOpaque(true);
-		centerPanel.add(scrollPane);
+		JScrollPane scroll = new JScrollPane(tblMembers);
+		scroll.setOpaque(true);
+//		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		centerPanel.add(scroll);
 
 		southPanel.add(btnAdd);
 		southPanel.add(btnCancel);
@@ -85,10 +86,10 @@ public class ShowMembersScreen extends Screen {
 	public void Update() {
 
 		lblProjectHeader.setText(_manager.getProjectManager()
-				.getSelectedProject().getName().toUpperCase()
+				.getSelectedProject().getName()
 				+ " Members");
 
-		String[] columnNames = { "Member ID", "Member Name", "Tasks" };
+		String[] columnNames = { "Member ID", "Member Name", "Task ID" };
 
 		ArrayList<User> members = new ArrayList();
 		ArrayList<Task> tasks = new ArrayList();
