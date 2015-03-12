@@ -15,7 +15,7 @@ public class TaskTest {
 	@Test
 	public void getIdShouldReturnInt() {
 		
-		Task tester = new Task(1, "", "", TaskProgress.FINISHED, new Date(System.currentTimeMillis()), 1);
+		Task tester = new Task(1, "", "", TaskProgress.FINISHED, 1);
 		assertEquals(1, tester.getId());
 		
 	}
@@ -23,7 +23,7 @@ public class TaskTest {
 	@Test
 	public void getNameShouldReturnString() {
 		
-		Task tester = new Task(0, "test", "", TaskProgress.FINISHED, new Date(System.currentTimeMillis()), 1);
+		Task tester = new Task(0, "test", "", TaskProgress.FINISHED, 1);
 		assertEquals("test", tester.getName());
 		
 	}
@@ -31,7 +31,7 @@ public class TaskTest {
 	@Test
 	public void getDescriptionShouldReturnString() {
 		
-		Task tester = new Task(0, "", "test", TaskProgress.FINISHED, new Date(System.currentTimeMillis()), 1);
+		Task tester = new Task(0, "", "test", TaskProgress.FINISHED, 1);
 		assertEquals("test", tester.getDescription());
 		
 	}
