@@ -74,6 +74,7 @@ public class TaskScreen extends Screen {
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				int row = tblTasks.getSelectedRow();
+				boolean hasNoFollowingTask;
 
 				// check for selected row first
 				if (tblTasks.getSelectedRow() != -1) {
@@ -83,13 +84,23 @@ public class TaskScreen extends Screen {
 							"Do you really want to delete this task?",
 							"Warning", dialogButton) == JOptionPane.YES_OPTION) {
 						// Delete the task from the database
+
 						Integer t_id = (Integer) model.getValueAt(row, 0);
+						
+						hasNoFollowingTask = _manager.getProjectManager().getSelectedProject().getTaskById(t_id).updateTaskSequence();
+						
+						if (!hasNoFollowingTask){
+							JOptionPane.showMessageDialog(null,
+									"The task cannot be deleted because other tasks depends on it.",
+									"Has Following Task", JOptionPane.ERROR_MESSAGE);
+						} else{
 
-						_manager.getProjectManager().getSelectedProject()
-								.deleteTask(t_id);
-
-						// remove selected row from the model
-						model.removeRow(tblTasks.getSelectedRow());
+							_manager.getProjectManager().getSelectedProject()
+									.deleteTask(t_id);						
+	
+							// remove selected row from the model
+							model.removeRow(tblTasks.getSelectedRow());
+						}
 					}
 				} else {
 					JOptionPane.showMessageDialog(null,
@@ -125,7 +136,7 @@ public class TaskScreen extends Screen {
 
 	@Override
 	public void Update() {
-		lblProjectHeader.setText(_manager.getProjectManager().getSelectedProject().getName()
+		lblProjectHeader.setText(_manager.getProjectManager().getSelectedProject().getName().toUpperCase()
 				+ " Tasks");
 
 		String[] columnNames = { "Task ID", "Task Name", "Description",

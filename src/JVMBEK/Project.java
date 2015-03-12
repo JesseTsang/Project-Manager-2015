@@ -224,7 +224,7 @@ public class Project {
 			System.exit(0);
 		}
 	}
-
+ 
 	// Assigns a member to a task and returns a boolean based on whether or not
 	// an error occurs
 	public boolean assignMember(User member, int taskId) {
