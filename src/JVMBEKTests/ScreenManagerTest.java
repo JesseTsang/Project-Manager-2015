@@ -18,7 +18,7 @@ public class ScreenManagerTest {
 		ScreenManager tester = new ScreenManager();
 		User dummy = new User(0, "", "", UserRole.MANAGER);
 		tester.setUser(dummy);
-		assertEquals(dummy, tester.getProjectManager());
+		assertEquals(dummy, tester.getProjectManager()); //Error: Probably because dummy is a User object and tester.getProjectManager returns a ProjectManager object.
 		
 	}
 
