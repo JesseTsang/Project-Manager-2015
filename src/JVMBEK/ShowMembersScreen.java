@@ -94,12 +94,15 @@ public class ShowMembersScreen extends Screen {
 		ArrayList<User> members = new ArrayList();
 		ArrayList<Task> tasks = new ArrayList();
 
-		for (int i = 0; i < _manager.getProjectManager().getSelectedProject()
-				.getTasks().size(); i++) {
-			for (User u : _manager.getProjectManager().getSelectedProject()
-					.getTasks().get(i).getAssignedMembers()) {
-				tasks.add(_manager.getProjectManager().getSelectedProject()
-						.getTasks().get(i));
+		//We first get the list of tasks from the project
+		for (int i = 0; i < _manager.getProjectManager().getSelectedProject().getTasks().size(); i++)
+		{
+			//For each task, we have a list of assigned members
+			for (User u : _manager.getProjectManager().getSelectedProject().getTasks().get(i).getAssignedMembers())
+			{
+				//tasks (ArrayList) will end up getting all the tasks
+				//members (ArrayList) will end up getting all the members with assignment (ID + Names)
+				tasks.add(_manager.getProjectManager().getSelectedProject().getTasks().get(i));
 				members.add(u);
 			}
 		}
@@ -115,12 +118,12 @@ public class ShowMembersScreen extends Screen {
 		 * members.addAll(_manager.getProjectManager().getSelectedProject
 		 * ().getTasks().get(i).getMembers()); }
 		 */
-		Object[][] data = new Object[members.size()][];
+		Object[][] data = new Object[members.size()][]; //Why is multidimensional array needed?
 
 		for (int i = 0; i < members.size(); i++) {
 			User u = members.get(i);
 
-			data[i] = new Object[] { u.getId(), u.getUserName(), u.getRole() };
+			data[i] = new Object[] { u.getId(), u.getUserName(), u.getRole() }; //What's the point of this line?
 			Task t = tasks.get(i);
 			data[i] = new Object[] { u.getId(), u.getUserName(), t.getId() };
 		}
