@@ -41,7 +41,7 @@ public class CreateScreen extends Screen {
 
 		JLabel lblProjectName = new JLabel("Project Name:");
 		JLabel lblDescription = new JLabel("Project Description:");
-		JLabel lblProjectStartDate = new JLabel("Start Date (DD-MM-YYYYY): ");
+		JLabel lblProjectStartDate = new JLabel("Start Date (DD-MM-YYYY): ");
 
 		textFieldProjectName = new JTextField(10);
 		textAreaDescription = new JTextArea();
