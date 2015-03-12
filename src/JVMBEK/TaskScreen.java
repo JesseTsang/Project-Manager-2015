@@ -34,6 +34,7 @@ public class TaskScreen extends Screen {
 		JButton btnGenerate = new JButton("Generate GANTT Chart");
 		JButton btnBack = new JButton("Back");
 		JButton btnShow = new JButton("Show Members");
+		JButton btnShowPaths = new JButton("Get Paths");
 
 		JPanel northPanel = new JPanel();
 		JPanel centerPanel = new JPanel();
@@ -54,6 +55,7 @@ public class TaskScreen extends Screen {
 		buttonPanel.add(btnGenerate);
 		buttonPanel.add(btnBack);
 		buttonPanel.add(btnShow);
+		buttonPanel.add(btnShowPaths);
 
 		add(BorderLayout.NORTH, northPanel);
 		add(BorderLayout.CENTER, centerPanel);
@@ -126,6 +128,32 @@ public class TaskScreen extends Screen {
 			public void actionPerformed(ActionEvent ae) {
 				_manager.show(ShowMembersScreen.IDENTIFIER);
 			}
+		});
+		
+		
+		btnShowPaths.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae) {
+				int row = tblTasks.getSelectedRow();
+				
+				// check for selected row first
+				if (tblTasks.getSelectedRow() != -1) {
+
+						// Delete the task from the database
+
+						Integer t_id = (Integer) model.getValueAt(row, 0);
+						
+						ArrayList<ArrayList<Integer>> pathList;
+						
+						pathList = _manager.getProjectManager().getSelectedProject().getTaskById(t_id).getPathsLeadingToTask();
+						
+						for (ArrayList<Integer> p : pathList) {
+							System.out.println("\nnew: ");
+							for (int id : p){
+								System.out.print(id + ", ");
+							}
+						}
+						}
+					}
 		});
 	}
 

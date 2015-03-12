@@ -282,23 +282,68 @@ public class Task {
 		}
 	}
 	
-	// Returns the duration of the longest task chain, counting the current task's duration
-/*	public int getLongestChain() {
-		ArrayList<Integer> precedingIds = this.getPrecedingIds();
-		
-		// Checking if it actually has any preceding tasks, return 0 if it doesn't
-		if(precedingIds.get(0) == _id) {
-			return _duration;
-		}
-		else {
-			ArrayList<Integer> longestChain = new ArrayList<Integer>();
-			Task[] t = new Task[precedingIds.size()];
-			for(int i = 0; i < t.length; i++) {
-				t[i].getLongestChain();
-			}
-		}
-	}*/
+	// Returns an ArrayList of ArrayList<Integer> containing all the possible paths leading up to the task
+	//http://stackoverflow.com/questions/25147799/java-arraylist-of-arraylist
 	
+	static ArrayList<ArrayList<Integer>> outer = new ArrayList<ArrayList<Integer>>();
+	static ArrayList<ArrayList<Integer>> outerPrecedingIds = new ArrayList<ArrayList<Integer>>();
+
+	static int count = 0;
+
+	public ArrayList<ArrayList<Integer>> getPathsLeadingToTask() {
+		
+	    ArrayList<Integer> inner = new ArrayList<Integer>(); 		
+		ArrayList<Integer> innerPrecedingIds = this.getPrecedingIds();
+		
+		
+		outerPrecedingIds.add(innerPrecedingIds);
+		if(outerPrecedingIds.get(index) == _id) {
+		    outer.add(inner);
+		    count++;
+		}
+
+		// Checking if it actually has any preceding tasks, return 0 if it doesn't
+			for (int task_id: outerPrecedingIds.get(count)){
+
+				if(task_id == _id) {
+				    outer.add(inner);
+//				    count++;
+				}
+				else {
+//					ArrayList<Integer> pathChains = new ArrayList<Integer>();
+					Task[] t = new Task[innerPrecedingIds.size()];
+					for(int i = 0; i < t.length; i++) {
+						t[i] = this.getProject().getTaskById(innerPrecedingIds.get(i));
+						inner.add(outerPrecedingIds.get(count).get(i));   
+						this.getProject().getTaskById(innerPrecedingIds.get(i)).getPathsLeadingToTask();
+					}					
+				}
+
+			}
+		return outer;
+
+	}
+	
+	static int divergenceCount;
+	
+//	public int getNumberOfDivergence() {
+//		ArrayList<Integer> innerPrecedingIds = this.getPrecedingIds();
+//		outerPrecedingIds.add(innerPrecedingIds);
+//		
+//		if(innerPrecedingIds.get(0) == _id){
+//			   
+//		}else{
+//			Task[] t = new Task[innerPrecedingIds.size()];
+//			for(int i = 0; i < t.length; i++) {
+//				t[i] = this.getProject().getTaskById(task_id);
+//				inner.add(task_id);     
+//				t[i].getNumberOfDivergence();
+//
+//		}
+//		
+//		
+//	}
+
 	// Returns the total number of preceding tasks; recursive
 	// DOES NOT WORK PROPERLY YET
 	public int getTotalPrecedingTasks() {
