@@ -21,16 +21,16 @@ public class ProjectTest {
 		User dummy = new User(1000, "", "", UserRole.MANAGER);
 		User tester = ProjectManager.login("1000", "password");
 		ProjectManager tester2 = new ProjectManager(tester);
-		tester2.setSelectedProject(12);
+		tester2.setSelectedProject(7);
 		
-		assertEquals(12, tester2.getSelectedProject().getId());
+		assertEquals(7, tester2.getSelectedProject().getId());
 		
 	}
 	
 	@Test
 	public void getNameShouldReturnString() {
 		
-		Project tester = new Project(0, "test", "", new Date(System.currentTimeMillis()));
+		Project tester = new Project(0, "test", "", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
 		assertEquals("test", tester.getName());
 		
 	}
@@ -38,7 +38,7 @@ public class ProjectTest {
 	@Test
 	public void getDescriptionShouldReturnString() {
 		
-		Project tester = new Project(0, "", "test", new Date(System.currentTimeMillis()));
+		Project tester = new Project(0, "", "test", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
 		assertEquals("test", tester.getDescription());
 		
 	}
@@ -46,7 +46,7 @@ public class ProjectTest {
 	@Test
 	public void toStringShouldReturnString() {
 		
-		Project tester = new Project(0, "test", "", new Date(System.currentTimeMillis()));
+		Project tester = new Project(0, "test", "", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
 		assertEquals("test", tester.toString());
 		
 	}
