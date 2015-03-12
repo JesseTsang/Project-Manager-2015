@@ -91,7 +91,7 @@ public class TaskScreen extends Screen {
 						
 						if (!hasNoFollowingTask){
 							JOptionPane.showMessageDialog(null,
-									"The task cannot be deleted because other tasks depends on it.",
+									"This task cannot be deleted because other tasks depend on it.",
 									"Has Following Task", JOptionPane.ERROR_MESSAGE);
 						} else{
 

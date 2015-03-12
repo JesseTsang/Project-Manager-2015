@@ -72,7 +72,7 @@ public class CreateTaskScreen extends Screen {
 		northPanel.add(lblDuration);
 		northPanel.add(tfDuration);
 		northPanel.add(lblFirstTaskCheckBox);
-		cbFirstTask = new JCheckBox("No Preceding Task");
+		cbFirstTask = new JCheckBox("No Preceding Task", false);
 		northPanel.add(cbFirstTask);
 		northPanel.setLayout(new GridLayout(3, 2, 5, 5));
 

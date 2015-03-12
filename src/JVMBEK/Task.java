@@ -184,23 +184,16 @@ public class Task {
 		Statement stmt = null;
 		try {
 			stmt = DB.getInstance().createStatement();
+
 			ResultSet id_set = stmt.executeQuery(
 					"SELECT preceding_task FROM task_sequence "
 					+ "WHERE preceding_task == " 
 					+ _id
-					+ "SELECT * FROM task_sequence "
-					+ "WHERE preceding_task == " 
+					+ " AND task_id != " 
 					+ _id);
 				//Find if the current task have a preceding task, skips when it is preceding itself
 				//(Find if the current task have a task after it)
-			
-//			ResultSet id_set = stmt.executeQuery(
-//			"SELECT * FROM task_sequence "
-//			+ "WHERE preceding_task == " 
-//			+ _id
-//			+ " EXCEPT SELECT task_id FROM task_sequence"
-//			+ "WHERE task_id == "					
-//			+ _id);
+
 			
 			while( id_set.next() ) {
 			    // ResultSet processing here
@@ -209,7 +202,7 @@ public class Task {
 
 			if( hasNoFollowingTask ) {
 			    // Empty result set, the task doesn't have a following task
-				stmt.executeQuery("DELETE FROM task_sequence WHERE task_id ===" + _id);
+				stmt.executeUpdate("DELETE FROM task_sequence WHERE task_id == " + _id);
 				
 			}			
 			
