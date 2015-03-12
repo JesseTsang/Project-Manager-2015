@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 import javax.swing.table.*;
 
+import org.jfree.ui.RefineryUtilities;
+
 public class TaskScreen extends Screen {
 	public static final String IDENTIFIER = "TASK";
 	public static final int WIDTH = 450;
@@ -110,20 +112,13 @@ public class TaskScreen extends Screen {
 			}
 		});
 
-		btnGenerate.addActionListener(new ActionListener() {
+			btnGenerate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-
-				// check for selected row first
-				if (tblTasks.getSelectedRow() != -1) {
-
-				} else {
-					JOptionPane
-							.showMessageDialog(
-									null,
-									"You must select a task for which to generate a GANTT chart.",
-									"No Task Selected",
-									JOptionPane.ERROR_MESSAGE);
-				}
+				final GanttChart chart = new GanttChart(_manager.getProjectManager().getSelectedProject().getName() + "Gantt Chart", _manager);
+				chart.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+				chart.pack();
+				RefineryUtilities.centerFrameOnScreen(chart);
+				chart.setVisible(true);
 			}
 		});
 
