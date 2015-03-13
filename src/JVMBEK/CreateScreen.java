@@ -129,7 +129,6 @@ public class CreateScreen extends Screen {
 	public void Update() {
 		textFieldProjectName.setText("");
 		textAreaDescription.setText("");
-		// _durField.setText("");
 	}
 
 }

@@ -27,7 +27,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class MemberTaskInformationScreen extends Screen {
 	public final static String IDENTIFIER = "TASKINFO";
-	public static final int WIDTH = 350;
+	public static final int WIDTH = 300;
 	public static final int HEIGHT = 400;
 
 	/*
@@ -80,11 +80,11 @@ public class MemberTaskInformationScreen extends Screen {
 		JLabel lblStartDateVal = new JLabel();
 		JLabel lblDueDate = new JLabel("Due Date:");
 		JLabel lblDueDateVal = new JLabel();
-		JLabel lblDuration = new JLabel("Task Duration:");
+		JLabel lblDuration = new JLabel("Duration:");
 		JLabel lblDurationVal = new JLabel();
 		JLabel lblDescription = new JLabel("Description:");
 		JTextArea taDescription = new JTextArea();
-		JLabel lblProgress = new JLabel("Progress:");
+		JLabel lblProgress = new JLabel("Status:");
 		final JComboBox cmbProgressVal = new JComboBox();
 		cmbProgressVal.addItem("In Queue");
 		cmbProgressVal.addItem("In Progress");

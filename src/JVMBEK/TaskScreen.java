@@ -13,7 +13,7 @@ import org.jfree.ui.RefineryUtilities;
 
 public class TaskScreen extends Screen {
 	public static final String IDENTIFIER = "TASK";
-	public static final int WIDTH = 450;
+	public static final int WIDTH = 600;
 	public static final int HEIGHT = 300;
 
 	private JLabel lblProjectHeader;
@@ -40,7 +40,7 @@ public class TaskScreen extends Screen {
 		JPanel buttonPanel = new JPanel(new GridLayout(2, 2));
 
 		tblTasks = new JTable();
-		tblTasks.setPreferredScrollableViewportSize(new Dimension(350, 150));
+		tblTasks.setPreferredScrollableViewportSize(new Dimension(500, 150));
 		tblTasks.setFillsViewportHeight(true);
 
 		JScrollPane scroll = new JScrollPane(tblTasks);
@@ -124,7 +124,8 @@ public class TaskScreen extends Screen {
 
 		btnShow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				_manager.show(ShowMembersScreen.IDENTIFIER);
+				_manager.showAndResize(ShowMembersScreen.IDENTIFIER, ShowMembersScreen.WIDTH,
+						ShowMembersScreen.HEIGHT);
 			}
 		});
 	}
@@ -135,7 +136,7 @@ public class TaskScreen extends Screen {
 				+ " Tasks");
 
 		String[] columnNames = { "Task ID", "Task Name", "Description",
-				"Precedence", "Progress" };
+				"Precedence", "Status" };
 
 		ArrayList<Task> tasks = _manager.getProjectManager()
 				.getSelectedProject().getTasks();

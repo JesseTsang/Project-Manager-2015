@@ -52,7 +52,7 @@ public class CreateTaskScreen extends Screen {
 		tblTasks = new JTable();
 		tblTasks.setPreferredScrollableViewportSize(new Dimension(350, 150));
 		tblTasks.setFillsViewportHeight(true);
-
+		
 		JScrollPane tasksScrollPane = new JScrollPane(tblTasks);
 		tasksScrollPane.setOpaque(true);
 		// tasksScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -101,8 +101,7 @@ public class CreateTaskScreen extends Screen {
 				}
 
 				if (tfDuration.getText().isEmpty()
-						|| //!tfDuration.getText().matches("-?\\d+(\\.\\d+)?")) {
-						
+						||
 						// Accepting positive integers only; anything else is rejected
 						!tfDuration.getText().matches("\\d+") || Integer.parseInt(tfDuration.getText()) < 1) {
 					JOptionPane.showMessageDialog(null,

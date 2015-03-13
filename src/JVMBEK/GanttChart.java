@@ -78,7 +78,7 @@ public class GanttChart extends JFrame {
         screenManager = manager;
         loadedProject = screenManager.getProjectManager().getSelectedProject();
         ArrayList<JVMBEK.Task> tasks = loadedProject.getTasks();
-
+        
         final IntervalCategoryDataset dataset = createDataset(tasks);
         final JFreeChart chart = createChart(dataset, screenManager.getProjectManager().getSelectedProject().getName());
 
@@ -97,15 +97,17 @@ public class GanttChart extends JFrame {
     	
     	final TaskSeries s1 = new TaskSeries("Scheduled");
     	for(JVMBEK.Task t : tasks) {
-    		// "getDate" methods don't actually exist yet
-/*    		s1.add(new Task(t.getName(),
+    		s1.add(new Task(t.getName(),
+    				
+    				// Note: "SimpleTimePeriod" constructor does not seem to support large numbers, even though
+    				// apparently it should accept "long" type date
+    				// Thus, numbers out of range (too large, whether positive or negative) could cause a crash
     	               new SimpleTimePeriod(t.getStartDate().getTime(), 
-    	            		   t.getEndDate().getTime())));*/
+    	            		   t.getEndDate().getTime())));
     	}
     	
 /*    	final TaskSeries s2 = new TaskSeries("Actual");
     	for(JVMBEK.Task t : tasks) {
-    		// "getDate" methods don't actually exist yet
     		s1.add(new Task(t.getName(),
     	               new SimpleTimePeriod(t.getStartDate(), 
     	            		   t.getEndDate())));
@@ -144,7 +146,7 @@ public class GanttChart extends JFrame {
      */
     private JFreeChart createChart(final IntervalCategoryDataset dataset, String title) {
         final JFreeChart chart = ChartFactory.createGanttChart(
-            title,  // chart title
+            title + " ",  // chart title
             "Tasks",              // domain axis label
             "Dates",              // range axis label
             dataset,             // data

@@ -81,7 +81,7 @@ public class MemberViewScreen extends Screen {
 	@Override
 	public void Update() {
 		String[] columnNames = { "Project Name", "Task ID", "Task Name",
-				"Start Date", "Due Date", "Progress"};
+				"Start Date", "Due Date", "Status"};
 
 		ArrayList<Task> tasks = Project.getAssignedTasks(_manager.getUser()
 				.getId());

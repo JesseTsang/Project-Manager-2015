@@ -19,6 +19,8 @@ import javax.swing.table.DefaultTableModel;
 
 public class ShowMembersScreen extends Screen {
 	public final static String IDENTIFIER = "SHOWMEMBERS";
+	public static final int WIDTH = 400;
+	public static final int HEIGHT = 300;
 
 	private JLabel lblProjectHeader;
 	private JTable tblMembers;
@@ -44,7 +46,7 @@ public class ShowMembersScreen extends Screen {
 		tfMemberName = new JTextField(15);
 		tfActivityId = new JTextField(15);
 
-		JButton btnAdd = new JButton("Assign Members");
+		JButton btnAdd = new JButton("Assign Member");
 		JButton btnCancel = new JButton("Cancel");
 
 		northPanel.add(lblProjectHeader);
@@ -106,18 +108,7 @@ public class ShowMembersScreen extends Screen {
 				members.add(u);
 			}
 		}
-		/*
-		 * String[] columnNames = { "Member ID", "Member Name", // "Tasks",
-		 * "Role"};
-		 * 
-		 * ArrayList<User> members = null;
-		 * 
-		 * for (int i=0;
-		 * i<_manager.getProjectManager().getSelectedProject().getTasks
-		 * ().size(); i++){
-		 * members.addAll(_manager.getProjectManager().getSelectedProject
-		 * ().getTasks().get(i).getMembers()); }
-		 */
+		
 		Object[][] data = new Object[members.size()][]; //Why is multidimensional array needed?
 
 		for (int i = 0; i < members.size(); i++) {

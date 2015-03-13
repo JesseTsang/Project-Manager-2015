@@ -50,7 +50,7 @@ public class ScreenManager {
 		user = temp;
 		if (user.getRole() == UserRole.MANAGER) {
 			_pm = new ProjectManager(user);
-			System.out.println("yay");
+			System.out.println("Logged in as manager.");
 			// Once we have a project manager, we can create all other screens
 			// (since they rely on the PM)
 			_screens.put(ManagerMainScreen.IDENTIFIER, new ManagerMainScreen(
@@ -65,7 +65,7 @@ public class ScreenManager {
 					this));
 			_screens.put(AddMemberScreen.IDENTIFIER, new AddMemberScreen(this));
 		} else {
-			System.out.println("boo");
+			System.out.println("Logged in member.");
 			_screens.put(MemberMainScreen.IDENTIFIER,
 					new MemberMainScreen(this));
 			_screens.put(MemberViewScreen.IDENTIFIER,

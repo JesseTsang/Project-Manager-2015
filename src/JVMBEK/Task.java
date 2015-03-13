@@ -334,6 +334,64 @@ public class Task {
 		}
 	}
 	
+	// Returns the start date of the task
+	// Note: Currently uses the "getLongestDuration_Alt" method, which is not always accurate
+	public Date getStartDate() {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(getProject().getStartDate());
+		cal.add(Calendar.DATE, getLongestDuration_Alt());
+		
+//		System.out.println("project start date: " + getProject().getStartDate());
+//		System.out.println("task test days: " + getLongestDuration_Alt());
+//		System.out.println("task start date: " + cal.getTime());
+//		System.out.println("can we add project start date and task start date as long: below");
+//		System.out.println(getProject().getStartDate().getTime());
+//		System.out.println(cal.getTime().getTime());
+//		System.out.println("yay");
+		
+		return cal.getTime();
+	}
+	
+	// Returns the end date of the task
+	// Note: Currently uses the "getLongestDuration_Alt" method, which is not always accurate
+	public Date getEndDate() {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(getProject().getStartDate());
+		cal.add(Calendar.DATE, getLongestDuration_Alt() + getDuration());
+		
+		return cal.getTime();
+	}
+	
+	// Returns the duration of a path leading from the current task to the beginning, not including the current path's duration
+	// Does not reliably return the longest path, as it checks task-by-task, and not the whole thing
+	// Recursive
+	public int getLongestDuration_Alt() {
+		ArrayList<Integer> precedingIds = getPrecedingIds();
+		
+		if(precedingIds.size() > 0) {
+			// If no preceding task, return 0
+			if(precedingIds.get(0) == _id) {
+				return 0;
+			}
+//			// If one preceding task, return duration of preceding task
+//			else if(precedingIds.size() == 1 && precedingIds.get(0) != _id) {
+//				return getProject().getTaskById(precedingIds.get(0)).getDuration();
+//			}
+			else {
+				int longest = 0;
+				int longestId = -1;
+				for(int i : precedingIds) {
+					if(longest < getProject().getTaskById(i).getDuration()) {
+						longest = getProject().getTaskById(i).getDuration();
+						longestId = i;
+					}
+				}
+				return longest + getProject().getTaskById(longestId).getLongestDuration_Alt();
+			}
+		}
+		return 0;
+	}
+	
 //	public Date addDaysToDate(int duration){
 //		Date end_date;	
 //	
