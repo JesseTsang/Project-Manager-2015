@@ -6,6 +6,7 @@ import java.util.Calendar;
 
 import org.jfree.util.ObjectUtilities;
 import org.jfree.util.PublicCloneable;
+import org.jfree.data.gantt.Task;
 
 /**
  * Represents an edge in the dependency graph

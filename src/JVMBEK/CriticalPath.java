@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.jfree.data.gantt.TaskSeries;
+import org.jfree.data.gantt.Task;
 
 /**
  * A Representation of the critical path of a TaskSeries
  * @author Chris Katz (ckatz2009@gmail.com)
+ *
  */
 public class CriticalPath {
 	
