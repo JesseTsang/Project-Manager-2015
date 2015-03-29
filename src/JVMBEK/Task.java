@@ -7,12 +7,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.jfree.data.time.SimpleTimePeriod;
+import org.jfree.data.time.TimePeriod;
 
 //A class that encapsulates all data from one row of the "tasks" table
 public class Task {
 	public static final String[] PROGRESS_STRINGS = { "In Queue",
 			"In Progress", "Finished" };
-
+	
+	//What's the point of this?
 	public static TaskProgress StringToProgress(String str) {
 		for (int i = 0; i < PROGRESS_STRINGS.length; i++)
 			if (PROGRESS_STRINGS[i].equalsIgnoreCase(str))
@@ -20,15 +26,16 @@ public class Task {
 		return TaskProgress.IN_QUEUE;
 	}
 
-	private int _id;
-	private String _name;
-	private int _duration;
-	private String _description;
-	private String _comment;
-	private TaskProgress _progress;
-//	private Date _start_date;
-//	private Date _end_date;
-	ArrayList<User> _members = new ArrayList<User>();
+	private int _id; 				//Task ID
+	private String _name; 			//Task Name
+	private int _duration; 			//Task Duration
+	private String _description; 	//Task Description
+	private TaskProgress _progress; //Task Progress status variable
+	private Date _start_date; 		//Task Start Date
+	private Date _end_date; 		//Task End Date
+	ArrayList<User> _members = new ArrayList<User>(); //Storage for project members list
+
+    private List predecessors; //Storage for the task that this task depends on.
 	
 
 
@@ -37,8 +44,17 @@ public class Task {
 		_name = name;
 		_description = description;
 		_progress = progress;
-		// _comment = comment;
 		_duration = dur;
+	}
+	
+	public Task(int id, String name, String description, TaskProgress progress, Date startDate, Date endDate){
+		_id = id;
+		_name = name;
+		_description = description;
+		_progress = progress;
+		_start_date = startDate;
+		_end_date = endDate;
+		_duration = (int) getDateDifference(startDate, endDate, TimeUnit.DAYS);
 	}
 
 	public Project getProject() {
@@ -125,10 +141,6 @@ public class Task {
 
 	public String getDescription() {
 		return _description;
-	}
-
-	public String getComment() {
-		return _comment;
 	}
 
 	public TaskProgress getProgress() {
@@ -403,9 +415,15 @@ public class Task {
 //		return end_date;
 //	}
 	
-	public String dateToString(){
-		String dateString = new SimpleDateFormat("dd-MM-yyyy").format(this);
-		return dateString;
+	/**
+	 * Get the difference between two dates
+	 * @param date1 the oldest date
+	 * @param date2 the newest date
+	 * @param timeUnit the unit in which you want the diff
+	 * @return the diff value, in the provided unit
+	 */
+	public static long getDateDifference(Date date1, Date date2, TimeUnit timeUnit) {
+	    long differenceInMillies = date2.getTime() - date1.getTime();
+	    return timeUnit.convert(differenceInMillies,TimeUnit.MILLISECONDS);
 	}
-
 }
