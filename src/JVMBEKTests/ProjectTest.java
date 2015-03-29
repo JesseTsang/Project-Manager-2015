@@ -93,5 +93,17 @@ public class ProjectTest {
 			}		
 		}	
 	}
+	
+	/*Iteration 3: Tests*/
+	@Test
+	public void CriticalPathTest() 
+	{	
+		User testUserLogin = ProjectManager.login("1000", "password");
+		
+		ProjectManager testUserProject = new ProjectManager(testUserLogin);
+		testUserProject.setSelectedProject(10);
+		
+		
+	}
 
 }
