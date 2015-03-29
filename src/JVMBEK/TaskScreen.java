@@ -32,6 +32,7 @@ public class TaskScreen extends Screen {
 		JButton btnAdd = new JButton("Add Task");
 		JButton btnDelete = new JButton("Delete Task");
 		JButton btnGenerate = new JButton("Generate GANTT Chart");
+		JButton btnCriticalPath = new JButton("Generate Critical Path");
 		JButton btnBack = new JButton("Back");
 		JButton btnShow = new JButton("Show Members");
 
@@ -52,6 +53,7 @@ public class TaskScreen extends Screen {
 		buttonPanel.add(btnAdd);
 		buttonPanel.add(btnDelete);
 		buttonPanel.add(btnGenerate);
+		buttonPanel.add(btnCriticalPath);
 		buttonPanel.add(btnBack);
 		buttonPanel.add(btnShow);
 
@@ -112,7 +114,7 @@ public class TaskScreen extends Screen {
 			}
 		});
 
-			btnGenerate.addActionListener(new ActionListener() {
+		btnGenerate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				final GanttChart chart = new GanttChart(_manager.getProjectManager().getSelectedProject().getName() + "Gantt Chart", _manager);
 				chart.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -121,6 +123,24 @@ public class TaskScreen extends Screen {
 				chart.setVisible(true);
 			}
 		});
+
+		btnCriticalPath.addActionListener
+		(
+				new ActionListener()
+				{
+					public void actionPerformed(ActionEvent ae) 
+					{
+						String title = _manager.getProjectManager().getSelectedProject().getName() + "Critical Path";
+						
+						final CriticalPathView criticalPathView = new CriticalPathView(title, _manager);
+						criticalPathView.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+						criticalPathView.pack();
+						RefineryUtilities.centerFrameOnScreen(criticalPathView);
+						criticalPathView.setVisible(true);
+					}
+				}
+		);			
+			
 
 		btnShow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
