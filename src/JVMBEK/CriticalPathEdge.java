@@ -9,11 +9,10 @@ import org.jfree.util.PublicCloneable;
 import org.jfree.data.gantt.Task;
 
 /**
- * Represents an edge in the dependency graph
- * Holds a specific task
+ * This class represents an edge in the dependency graph. Each object holds a specific task.
+ * This is a modification and originally developed by Chris Katz.
  * 
- * @author Chris Katz (ckatz2009@gmail.com)
- *
+ * @author Chris Katz and Jesse Tsang
  */
 public class CriticalPathEdge implements Cloneable, PublicCloneable, Serializable   {
 	
