@@ -23,12 +23,14 @@ import javax.swing.table.DefaultTableModel;
 
 public class CreateTaskScreen extends Screen {
 	public final static String IDENTIFIER = "CREATETASK";
-	public static final int WIDTH = 350;
-	public static final int HEIGHT = 400;
+	public static final int WIDTH = 500;
+	public static final int HEIGHT = 550;
 
 	private JTextField tfTaskName;
 	private JTextArea taDescription;
 	private JTextField tfDuration;
+	private JTextField tfOptimistic;
+	private JTextField tfPessimistic;
 	private JCheckBox cbFirstTask;
 	private JTable tblTasks;
 	private DefaultTableModel _model;
@@ -48,6 +50,8 @@ public class CreateTaskScreen extends Screen {
 		JLabel lblFirstTaskCheckBox = new JLabel(/* "Check if no preceding tasks:" */);
 		JLabel lblPrecedingTasks = new JLabel("Select Preceding Tasks:");
 		JLabel lblDuration = new JLabel("Task Duration:");
+		JLabel lblOptimistic = new JLabel("Optimistic:");
+		JLabel lblPessimistic = new JLabel("Pessimistic:");
 
 		tblTasks = new JTable();
 		tblTasks.setPreferredScrollableViewportSize(new Dimension(350, 150));
@@ -64,6 +68,8 @@ public class CreateTaskScreen extends Screen {
 		// descriptionScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		// descriptionScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		tfDuration = new JTextField(10);
+		tfOptimistic = new JTextField(10);
+		tfPessimistic = new JTextField(10);
 
 		JButton btnCreate = new JButton("Create Task");
 		JButton btnCancel = new JButton("Cancel");
@@ -71,10 +77,14 @@ public class CreateTaskScreen extends Screen {
 		northPanel.add(tfTaskName);
 		northPanel.add(lblDuration);
 		northPanel.add(tfDuration);
+		northPanel.add(lblOptimistic);
+		northPanel.add(tfOptimistic);
+		northPanel.add(lblPessimistic);
+		northPanel.add(tfPessimistic);
 		northPanel.add(lblFirstTaskCheckBox);
 		cbFirstTask = new JCheckBox("No Preceding Task", false);
 		northPanel.add(cbFirstTask);
-		northPanel.setLayout(new GridLayout(3, 2, 5, 5));
+		northPanel.setLayout(new GridLayout(5, 3, 5, 5));
 
 		centerPanel.add(lblPrecedingTasks);
 		centerPanel.add(tasksScrollPane);
@@ -109,6 +119,23 @@ public class CreateTaskScreen extends Screen {
 							"Incorrect duration", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
+				
+				
+				if (tfOptimistic.getText().isEmpty() || Integer.parseInt(tfOptimistic.getText()) >= Integer.parseInt(tfDuration.getText())){
+					JOptionPane.showMessageDialog(null,
+							"Please enter an optimistic value for your task. (Smaller than duration)",
+							"Missing field", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+
+				
+				if (tfPessimistic.getText().isEmpty() || Integer.parseInt(tfPessimistic.getText()) <= Integer.parseInt(tfDuration.getText()) ){
+					JOptionPane.showMessageDialog(null,
+							"Please enter a pessimistic value for your task. (Greater than duration)",
+							"Missing field", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+
 
 				if (!Character.isLetter(tfTaskName.getText().charAt(0))) {
 					JOptionPane.showMessageDialog(null,
@@ -162,12 +189,20 @@ public class CreateTaskScreen extends Screen {
 				//
 
 				int dur = Integer.parseInt(tfDuration.getText());
+				int optimistic = Integer.parseInt(tfOptimistic.getText());
+				int pessimistic = Integer.parseInt(tfPessimistic.getText());
+				double e1 = optimistic + (4*dur) + pessimistic;
+				double estimate = e1/6;
+				double v1 = pessimistic - optimistic;
+				double variance = v1/6*v1/6;
+				
+
 
 				_manager.getProjectManager()
 						.getSelectedProject()
 						.addTask(tfTaskName.getText(), taDescription.getText(),
-								dur);
-
+								dur, optimistic, pessimistic, estimate, variance);
+				
 				//
 				//
 				// Getting the id of the task that just got created
@@ -226,7 +261,7 @@ public class CreateTaskScreen extends Screen {
 		tfDuration.setText("");
 
 		String[] columnNames = { "Task ID", "Task Name", "Description",
-				"Progress" };
+				"Progress", "Optimistic", "Pessimistic"};
 
 		ArrayList<Task> tasks = _manager.getProjectManager()
 				.getSelectedProject().getTasks();
@@ -236,7 +271,7 @@ public class CreateTaskScreen extends Screen {
 			Task t = tasks.get(i);
 			data[i] = new Object[] { t.getId(), t.getName(),
 					t.getDescription(),
-					Task.PROGRESS_STRINGS[t.getProgress().ordinal()] };
+					Task.PROGRESS_STRINGS[t.getProgress().ordinal()], t.getOptimistic(), t.getPessimistic() };
 		}
 
 		_model = new DefaultTableModel(data, columnNames);

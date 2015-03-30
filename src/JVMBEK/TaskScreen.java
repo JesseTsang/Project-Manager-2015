@@ -32,6 +32,7 @@ public class TaskScreen extends Screen {
 		JButton btnAdd = new JButton("Add Task");
 		JButton btnDelete = new JButton("Delete Task");
 		JButton btnGenerate = new JButton("Generate GANTT Chart");
+		JButton btnGenerate2 = new JButton("Pert Analysis");
 		JButton btnCriticalPath = new JButton("Generate Critical Path");
 		JButton btnBack = new JButton("Back");
 		JButton btnShow = new JButton("Show Members");
@@ -53,6 +54,7 @@ public class TaskScreen extends Screen {
 		buttonPanel.add(btnAdd);
 		buttonPanel.add(btnDelete);
 		buttonPanel.add(btnGenerate);
+		buttonPanel.add(btnGenerate2);
 		buttonPanel.add(btnCriticalPath);
 		buttonPanel.add(btnBack);
 		buttonPanel.add(btnShow);
@@ -114,7 +116,7 @@ public class TaskScreen extends Screen {
 			}
 		});
 
-		btnGenerate.addActionListener(new ActionListener() {
+			btnGenerate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				final GanttChart chart = new GanttChart(_manager.getProjectManager().getSelectedProject().getName() + "Gantt Chart", _manager);
 				chart.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -123,7 +125,23 @@ public class TaskScreen extends Screen {
 				chart.setVisible(true);
 			}
 		});
+			
+			btnGenerate2.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent ae) {
+						_manager.showAndResize(Pert.IDENTIFIER, Pert.WIDTH,
+								Pert.HEIGHT);
+				}
+			});
+			
+			
 
+		btnShow.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				_manager.showAndResize(ShowMembersScreen.IDENTIFIER, ShowMembersScreen.WIDTH,
+						ShowMembersScreen.HEIGHT);
+			}
+		});
+		
 		btnCriticalPath.addActionListener
 		(
 				new ActionListener()
@@ -139,16 +157,10 @@ public class TaskScreen extends Screen {
 						criticalPathView.setVisible(true);
 					}
 				}
-		);			
-			
-
-		btnShow.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				_manager.showAndResize(ShowMembersScreen.IDENTIFIER, ShowMembersScreen.WIDTH,
-						ShowMembersScreen.HEIGHT);
-			}
-		});
+		);
 	}
+	
+	
 
 	@Override
 	public void Update() {
@@ -156,7 +168,7 @@ public class TaskScreen extends Screen {
 				+ " Tasks");
 
 		String[] columnNames = { "Task ID", "Task Name", "Description",
-				"Precedence", "Status" };
+				"Precedence", "Status"};
 
 		ArrayList<Task> tasks = _manager.getProjectManager()
 				.getSelectedProject().getTasks();

@@ -53,7 +53,11 @@ public class Project {
 						task_set.getString("name"),
 						task_set.getString("description"), 
 						prog,
-						task_set.getInt("duration")
+						task_set.getInt("duration"),
+						task_set.getInt("optimistic"),
+						task_set.getInt("pessimistic"),
+						task_set.getInt("estimate"),
+						task_set.getInt("variance")
 						);
 
 				_tasks.add(t);
@@ -90,7 +94,12 @@ public class Project {
 						task_set.getString("description"), 
 						prog,
 //						task_set.getDate("start_date"),
-						task_set.getInt("duration"));
+						task_set.getInt("duration"),
+						task_set.getInt("optimistic"),
+						task_set.getInt("pessimistic"),
+						task_set.getInt("estimate"),
+						task_set.getInt("variance")
+						);
 
 				assignedTasks.add(t);
 			}
@@ -135,8 +144,11 @@ public class Project {
 		return _created_date;
 	}
 	public void setDescription(String desc) {
+		
 		_description = desc;
 	}
+	
+
 
 	public ArrayList<Task> getTasks() {
 		return _tasks;
@@ -183,22 +195,30 @@ public class Project {
 		}
 	}
 
-	public void addTask(String name, String description, int duration) {
-		Date date = new Date();
+	public void addTask(String name, String description, int duration, int optimistic, int pessimistic, double estimate, double variance) {
+		new Date();
 		Statement stmt = null;
 		try {
 			stmt = DB.getInstance().createStatement();
-			String sql = "INSERT INTO tasks  (name, description, duration, progress) VALUES ('"
+			String sql = "INSERT INTO tasks  (name, description, duration, progress, optimistic, pessimistic, estimate, variance) VALUES ('"
 					+ name
 					+ "', '"
 					+ description
-					+ "', "
+					+ "', '"
 //					+ date.getTime()
 //					+ ", " 
 					+ duration
 					
 					// Tasks are set as "In Queue" by default
-					+ ", 'In Queue');";
+					+ "', 'In Queue','"
+					+ optimistic
+					+ "', '"
+					+ pessimistic
+					+ "', '"
+					+estimate
+					+ "', '"
+					+variance
+					+ "');";
 			stmt.executeUpdate(sql);
 
 			// Grab latest autoincrement id
@@ -217,7 +237,7 @@ public class Project {
 			stmt.executeUpdate(sql);
 
 			_tasks.add(new Task(task_id, name, description,
-					TaskProgress.IN_QUEUE, /*date, */duration));
+					TaskProgress.IN_QUEUE, /*date, */duration, optimistic, pessimistic, estimate, variance));
 
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());

@@ -58,6 +58,7 @@ public class ScreenManager {
 			_screens.put(LoadScreen.IDENTIFIER, new LoadScreen(this));
 			_screens.put(CreateScreen.IDENTIFIER, new CreateScreen(this));
 			_screens.put(ModifyScreen.IDENTIFIER, new ModifyScreen(this));
+			_screens.put(Pert.IDENTIFIER, new Pert(this));
 			_screens.put(TaskScreen.IDENTIFIER, new TaskScreen(this));
 			_screens.put(CreateTaskScreen.IDENTIFIER,
 					new CreateTaskScreen(this));

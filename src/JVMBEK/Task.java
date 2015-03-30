@@ -10,15 +10,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.jfree.data.time.SimpleTimePeriod;
-import org.jfree.data.time.TimePeriod;
-
 //A class that encapsulates all data from one row of the "tasks" table
 public class Task {
 	public static final String[] PROGRESS_STRINGS = { "In Queue",
 			"In Progress", "Finished" };
-	
-	//What's the point of this?
+
+	//Because the status of the progress we retrive from database will be in String,
+	//therefore, we would need a function to convert that string result back to TaskProgress object.
 	public static TaskProgress StringToProgress(String str) {
 		for (int i = 0; i < PROGRESS_STRINGS.length; i++)
 			if (PROGRESS_STRINGS[i].equalsIgnoreCase(str))
@@ -34,28 +32,35 @@ public class Task {
 	private Date _start_date; 		//Task Start Date
 	private Date _end_date; 		//Task End Date
 	ArrayList<User> _members = new ArrayList<User>(); //Storage for project members list
-
-    private List predecessors; //Storage for the task that this task depends on.
+	private List predecessors; //Storage for the task that this task depends on.
+	private int _optimistic;
+	private int _pessimistic;
+	private double _estimate;
+	private double _variance;
 	
-
-
-	public Task(int id, String name, String description, TaskProgress progress, int dur) {
+	public Task(int id, String name, String description, TaskProgress progress, int dur, int optimistic, int pessimistic, double estimate, double variance) {
 		_id = id;
 		_name = name;
 		_description = description;
 		_progress = progress;
 		_duration = dur;
+		_optimistic = optimistic;
+		_pessimistic = pessimistic;
+		_estimate = estimate;
+		 _variance = variance;
+		 
+		 this.predecessors = new java.util.ArrayList();
 	}
 	
-	public Task(int id, String name, String description, TaskProgress progress, Date startDate, Date endDate){
-		_id = id;
-		_name = name;
-		_description = description;
-		_progress = progress;
-		_start_date = startDate;
-		_end_date = endDate;
-		_duration = (int) getDateDifference(startDate, endDate, TimeUnit.DAYS);
-	}
+//	public Task(int id, String name, String description, TaskProgress progress, Date startDate, Date endDate){
+//	_id = id;
+//	_name = name;
+//	_description = description;
+//	_progress = progress;
+//	_start_date = startDate;
+//	_end_date = endDate;
+//	_duration = (int) getDateDifference(startDate, endDate, TimeUnit.DAYS);
+//}
 
 	public Project getProject() {
 		Project p = null;
@@ -134,7 +139,20 @@ public class Task {
 	public int getDuration() {
 		return _duration;
 	}
-
+	
+	public int getOptimistic() {
+		return _optimistic;
+	}
+	
+	public int getPessimistic() {
+		return _pessimistic;
+	}
+	public double getEstimate() {
+		return _estimate;
+	}
+	public double getVariance() {
+		return _variance;
+	}
 	public String getName() {
 		return _name;
 	}
@@ -182,6 +200,46 @@ public class Task {
 			
 			
 		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.exit(0);
+		}
+		
+		return preceding_tasks;
+	}
+	
+	public ArrayList<Task> getPredecessors()
+	{
+		ArrayList<Task> preceding_tasks = new ArrayList<Task>();
+		
+		Statement stmt = null;
+		try 
+		{
+			stmt = DB.getInstance().createStatement();
+			ResultSet id_set = stmt.executeQuery("SELECT preceding_task, tasks.name, tasks.duration, tasks.progress "
+											   + "FROM task_sequence, tasks "
+											   + "WHERE task_id ==" + _id + " "
+											   + "AND preceding_task == tasks.id ");
+			
+			while(id_set.next())
+			{
+				//preceding_tasks += (id_set.getInt;("preceding_task") + " ");
+				
+//				int taskID = id_set.getInt("preceding_task");
+//				String taskName = id_set.getString("name");
+//				String taskProgressString = id_set.getString("progress");
+//				TaskProgress taskProgress = StringToProgress(taskProgressString);
+//				int taskDuration = id_set.getInt("duration");
+				
+				//Task is int id, String name, String description, TaskProgress progress, int dur
+				//Task taskFromDB = new Task(taskID, taskName, null, taskProgress, taskDuration)
+				
+				
+				
+				//preceding_tasks.add()
+			}	
+		} 
+		catch (Exception e) 
+		{
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
 		}
@@ -426,4 +484,10 @@ public class Task {
 	    long differenceInMillies = date2.getTime() - date1.getTime();
 	    return timeUnit.convert(differenceInMillies,TimeUnit.MILLISECONDS);
 	}
+	
+	public String dateToString(){
+		String dateString = new SimpleDateFormat("dd-MM-yyyy").format(this);
+		return dateString;
+	}
+
 }
