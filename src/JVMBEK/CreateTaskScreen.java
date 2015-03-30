@@ -27,8 +27,8 @@ import javax.swing.table.DefaultTableModel;
 
 public class CreateTaskScreen extends Screen {
 	public final static String IDENTIFIER = "CREATETASK";
-	public static final int WIDTH = 500;
-	public static final int HEIGHT = 550;
+	public static final int WIDTH = 840;//original 500
+	public static final int HEIGHT = 924;//original 550
 
 	private JTextField tfTaskName;
 	private JTextArea taDescription;
@@ -67,7 +67,7 @@ public class CreateTaskScreen extends Screen {
 		
 
 		tblTasks = new JTable();
-		tblTasks.setPreferredScrollableViewportSize(new Dimension(350, 150));
+		tblTasks.setPreferredScrollableViewportSize(new Dimension(490, 210));//350, 150
 		tblTasks.setFillsViewportHeight(true);
 		
 		JScrollPane tasksScrollPane = new JScrollPane(tblTasks);
@@ -159,6 +159,14 @@ public class CreateTaskScreen extends Screen {
 					    cal.setTime(formatter.parse(startDateString));
 					    taskStartDate = formatter.parse(startDateString);
 					    taskEndDate = formatter.parse(endDateString);
+					    
+					    if (taskStartDate.compareTo(taskEndDate) > 0)
+					    {
+					    	JOptionPane.showMessageDialog(null,
+								      					  "Start date must be set before end date.",
+								      					  "Invalid date entry", JOptionPane.ERROR_MESSAGE);
+					    	return;
+					    }
 					}
 					catch (Exception e) 
 					{
@@ -319,8 +327,8 @@ public class CreateTaskScreen extends Screen {
 	public long getDuration()
 	{
 		// turn the Task's duration into a Date object
-		Date endDate = taskStartDate;
-		Date startDate = taskEndDate;
+		Date endDate = taskEndDate;
+		Date startDate = taskStartDate;
 		
 		// turn the Date objects into Calendar objects
 		Calendar endCal = Calendar.getInstance();
@@ -348,6 +356,8 @@ public class CreateTaskScreen extends Screen {
 		tfTaskName.setText("");
 		taDescription.setText("");
 		tfDuration.setText("");
+		tfTaskStartDate.setText("");
+		tfTaskEndDate.setText("");
 
 		String[] columnNames = { "Task ID", "Task Name", "Description",
 				"Progress", "Optimistic", "Pessimistic"};
