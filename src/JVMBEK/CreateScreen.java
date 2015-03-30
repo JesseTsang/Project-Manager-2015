@@ -88,7 +88,7 @@ public class CreateScreen extends Screen {
 					return;
 				}
 				
-				DateFormat formatter = new SimpleDateFormat("d-MM-yyyy"/*, Locale.ENGLISH*/);
+				DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy"/*, Locale.ENGLISH*/);
 				formatter.setLenient(false);
 				Calendar cal = Calendar.getInstance();
 				String startDateString = textFieldProjectStartDate.getText();
