@@ -7,12 +7,11 @@ import org.jfree.data.gantt.TaskSeries;
 import org.jfree.data.gantt.Task;
 
 /**
- * A Representation of the critical path of a TaskSeries
- * @author Chris Katz (ckatz2009@gmail.com)
- *
+ * This is a modification of the critical path algorithm originally by Chris Katz.
+ * @author Chris Katz and Jesse Tsang
  */
-public class CriticalPath {
-	
+public class CriticalPath 
+{	
 	/** The root node of the critical path */
 	private CriticalPathNode root;
 	
@@ -76,8 +75,7 @@ public class CriticalPath {
 			Task task = (Task)t;
 			CriticalPathEdge edge =  new CriticalPathEdge(task);
 			edges.add(edge);
-		}
-		
+		}	
 	}
 	
 	/** 
@@ -261,7 +259,12 @@ public class CriticalPath {
 		List criticalPath = new ArrayList();
 		for(CriticalPathEdge edge: edges)
 		{
-			long taskfloat =  edge.getNext().getLatestStartDate()-edge.getPrevious().getEarliestStartDate()-edge.getDuration();
+			long latestStartDate = edge.getNext().getLatestStartDate();
+			long earliestStartDate = edge.getPrevious().getEarliestStartDate();
+			long duration = edge.getDuration();
+			
+			long taskfloat =  latestStartDate - earliestStartDate - duration;
+			
 			if(taskfloat == 0)
 			{
 				criticalPath.add(edge);

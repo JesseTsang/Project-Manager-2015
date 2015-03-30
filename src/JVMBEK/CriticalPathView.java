@@ -55,6 +55,7 @@ public class CriticalPathView extends JFrame
     		Long endDateTime   = t.getEndDate().getTime();
     		SimpleTimePeriod duration = new SimpleTimePeriod(startDateTime, endDateTime);
     		
+    		System.out.println("Name: " + taskName + " Duration: " + duration.toString());
     		s1.add(new Task(taskName, duration));
     	}
     	
@@ -87,11 +88,13 @@ public class CriticalPathView extends JFrame
     	List testList = criticalPath.getCriticalPath();
     	
     	// iterate via "for loop"
-    	System.out.println("==> For Loop Example.");
+    	System.out.println("List size: " + testList.size());
     	for (int i = 0; i < testList.size(); i++) 
     	{
+    		System.out.println(i);
     		System.out.println(testList.get(i));
     	}
+    	System.out.println("End loop");
     	
     	 	
         final TaskSeriesCollection collection = new TaskSeriesCollection();

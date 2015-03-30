@@ -108,7 +108,8 @@ public class CriticalPathEdge implements Cloneable, PublicCloneable, Serializabl
 		// Count from the start date to the end date to calculate duration
 		Calendar date = (Calendar) startCal.clone();  
 		long daysBetween = 0;  
-		while (date.before(endCal)) {  
+		while (date.before(endCal)) 
+		{  
 			date.add(Calendar.DAY_OF_MONTH, 1);  
 			daysBetween++;  
 		}  
