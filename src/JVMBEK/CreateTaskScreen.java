@@ -160,12 +160,17 @@ public class CreateTaskScreen extends Screen {
 					    taskStartDate = formatter.parse(startDateString);
 					    taskEndDate = formatter.parse(endDateString);
 					    
+					    // > 0 means later, < 0 means earlier 
 					    if (taskStartDate.compareTo(taskEndDate) > 0)
 					    {
 					    	JOptionPane.showMessageDialog(null,
 								      					  "Start date must be set before end date.",
 								      					  "Invalid date entry", JOptionPane.ERROR_MESSAGE);
 					    	return;
+					    }
+					    else
+					    {
+					    	taskDuration = getDuration();
 					    }
 					}
 					catch (Exception e) 
@@ -184,9 +189,10 @@ public class CreateTaskScreen extends Screen {
 					return;
 				}
 				
-				taskDuration = getDuration();
+				
 							
-				if (tfOptimistic.getText().isEmpty() || Integer.parseInt(tfOptimistic.getText()) >= Integer.parseInt(tfDuration.getText()))
+				//if (tfOptimistic.getText().isEmpty() || Integer.parseInt(tfOptimistic.getText()) >= Integer.parseInt(tfDuration.getText()))
+				if (tfOptimistic.getText().isEmpty() || Integer.parseInt(tfOptimistic.getText()) >= taskDuration)
 				{
 					JOptionPane.showMessageDialog(null,
 							"Please enter an optimistic value for your task. (Smaller than duration)",
@@ -195,7 +201,8 @@ public class CreateTaskScreen extends Screen {
 				}
 
 				
-				if (tfPessimistic.getText().isEmpty() || Integer.parseInt(tfPessimistic.getText()) <= Integer.parseInt(tfDuration.getText()))
+				//if (tfPessimistic.getText().isEmpty() || Integer.parseInt(tfPessimistic.getText()) <= Integer.parseInt(tfDuration.getText()))
+				if (tfPessimistic.getText().isEmpty() || Integer.parseInt(tfPessimistic.getText()) <= taskDuration)
 				{
 					JOptionPane.showMessageDialog(null,
 							"Please enter a pessimistic value for your task. (Greater than duration)",
@@ -265,10 +272,15 @@ public class CreateTaskScreen extends Screen {
 				double v1 = pessimistic - optimistic;
 				double variance = v1/6*v1/6;
 
+//				_manager.getProjectManager()
+//						.getSelectedProject()
+//						.addTask(tfTaskName.getText(), taDescription.getText(),
+//								dur, optimistic, pessimistic, estimate, variance);
+				
 				_manager.getProjectManager()
-						.getSelectedProject()
-						.addTask(tfTaskName.getText(), taDescription.getText(),
-								dur, optimistic, pessimistic, estimate, variance);
+				.getSelectedProject()
+				.addTask(tfTaskName.getText(), taDescription.getText(),
+						taskStartDate, taskEndDate, optimistic, pessimistic, estimate, variance);
 				
 				// Getting the id of the task that just got created
 				// in order to setup the preceding tasks relation in the db
