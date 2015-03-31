@@ -61,7 +61,13 @@ public class Task {
 		_progress = progress;
 		_start_date = startDate;
 		_end_date = endDate;
+	
 		_duration = (int) getDateDifference(startDate, endDate, TimeUnit.DAYS);
+		//_duration = getDuration();
+		
+		System.out.println("(in task) Start date: " + _start_date);
+		System.out.println("(in task) End date: " + _end_date);
+		System.out.println("(in task) Duration: " + _duration);
 		
 		this.predecessors = new java.util.ArrayList();
 	}
@@ -140,8 +146,65 @@ public class Task {
 		return _id;
 	}
 	
-	public int getDuration() {
+	public int getDuration() 
+	{
+		// turn the Task's duration into a Date object
+//		Date endDate = _end_date;
+//		Date startDate = _start_date;
+		
+		//System.out.println("Standby ...");
+		//System.out.println("Duration: " + _duration);
+		
+
+				
+		// turn the Date objects into Calendar objects
+//		Calendar endCal = Calendar.getInstance();
+//		endCal.setTime(endDate);  
+//		Calendar startCal = Calendar.getInstance();
+//		startCal.setTime(startDate);
+				
+		// Count from the start date to the end date to calculate duration
+//		Calendar date = (Calendar) startCal.clone();  
+//		_duration = 0;  
+//		while (date.before(endCal)) 
+//		{  
+//			date.add(Calendar.DAY_OF_MONTH, 1);  
+//			_duration++;  
+//		}  
+//		
+//		System.out.println(_duration);
 		return _duration;
+	}
+	
+	public long calcDuration()
+	{
+		//turn the Task's duration into a Date object
+		Date endDate = _end_date;
+		Date startDate = _start_date;
+		
+		//System.out.println("Standby ...");
+		//System.out.println("Duration: " + _duration);
+		
+
+				
+		// turn the Date objects into Calendar objects
+		Calendar endCal = Calendar.getInstance();
+		endCal.setTime(endDate);  
+		Calendar startCal = Calendar.getInstance();
+		startCal.setTime(startDate);
+				
+		// Count from the start date to the end date to calculate duration
+		Calendar date = (Calendar) startCal.clone();  
+		long result = 0;  
+		while (date.before(endCal)) 
+		{  
+			date.add(Calendar.DAY_OF_MONTH, 1);  
+			result++;  
+		}  
+		
+//		System.out.println(_duration);
+		return result;
+		
 	}
 	
 	public int getOptimistic() {
@@ -213,13 +276,13 @@ public class Task {
 	
 	public ArrayList<Task> getPredecessors()
 	{
-		ArrayList<Task> preceding_tasks = new ArrayList<Task>();
+		ArrayList<Task> preceding_tasks_list = new ArrayList<Task>();
 		
 		Statement stmt = null;
 		try 
 		{
 			stmt = DB.getInstance().createStatement();
-			ResultSet id_set = stmt.executeQuery("SELECT preceding_task, tasks.name, tasks.duration, tasks.progress "
+			ResultSet id_set = stmt.executeQuery("SELECT preceding_task, tasks.name, tasks.task_start_date, tasks.task_end_date, tasks.progress "
 											   + "FROM task_sequence, tasks "
 											   + "WHERE task_id ==" + _id + " "
 											   + "AND preceding_task == tasks.id ");
@@ -228,14 +291,14 @@ public class Task {
 			{
 				//preceding_tasks += (id_set.getInt;("preceding_task") + " ");
 				
-//				int taskID = id_set.getInt("preceding_task");
-//				String taskName = id_set.getString("name");
-//				String taskProgressString = id_set.getString("progress");
-//				TaskProgress taskProgress = StringToProgress(taskProgressString);
-//				int taskDuration = id_set.getInt("duration");
+				int taskID = id_set.getInt("preceding_task");
+				String taskName = id_set.getString("name");
+				String taskProgressString = id_set.getString("progress");
+				TaskProgress taskProgress = StringToProgress(taskProgressString);
+				int taskDuration = id_set.getInt("duration");
 				
-				//Task is int id, String name, String description, TaskProgress progress, int dur
-				//Task taskFromDB = new Task(taskID, taskName, null, taskProgress, taskDuration)
+				//Task(int id, String name, String description, TaskProgress progress, Date startDate, Date endDate, int optimistic, int pessimistic, double estimate, double variance)
+				Task taskFromDB = new Task(taskID, taskName, null, taskProgress, _start_date, _end_date, taskDuration, taskDuration, _estimate, _estimate);
 				
 				
 				
@@ -248,7 +311,7 @@ public class Task {
 			System.exit(0);
 		}
 		
-		return preceding_tasks;
+		return preceding_tasks_list;
 	}
 	
 	public boolean updateTaskSequence(){
@@ -411,9 +474,9 @@ public class Task {
 	// Returns the start date of the task
 	// Note: Currently uses the "getLongestDuration_Alt" method, which is not always accurate
 	public Date getStartDate() {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(getProject().getStartDate());
-		cal.add(Calendar.DATE, getLongestDuration_Alt());
+		//Calendar cal = Calendar.getInstance();
+		//cal.setTime(getProject().getStartDate());
+		//cal.add(Calendar.DATE, getLongestDuration_Alt());
 		
 //		System.out.println("project start date: " + getProject().getStartDate());
 //		System.out.println("task test days: " + getLongestDuration_Alt());
@@ -423,17 +486,22 @@ public class Task {
 //		System.out.println(cal.getTime().getTime());
 //		System.out.println("yay");
 		
-		return cal.getTime();
+		//return cal.getTime();
+		
+		System.out.println("(in getStartDate(): " + _start_date);
+		return _start_date;
 	}
 	
 	// Returns the end date of the task
 	// Note: Currently uses the "getLongestDuration_Alt" method, which is not always accurate
 	public Date getEndDate() {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(getProject().getStartDate());
-		cal.add(Calendar.DATE, getLongestDuration_Alt() + getDuration());
+//		Calendar cal = Calendar.getInstance();
+//		cal.setTime(getProject().getStartDate());
+//		cal.add(Calendar.DATE, getLongestDuration_Alt() + getDuration());
+//		
+//		return cal.getTime();
 		
-		return cal.getTime();
+		return _end_date;
 	}
 	
 	// Returns the duration of a path leading from the current task to the beginning, not including the current path's duration
