@@ -29,14 +29,15 @@ public class Task {
 	private int _duration; 			//Task Duration
 	private String _description; 	//Task Description
 	private TaskProgress _progress; //Task Progress status variable
-	private Date _start_date; 		//Task Start Date
-	private Date _end_date; 		//Task End Date
-	ArrayList<User> _members = new ArrayList<User>(); //Storage for project members list
-	private List predecessors; //Storage for the task that this task depends on.
 	private int _optimistic;
 	private int _pessimistic;
 	private double _estimate;
 	private double _variance;
+	private Date _start_date; 		//Task Start Date
+	private Date _end_date; 		//Task End Date
+	ArrayList<User> _members = new ArrayList<User>(); //Storage for project members list
+	private List predecessors; //Storage for the task that this task depends on.
+	
 	
 	public Task(int id, String name, String description, TaskProgress progress, int dur, int optimistic, int pessimistic, double estimate, double variance) {
 		_id = id;
@@ -47,20 +48,23 @@ public class Task {
 		_optimistic = optimistic;
 		_pessimistic = pessimistic;
 		_estimate = estimate;
-		 _variance = variance;
+		_variance = variance;
 		 
-		 this.predecessors = new java.util.ArrayList();
+		this.predecessors = new java.util.ArrayList();
 	}
 	
-//	public Task(int id, String name, String description, TaskProgress progress, Date startDate, Date endDate){
-//	_id = id;
-//	_name = name;
-//	_description = description;
-//	_progress = progress;
-//	_start_date = startDate;
-//	_end_date = endDate;
-//	_duration = (int) getDateDifference(startDate, endDate, TimeUnit.DAYS);
-//}
+	public Task(int id, String name, String description, TaskProgress progress, Date startDate, Date endDate, int optimistic, int pessimistic, double estimate, double variance)
+	{
+		_id = id;
+		_name = name;
+		_description = description;
+		_progress = progress;
+		_start_date = startDate;
+		_end_date = endDate;
+		_duration = (int) getDateDifference(startDate, endDate, TimeUnit.DAYS);
+		
+		this.predecessors = new java.util.ArrayList();
+	}
 
 	public Project getProject() {
 		Project p = null;
