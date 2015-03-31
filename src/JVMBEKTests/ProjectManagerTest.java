@@ -31,15 +31,6 @@ public class ProjectManagerTest {
 	}
 	
 	@Test
-	public void getOwnerShouldReturnUser() {
-		
-		User dummy = new User(0, "", "", UserRole.MANAGER);
-		ProjectManager tester = new ProjectManager(dummy);
-		assertEquals(dummy, tester.getOwner());
-		
-	}
-
-	@Test
 	public void hasSelectedShouldReturnTrue() {
 		
 		ProjectManager tester = new ProjectManager(new User(10, "", "", UserRole.MANAGER));
