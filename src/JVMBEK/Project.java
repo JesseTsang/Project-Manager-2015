@@ -197,6 +197,10 @@ public class Project {
 
 	//public void addTask(String name, String description, int duration, int optimistic, int pessimistic, double estimate, double variance) {
 	public void addTask(String name, String description, Date taskStartDate, Date taskEndDate, int optimistic, int pessimistic, double estimate, double variance) {
+		System.out.println("(In Project) Start date: " + taskStartDate);
+		System.out.println("(In Project) End date: " + taskEndDate);
+		
+		
 		new Date();
 		Statement stmt = null;
 		try {
@@ -236,7 +240,7 @@ public class Project {
 			stmt.executeUpdate(sql);
 
 			_tasks.add(new Task(task_id, name, description,
-					TaskProgress.IN_QUEUE, taskStartDate, taskStartDate, optimistic, pessimistic, estimate, variance));
+					TaskProgress.IN_QUEUE, taskStartDate, taskEndDate, optimistic, pessimistic, estimate, variance));
 
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
