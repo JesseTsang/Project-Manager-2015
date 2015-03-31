@@ -195,29 +195,28 @@ public class Project {
 		}
 	}
 
-	public void addTask(String name, String description, int duration, int optimistic, int pessimistic, double estimate, double variance) {
+	//public void addTask(String name, String description, int duration, int optimistic, int pessimistic, double estimate, double variance) {
+	public void addTask(String name, String description, Date taskStartDate, Date taskEndDate, int optimistic, int pessimistic, double estimate, double variance) {
 		new Date();
 		Statement stmt = null;
 		try {
 			stmt = DB.getInstance().createStatement();
-			String sql = "INSERT INTO tasks  (name, description, duration, progress, optimistic, pessimistic, estimate, variance) VALUES ('"
+			String sql = "INSERT INTO tasks  (name, description, progress, optimistic, pessimistic, estimate, variance, task_start_date, task_end_date) VALUES ('"
 					+ name
 					+ "', '"
-					+ description
-					+ "', '"
-//					+ date.getTime()
-//					+ ", " 
-					+ duration
-					
-					// Tasks are set as "In Queue" by default
-					+ "', 'In Queue','"
+					+ description					
+					+ "', 'In Queue','" // Tasks are set as "In Queue" by default
 					+ optimistic
 					+ "', '"
 					+ pessimistic
 					+ "', '"
-					+estimate
+					+ estimate
 					+ "', '"
-					+variance
+					+ variance
+					+ "', '"
+					+ taskStartDate
+					+ "', '"
+					+ taskEndDate
 					+ "');";
 			stmt.executeUpdate(sql);
 
@@ -237,7 +236,7 @@ public class Project {
 			stmt.executeUpdate(sql);
 
 			_tasks.add(new Task(task_id, name, description,
-					TaskProgress.IN_QUEUE, /*date, */duration, optimistic, pessimistic, estimate, variance));
+					TaskProgress.IN_QUEUE, taskStartDate, taskStartDate, optimistic, pessimistic, estimate, variance));
 
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
