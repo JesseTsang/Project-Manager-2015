@@ -281,7 +281,7 @@ public class CreateTaskScreen extends Screen {
 				.getSelectedProject()
 				.addTask(tfTaskName.getText(), taDescription.getText(),
 						taskStartDate, taskEndDate, optimistic, pessimistic, estimate, variance);
-				
+							
 				// Getting the id of the task that just got created
 				// in order to setup the preceding tasks relation in the db
 
@@ -356,9 +356,7 @@ public class CreateTaskScreen extends Screen {
 			date.add(Calendar.DAY_OF_MONTH, 1);  
 			daysBetween++;  
 		}  
-		
-		System.out.println("Days passed: " + daysBetween);
-		
+	
 		return daysBetween; 
 	}
 
