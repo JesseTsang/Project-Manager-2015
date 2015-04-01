@@ -18,6 +18,8 @@ public class Project {
 	private Date _created_date;
 	private Date _start_date;
 	private ArrayList<Task> _tasks;
+	static Date startDatefromDB;
+	static Date endDatefromDB;
 	
 	// For member use, when selecting a task to view information for
 	public static int selectedTaskId;
@@ -47,13 +49,17 @@ public class Project {
 			while (task_set.next()) {
 				TaskProgress prog = Task.StringToProgress(task_set
 						.getString("progress"));
-
-				// TODO: get dates such as task_set.getDate("start_date"),
+				
+				startDatefromDB = task_set.getDate("task_start_date");
+				endDatefromDB   = task_set.getDate("task_end_date");
+			
 				Task t = new Task(task_set.getInt("id"),
 						task_set.getString("name"),
 						task_set.getString("description"), 
 						prog,
-						task_set.getInt("duration"),
+						//task_set.getInt("duration"),
+						startDatefromDB,
+						endDatefromDB,
 						task_set.getInt("optimistic"),
 						task_set.getInt("pessimistic"),
 						task_set.getInt("estimate"),
@@ -80,25 +86,25 @@ public class Project {
 			Statement member_stmt = DB.getInstance().createStatement();
 			ResultSet task_set = member_stmt
 					.executeQuery("SELECT * FROM tasks_members, tasks "
-							+ "WHERE user_id == " + user_id
-							+ " AND task_id = id");
+								+ "WHERE user_id == " + user_id
+								+ " AND task_id = id");
 
 			while (task_set.next()) {
 
-				TaskProgress prog = Task.StringToProgress(task_set
-						.getString("progress"));
+				TaskProgress prog = Task.StringToProgress(task_set.getString("progress"));
 
 				// TODO: get dates such as task_set.getDate("start_date"),
 				Task t = new Task(task_set.getInt("id"),
-						task_set.getString("name"),
-						task_set.getString("description"), 
-						prog,
-//						task_set.getDate("start_date"),
-						task_set.getInt("duration"),
-						task_set.getInt("optimistic"),
-						task_set.getInt("pessimistic"),
-						task_set.getInt("estimate"),
-						task_set.getInt("variance")
+								  task_set.getString("name"),
+								  task_set.getString("description"), 
+								  prog,						
+								  task_set.getInt("duration"),
+								  //startDatefromDB,
+								  //endDatefromDB,
+								  task_set.getInt("optimistic"),
+								  task_set.getInt("pessimistic"),
+								  task_set.getInt("estimate"),
+								  task_set.getInt("variance")
 						);
 
 				assignedTasks.add(t);
@@ -162,7 +168,12 @@ public class Project {
 	public String getStartDateString(){
 		String dateString = new SimpleDateFormat("dd-MM-yyyy").format(_start_date);
 		return dateString;
-
+	}
+	
+	public String getDateString(Date date)
+	{
+		String dateString = new SimpleDateFormat("dd-MM-yyyy").format(date);
+		return dateString;
 	}
 	
 //	public Date stringToDate(){
@@ -218,9 +229,9 @@ public class Project {
 					+ "', '"
 					+ variance
 					+ "', '"
-					+ taskStartDate
+					+ taskStartDate.getTime()
 					+ "', '"
-					+ taskEndDate
+					+ taskEndDate.getTime()
 					+ "');";
 			stmt.executeUpdate(sql);
 
