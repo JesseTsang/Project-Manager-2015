@@ -27,8 +27,8 @@ import javax.swing.table.DefaultTableModel;
 
 public class CreateTaskScreen extends Screen {
 	public final static String IDENTIFIER = "CREATETASK";
-	public static final int WIDTH = 840;//original 500
-	public static final int HEIGHT = 924;//original 550
+	public static final int WIDTH = 1176;//original 500
+	public static final int HEIGHT = 624;//original 550
 
 	private JTextField tfTaskName;
 	private JTextArea taDescription;
@@ -94,8 +94,8 @@ public class CreateTaskScreen extends Screen {
 		northPanel.add(tfTaskStartDate);
 		northPanel.add(lblTaskEndDate);
 		northPanel.add(tfTaskEndDate);
-		northPanel.add(lblDuration);
-		northPanel.add(tfDuration);
+		//northPanel.add(lblDuration);
+		//northPanel.add(tfDuration);
 		northPanel.add(lblOptimistic);
 		northPanel.add(tfOptimistic);
 		northPanel.add(lblPessimistic);
@@ -133,7 +133,7 @@ public class CreateTaskScreen extends Screen {
 					return;
 				}
 
-				if (tfDuration.getText().isEmpty() ||
+/*				if (tfDuration.getText().isEmpty() ||
 						// Accepting positive integers only; anything else is rejected
 						!tfDuration.getText().matches("\\d+") || Integer.parseInt(tfDuration.getText()) < 1) 
 				{
@@ -141,7 +141,7 @@ public class CreateTaskScreen extends Screen {
 							"Please enter a valid duration (# of days).",
 							"Incorrect duration", JOptionPane.ERROR_MESSAGE);
 					return;
-				}
+				}*/
 							
 				//Extract StartDate -> String, then store as a Date variable.
 				DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy"/*, Locale.ENGLISH*/);
@@ -149,8 +149,7 @@ public class CreateTaskScreen extends Screen {
 				Calendar cal = Calendar.getInstance();
 				String startDateString = tfTaskStartDate.getText();
 				String endDateString = tfTaskEndDate.getText();
-				
-				
+								
 				//If either tfTaskStartDate AND tfTaskEndDate are not empty, then ...
 				if(!tfTaskStartDate.getText().isEmpty() && !tfTaskEndDate.getText().isEmpty())
 				{
@@ -170,7 +169,6 @@ public class CreateTaskScreen extends Screen {
 					    }
 					    else
 					    {
-					    	//taskDuration = getDuration();
 					    	taskDuration = DateUtils.getDuration(taskStartDate, taskEndDate);
 					    }
 					}
@@ -190,9 +188,6 @@ public class CreateTaskScreen extends Screen {
 					return;
 				}
 				
-				
-							
-				//if (tfOptimistic.getText().isEmpty() || Integer.parseInt(tfOptimistic.getText()) >= Integer.parseInt(tfDuration.getText()))
 				if (tfOptimistic.getText().isEmpty() || Integer.parseInt(tfOptimistic.getText()) >= taskDuration)
 				{
 					JOptionPane.showMessageDialog(null,
@@ -201,8 +196,6 @@ public class CreateTaskScreen extends Screen {
 					return;
 				}
 
-				
-				//if (tfPessimistic.getText().isEmpty() || Integer.parseInt(tfPessimistic.getText()) <= Integer.parseInt(tfDuration.getText()))
 				if (tfPessimistic.getText().isEmpty() || Integer.parseInt(tfPessimistic.getText()) <= taskDuration)
 				{
 					JOptionPane.showMessageDialog(null,
@@ -226,9 +219,7 @@ public class CreateTaskScreen extends Screen {
 
 				if (cbFirstTask.isSelected()) 
 				{
-					// precedingTasks.add(-1);
 					isFirstTask = true;
-
 				}
 				else if (tblTasks.getSelectedRow() == -1)
 				{
@@ -265,19 +256,14 @@ public class CreateTaskScreen extends Screen {
 				// preceding_task in task_sequence will be itself
 				// Cannot be assigned until after addTask()
 
-				int dur = Integer.parseInt(tfDuration.getText());
+				int dur = (int) taskDuration;
 				int optimistic = Integer.parseInt(tfOptimistic.getText());
 				int pessimistic = Integer.parseInt(tfPessimistic.getText());
 				double e1 = optimistic + (4*dur) + pessimistic;
 				double estimate = e1/6;
 				double v1 = pessimistic - optimistic;
 				double variance = v1/6*v1/6;
-
-//				_manager.getProjectManager()
-//						.getSelectedProject()
-//						.addTask(tfTaskName.getText(), taDescription.getText(),
-//								dur, optimistic, pessimistic, estimate, variance);
-				
+							
 				_manager.getProjectManager()
 				.getSelectedProject()
 				.addTask(tfTaskName.getText(), taDescription.getText(),
@@ -299,7 +285,6 @@ public class CreateTaskScreen extends Screen {
 				}
 
 				// insertion into the table
-
 				for (int i = 0; i < precedingTasks.size(); i++) 
 				{
 					Statement stmt = null;
@@ -365,6 +350,8 @@ public class CreateTaskScreen extends Screen {
 		tfDuration.setText("");
 		tfTaskStartDate.setText("");
 		tfTaskEndDate.setText("");
+		tfOptimistic.setText("");
+		tfPessimistic.setText("");
 
 		String[] columnNames = { "Task ID", "Task Name",
 				"Progress", "Start Date", "End Date" , "Optimistic", "Pessimistic"};
