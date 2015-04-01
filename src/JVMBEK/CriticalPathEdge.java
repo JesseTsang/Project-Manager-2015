@@ -6,7 +6,7 @@ import java.util.Calendar;
 
 import org.jfree.util.ObjectUtilities;
 import org.jfree.util.PublicCloneable;
-import org.jfree.data.gantt.Task;
+//import org.jfree.data.gantt.Task;
 
 /**
  * This class represents an edge in the dependency graph. Each object holds a specific task.
@@ -95,8 +95,10 @@ public class CriticalPathEdge implements Cloneable, PublicCloneable, Serializabl
 	public long getDuration()
 	{
 		// turn the Task's duration into a Date object
-		Date endDate = task.getDuration().getEnd();
-		Date startDate = task.getDuration().getStart();
+		//Date endDate = task.getDuration().getEnd();
+		Date endDate = task.getEndDate();
+		//Date startDate = task.getDuration().getStart();
+		Date startDate = task.getStartDate();
 		
 		// turn the Date objects into Calendar objects
 		Calendar endCal = Calendar.getInstance();

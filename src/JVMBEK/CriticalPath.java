@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.jfree.data.gantt.TaskSeries;
-import org.jfree.data.gantt.Task;
+//import org.jfree.data.gantt.Task;
 
 /**
  * This is a modification of the critical path algorithm originally by Chris Katz.
@@ -17,6 +17,7 @@ public class CriticalPath
 	
 	/** The TaskSeries object that this critical path refers to */
 	private TaskSeries taskseries;
+	private ArrayList<Task> tasksList;
 	
 	/** The List of nodes in the dependency graph */
 	private List<CriticalPathNode> nodes;
@@ -32,10 +33,12 @@ public class CriticalPath
 	 * 
 	 * @param series The TaskSeries object whose critical path needs to be calculated
 	 */
-	public CriticalPath(TaskSeries series)
+	//public CriticalPath(TaskSeries series)
+	public CriticalPath(ArrayList<Task> tasksListFromProject)
 	{
 		root = new CriticalPathNode(0);
-		taskseries = series;
+		//taskseries = series;
+		tasksList = tasksListFromProject;
 		
 		nodes = new ArrayList<CriticalPathNode>();
 		nodes.add(root);
@@ -68,8 +71,10 @@ public class CriticalPath
 	 */
 	private void CreateEdges()
 	{
-		List tasks = taskseries.getTasks();
+		//List tasks = taskseries.getTasks();
+		List tasks = tasksList;
 		
+		//These are standardized tasks
 		for(Object t: tasks)
 		{
 			Task task = (Task)t;
@@ -254,9 +259,9 @@ public class CriticalPath
 	 * 
 	 * @return the list of Task objects that make up the critical path 
 	 */
-	public List getCriticalPath()
+	public ArrayList<JVMBEK.Task> getCriticalPath()
 	{
-		List criticalPath = new ArrayList();
+		ArrayList<JVMBEK.Task> criticalPath = new ArrayList();
 		for(CriticalPathEdge edge: edges)
 		{
 			long latestStartDate = edge.getNext().getLatestStartDate();
@@ -267,7 +272,8 @@ public class CriticalPath
 			
 			if(taskfloat == 0)
 			{
-				criticalPath.add(edge);
+				//criticalPath.add(edge);
+				criticalPath.add(edge.getTask());
 			}
 		}
 		
