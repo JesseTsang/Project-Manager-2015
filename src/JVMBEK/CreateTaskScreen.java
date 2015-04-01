@@ -170,7 +170,8 @@ public class CreateTaskScreen extends Screen {
 					    }
 					    else
 					    {
-					    	taskDuration = getDuration();
+					    	//taskDuration = getDuration();
+					    	taskDuration = DateUtils.getDuration(taskStartDate, taskEndDate);
 					    }
 					}
 					catch (Exception e) 
@@ -336,29 +337,25 @@ public class CreateTaskScreen extends Screen {
 		});
 	}
 	
-	public long getDuration()
-	{
-		// turn the Task's duration into a Date object
-		Date endDate = taskEndDate;
-		Date startDate = taskStartDate;
-		
-		// turn the Date objects into Calendar objects
-		Calendar endCal = Calendar.getInstance();
-		endCal.setTime(endDate);  
-		Calendar startCal = Calendar.getInstance();
-		startCal.setTime(startDate);
-		
-		// Count from the start date to the end date to calculate duration
-		Calendar date = (Calendar) startCal.clone();  
-		long daysBetween = 0;  
-		while (date.before(endCal)) 
-		{  
-			date.add(Calendar.DAY_OF_MONTH, 1);  
-			daysBetween++;  
-		}  
-	
-		return daysBetween; 
-	}
+//	public long getDuration()
+//	{		
+//		// turn the Date objects into Calendar objects
+//		Calendar endCal = Calendar.getInstance();
+//		endCal.setTime(taskEndDate);  
+//		Calendar startCal = Calendar.getInstance();
+//		startCal.setTime(taskStartDate);
+//		
+//		// Count from the start date to the end date to calculate duration
+//		Calendar date = (Calendar) startCal.clone();  
+//		long daysBetween = 0;  
+//		while (date.before(endCal)) 
+//		{  
+//			date.add(Calendar.DAY_OF_MONTH, 1);  
+//			daysBetween++;  
+//		}  
+//	
+//		return daysBetween; 
+//	}
 
 	@Override
 	public void Update() 
@@ -369,11 +366,10 @@ public class CreateTaskScreen extends Screen {
 		tfTaskStartDate.setText("");
 		tfTaskEndDate.setText("");
 
-		String[] columnNames = { "Task ID", "Task Name", "Description",
-				"Progress", "Optimistic", "Pessimistic"};
+		String[] columnNames = { "Task ID", "Task Name",
+				"Progress", "Start Date", "End Date" , "Optimistic", "Pessimistic"};
 
-		ArrayList<Task> tasks = _manager.getProjectManager()
-				.getSelectedProject().getTasks();
+		ArrayList<Task> tasks = _manager.getProjectManager().getSelectedProject().getTasks();
 		Object[][] data = new Object[tasks.size()][];
 
 		for (int i = 0; i < tasks.size(); i++) 
@@ -381,10 +377,13 @@ public class CreateTaskScreen extends Screen {
 			Task t = tasks.get(i);
 			data[i] = new Object[] 
 					{ 
-						t.getId(), t.getName(),
-						t.getDescription(),
-						Task.PROGRESS_STRINGS[t.getProgress().ordinal()], 
-						t.getOptimistic(), t.getPessimistic() 
+						t.getId(), 
+						t.getName(),
+						Task.PROGRESS_STRINGS[t.getProgress().ordinal()],
+						t.getStartDate(),
+						t.getEndDate(),
+						t.getOptimistic(),
+						t.getPessimistic(),
 					};
 		}
 
