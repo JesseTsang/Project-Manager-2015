@@ -24,9 +24,9 @@ public class ProjectManager {
 		populateProjects();
 	}
 
-//	public User getOwner() {
-//		return _owner;
-//	}
+	public User getOwner() {
+		return _owner;
+	}
 
 	public Map<Integer, Project> getProjects() {
 		return _projects;
