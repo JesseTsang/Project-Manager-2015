@@ -16,7 +16,7 @@ public class CriticalPath
 	private CriticalPathNode root;
 	
 	/** The TaskSeries object that this critical path refers to */
-	private TaskSeries taskseries;
+	//private TaskSeries taskseries;
 	private ArrayList<Task> tasksList;
 	
 	/** The List of nodes in the dependency graph */
@@ -59,7 +59,7 @@ public class CriticalPath
 	 */
 	private void CreatePath()
 	{
-		CreateEdges();
+		CreateEdges();//So all the tasks will be first cast to edge objects, then add to "edges" list.
 		CreateRoot();
 		CreateRestOfPath();
 		CalculateEarliestStartDate();
@@ -72,13 +72,15 @@ public class CriticalPath
 	private void CreateEdges()
 	{
 		//List tasks = taskseries.getTasks();
-		List tasks = tasksList;
+		//List tasks = tasksList;
 		
-		//These are standardized tasks
-		for(Object t: tasks)
+		
+		//for(Object t: tasks)
+		for(Task t: tasksList)
 		{
-			Task task = (Task)t;
-			CriticalPathEdge edge =  new CriticalPathEdge(task);
+			//Task task = (Task)t;
+			//CriticalPathEdge edge =  new CriticalPathEdge(task);
+			CriticalPathEdge edge =  new CriticalPathEdge(t);
 			edges.add(edge);
 		}	
 	}
@@ -92,6 +94,8 @@ public class CriticalPath
 		{
 			if(edge.getTask().getPredecessorCount() == 0)
 			{
+				//Does that mean only 1 task should have no predecessor?
+				System.out.println("CriticalPath.java - edge.getTask().getName() - root edge: " + edge.getTask().getName());
 				edge.setPrevious(root);
 				root.addNext(edge);
 			}
