@@ -501,6 +501,8 @@ public class Task {
 	
 	public int getPredecessorCount() 
 	{
+		//getPredecessors();
+		System.out.println("Task.java - predecessors.size(): " + predecessors.size());
 		return predecessors.size();
 	}
 	
