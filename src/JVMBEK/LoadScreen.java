@@ -42,6 +42,7 @@ public class LoadScreen extends Screen {
 						ModifyScreen.HEIGHT);
 			}
 		});
+		
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				int dialogButton = JOptionPane.YES_NO_OPTION;
@@ -106,14 +107,15 @@ public class LoadScreen extends Screen {
 		comboPanel.add(lblStartDate);
 
 
-		for (Project proj : _manager.getProjectManager().getProjects().values()) {
+		for (Project proj : _manager.getProjectManager().getProjects().values())
+		{
 			cmbProjects.addItem(proj);
 
-			if (!_manager.getProjectManager().hasSelected()) {
+			if (!_manager.getProjectManager().hasSelected()) 
+			{
 				_manager.getProjectManager().setSelectedProject(proj.getId());
 			}
 		}
-
 	}
 
 	@Override
