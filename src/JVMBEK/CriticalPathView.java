@@ -44,19 +44,20 @@ public class CriticalPathView extends JFrame
         setContentPane(chartPanel);
     }
     
+    //Extract our task list and generalize it for JFreeChart TaskList (TaskSeries).
     public static TaskSeries getTaskSeries(ArrayList<JVMBEK.Task> tasks)
     {
-    	final TaskSeries s1 = new TaskSeries("Scheduled");
+    	final TaskSeries taskSeries = new TaskSeries("Scheduled");
 	 	
-    	for(JVMBEK.Task t : tasks) 
+    	for(JVMBEK.Task task : tasks) 
     	{
-    		String taskName    = t.getName();
+    		String taskName    = task.getName();
     		
-    		Long startDateTime = t.getStartDate().getTime();
-    		Long endDateTime   = t.getEndDate().getTime();
+    		Long startDateTime = task.getStartDate().getTime();
+    		Long endDateTime   = task.getEndDate().getTime();
     		SimpleTimePeriod duration = new SimpleTimePeriod(startDateTime, endDateTime);
     		 		
-    		System.out.println("Getting Predecessor List for : " + taskName);
+/*    		System.out.println("Getting Predecessor List for : " + taskName);
     		ArrayList<JVMBEK.Task> testList = t.getPredecessors();
     		
     		if (testList.size() != 0)
@@ -69,12 +70,12 @@ public class CriticalPathView extends JFrame
         			System.out.println("Predecessor " + k + " : " + predecessorTaskName);
         			k++;        			
         		}			
-    		}
+    		}*/
     			
-    		s1.add(new Task(taskName, duration));
+    		taskSeries.add(new Task(taskName, duration));
     	}
     	
-    	return s1; 	
+    	return taskSeries; 	
     }
     
     /**
@@ -86,22 +87,16 @@ public class CriticalPathView extends JFrame
     	
     	final TaskSeries s1 = getTaskSeries(tasks);
     	
-    	criticalPath = new CriticalPath(s1);
+    	//criticalPath = new CriticalPath(s1);
+    	criticalPath = new CriticalPath(tasks);
     	criticalPath.createPath();
-    	List testList = criticalPath.getCriticalPath();
+    	ArrayList<JVMBEK.Task> criticalPathList = criticalPath.getCriticalPath();
     	
-    	// iterate via "for loop"
-    	System.out.println("List size: " + testList.size());
-    	for (int i = 0; i < testList.size(); i++) 
-    	{
-    		System.out.println(i);
-    		System.out.println(testList.get(i));
-    	}
-    	System.out.println("End loop");
+    	final TaskSeries s2 = getTaskSeries(criticalPathList);
     	
-    	 	
+    	 	  	 	
         final TaskSeriesCollection collection = new TaskSeriesCollection();
-        collection.add(s1);
+        collection.add(s2);
     	
         return collection;
     }
