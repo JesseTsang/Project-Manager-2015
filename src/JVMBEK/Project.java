@@ -149,13 +149,12 @@ public class Project {
 	public Date getCreatedDate(){
 		return _created_date;
 	}
+	
 	public void setDescription(String desc) {
 		
 		_description = desc;
 	}
 	
-
-
 	public ArrayList<Task> getTasks() {
 		return _tasks;
 	}
@@ -176,12 +175,6 @@ public class Project {
 		return dateString;
 	}
 	
-//	public Date stringToDate(){
-//		DateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-//		Date date = format.parse(this);
-//		return date;
-//	}
-
 	// **********************************************************************
 	// TASK DATABASE FUNCTIONS
 	// **********************************************************************
@@ -208,11 +201,6 @@ public class Project {
 
 	//public void addTask(String name, String description, int duration, int optimistic, int pessimistic, double estimate, double variance) {
 	public void addTask(String name, String description, Date taskStartDate, Date taskEndDate, int optimistic, int pessimistic, double estimate, double variance) {
-		System.out.println("(In Project) Start date: " + taskStartDate);
-		System.out.println("(In Project) End date: " + taskEndDate);
-		
-		
-		new Date();
 		Statement stmt = null;
 		try {
 			stmt = DB.getInstance().createStatement();
