@@ -172,14 +172,11 @@ public class Task {
 		return result;	
 	}
 	
-	public int getOptimistic() {
-		System.out.println("Task.java - _optimistic: " + _optimistic);
-		
+	public int getOptimistic() {	
 		return _optimistic;
 	}
 	
 	public int getPessimistic() {
-		System.out.println("Task.java - _pessimistic: " + _pessimistic);
 		return _pessimistic;
 	}
 	
