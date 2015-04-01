@@ -39,7 +39,7 @@ public class Task {
 	private List predecessors; //Storage for the task that this task depends on.
 	
 	
-	public Task(int id, String name, String description, TaskProgress progress, int dur, int optimistic, int pessimistic, double estimate, double variance) {
+/*	public Task(int id, String name, String description, TaskProgress progress, int dur, int optimistic, int pessimistic, double estimate, double variance) {
 		_id = id;
 		_name = name;
 		_description = description;
@@ -51,7 +51,7 @@ public class Task {
 		_variance = variance;
 		 
 		this.predecessors = new java.util.ArrayList();
-	}
+	}*/
 	
 	public Task(int id, String name, String description, TaskProgress progress, Date startDate, Date endDate, int optimistic, int pessimistic, double estimate, double variance)
 	{
@@ -61,9 +61,13 @@ public class Task {
 		_progress = progress;
 		_start_date = startDate;
 		_end_date = endDate;
-
-		_duration = getDuration();
-			
+		_optimistic = optimistic;
+		_pessimistic = pessimistic;
+		_estimate = estimate;
+		_variance = variance;
+		
+		_duration = getDuration();		
+		
 		this.predecessors = new java.util.ArrayList();
 	}
 
@@ -169,18 +173,24 @@ public class Task {
 	}
 	
 	public int getOptimistic() {
+		System.out.println("Task.java - _optimistic: " + _optimistic);
+		
 		return _optimistic;
 	}
 	
 	public int getPessimistic() {
+		System.out.println("Task.java - _pessimistic: " + _pessimistic);
 		return _pessimistic;
 	}
+	
 	public double getEstimate() {
 		return _estimate;
 	}
+	
 	public double getVariance() {
 		return _variance;
 	}
+	
 	public String getName() {
 		return _name;
 	}
@@ -486,21 +496,8 @@ public class Task {
 //		return end_date;
 //	}
 	
-	/**
-	 * Get the difference between two dates
-	 * @param date1 the oldest date
-	 * @param date2 the newest date
-	 * @param timeUnit the unit in which you want the diff
-	 * @return the diff value, in the provided unit
-	 */
-	public static long getDateDifference(Date date1, Date date2, TimeUnit timeUnit) {
-	    long differenceInMillies = date2.getTime() - date1.getTime();
-	    return timeUnit.convert(differenceInMillies,TimeUnit.MILLISECONDS);
-	}
-	
 	public String dateToString(){
 		String dateString = new SimpleDateFormat("dd-MM-yyyy").format(this);
 		return dateString;
 	}
-
 }
