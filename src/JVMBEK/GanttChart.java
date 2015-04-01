@@ -102,8 +102,7 @@ public class GanttChart extends JFrame {
     				// Note: "SimpleTimePeriod" constructor does not seem to support large numbers, even though
     				// apparently it should accept "long" type date
     				// Thus, numbers out of range (too large, whether positive or negative) could cause a crash
-    	               new SimpleTimePeriod(t.getStartDate().getTime(), 
-    	            		   t.getEndDate().getTime())));
+    	               new SimpleTimePeriod(t.getStartDate().getTime(), t.getEndDate().getTime())));
     	}
     	
 /*    	final TaskSeries s2 = new TaskSeries("Actual");
