@@ -61,14 +61,9 @@ public class Task {
 		_progress = progress;
 		_start_date = startDate;
 		_end_date = endDate;
-	
-		_duration = (int) getDateDifference(startDate, endDate, TimeUnit.DAYS);
-		//_duration = getDuration();
-		
-		System.out.println("(in task) Start date: " + _start_date);
-		System.out.println("(in task) End date: " + _end_date);
-		System.out.println("(in task) Duration: " + _duration);
-		
+
+		_duration = getDuration();
+			
 		this.predecessors = new java.util.ArrayList();
 	}
 
@@ -148,63 +143,29 @@ public class Task {
 	
 	public int getDuration() 
 	{
-		// turn the Task's duration into a Date object
-//		Date endDate = _end_date;
-//		Date startDate = _start_date;
-		
-		//System.out.println("Standby ...");
-		//System.out.println("Duration: " + _duration);
-		
-
-				
-		// turn the Date objects into Calendar objects
-//		Calendar endCal = Calendar.getInstance();
-//		endCal.setTime(endDate);  
-//		Calendar startCal = Calendar.getInstance();
-//		startCal.setTime(startDate);
-				
-		// Count from the start date to the end date to calculate duration
-//		Calendar date = (Calendar) startCal.clone();  
-//		_duration = 0;  
-//		while (date.before(endCal)) 
-//		{  
-//			date.add(Calendar.DAY_OF_MONTH, 1);  
-//			_duration++;  
-//		}  
-//		
-//		System.out.println(_duration);
 		return _duration;
 	}
 	
 	public long calcDuration()
-	{
-		//turn the Task's duration into a Date object
-		Date endDate = _end_date;
-		Date startDate = _start_date;
-		
-		//System.out.println("Standby ...");
-		//System.out.println("Duration: " + _duration);
-		
-
-				
+	{		
 		// turn the Date objects into Calendar objects
 		Calendar endCal = Calendar.getInstance();
-		endCal.setTime(endDate);  
+		endCal.setTime(_end_date);  
 		Calendar startCal = Calendar.getInstance();
-		startCal.setTime(startDate);
+		startCal.setTime(_start_date);
 				
 		// Count from the start date to the end date to calculate duration
 		Calendar date = (Calendar) startCal.clone();  
+		
 		long result = 0;  
+		
 		while (date.before(endCal)) 
 		{  
 			date.add(Calendar.DAY_OF_MONTH, 1);  
 			result++;  
 		}  
-		
-//		System.out.println(_duration);
-		return result;
-		
+
+		return result;	
 	}
 	
 	public int getOptimistic() {
@@ -232,20 +193,25 @@ public class Task {
 		return _progress;
 	}
 	
-	public ArrayList<Integer> getPrecedingIds(){
+	public ArrayList<Integer> getPrecedingIds()
+	{
 		ArrayList<Integer> preceding_tasks = new ArrayList<Integer>();
 		Statement stmt = null;
-		try {
+		
+		try 
+		{
 			stmt = DB.getInstance().createStatement();
 			ResultSet id_set = stmt.executeQuery("SELECT preceding_task FROM task_sequence "
 					+ "WHERE task_id ==" + _id);
 			
-			while(id_set.next()){
+			while(id_set.next())
+			{
 				preceding_tasks.add(id_set.getInt("preceding_task"));
 			}
-			
-			
-		} catch (Exception e) {
+					
+		}
+		catch (Exception e)
+		{
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
 		}
@@ -253,20 +219,26 @@ public class Task {
 		return preceding_tasks;
 	}
 	
-	public String getPrecedingIdsAsString(){
+	public String getPrecedingIdsAsString()
+	{
 		String preceding_tasks = "";
 		Statement stmt = null;
-		try {
+		
+		try 
+		{
 			stmt = DB.getInstance().createStatement();
 			ResultSet id_set = stmt.executeQuery("SELECT preceding_task FROM task_sequence "
 					+ "WHERE task_id ==" + _id);
 			
-			while(id_set.next()){
+			while(id_set.next())
+			{
 				preceding_tasks += (id_set.getInt("preceding_task") + " ");
 			}
 			
 			
-		} catch (Exception e) {
+		} 
+		catch (Exception e)
+		{
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
 		}
@@ -352,14 +324,6 @@ public class Task {
 
 	}
 	
-//	public Date getStartDate(){
-//		return _start_date;
-//	}
-//	
-//	public Date getEndDate(){
-//		return _end_date;
-//	}
-
 	public ArrayList<User> getAssignedMembers() {
 		loadMembers();
 		return _members;
@@ -471,36 +435,13 @@ public class Task {
 		}
 	}
 	
-	// Returns the start date of the task
-	// Note: Currently uses the "getLongestDuration_Alt" method, which is not always accurate
-	public Date getStartDate() {
-		//Calendar cal = Calendar.getInstance();
-		//cal.setTime(getProject().getStartDate());
-		//cal.add(Calendar.DATE, getLongestDuration_Alt());
-		
-//		System.out.println("project start date: " + getProject().getStartDate());
-//		System.out.println("task test days: " + getLongestDuration_Alt());
-//		System.out.println("task start date: " + cal.getTime());
-//		System.out.println("can we add project start date and task start date as long: below");
-//		System.out.println(getProject().getStartDate().getTime());
-//		System.out.println(cal.getTime().getTime());
-//		System.out.println("yay");
-		
-		//return cal.getTime();
-		
-		System.out.println("(in getStartDate(): " + _start_date);
+	public Date getStartDate()
+	{
 		return _start_date;
 	}
 	
-	// Returns the end date of the task
-	// Note: Currently uses the "getLongestDuration_Alt" method, which is not always accurate
-	public Date getEndDate() {
-//		Calendar cal = Calendar.getInstance();
-//		cal.setTime(getProject().getStartDate());
-//		cal.add(Calendar.DATE, getLongestDuration_Alt() + getDuration());
-//		
-//		return cal.getTime();
-		
+	public Date getEndDate()
+	{
 		return _end_date;
 	}
 	
