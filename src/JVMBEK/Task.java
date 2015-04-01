@@ -255,7 +255,7 @@ public class Task {
 	
 	public ArrayList<Task> getPredecessors()
 	{
-		ArrayList<Task> preceding_tasks_list = new ArrayList<Task>();
+		//ArrayList<Task> preceding_tasks_list = new ArrayList<Task>();
 		
 		Statement stmt = null;
 		try 
@@ -287,7 +287,7 @@ public class Task {
 				Task taskFromDB = new Task(taskID, taskName, taskDescription, taskProgress, 
 										   startDateFromDB, endDateFromDB, optimisticFromDB, pessimisticFromDB, estimateFromDB, varianceFromDB);
 				
-				preceding_tasks_list.add(taskFromDB);
+				predecessors.add(taskFromDB);
 			}	
 		} 
 		catch (Exception e) 
@@ -296,7 +296,7 @@ public class Task {
 			System.exit(0);
 		}
 		
-		return preceding_tasks_list;
+		return (ArrayList<Task>) predecessors;
 	}
 	
 	public boolean updateTaskSequence(){
@@ -499,8 +499,15 @@ public class Task {
 //		return end_date;
 //	}
 	
+	public int getPredecessorCount() 
+	{
+		return predecessors.size();
+	}
+	
 	public String dateToString(){
 		String dateString = new SimpleDateFormat("dd-MM-yyyy").format(this);
 		return dateString;
 	}
+
+	
 }
