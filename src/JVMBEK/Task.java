@@ -150,7 +150,7 @@ public class Task {
 		return _duration;
 	}
 	
-	public long calcDuration()
+/*	public long calcDuration()
 	{		
 		// turn the Date objects into Calendar objects
 		Calendar endCal = Calendar.getInstance();
@@ -170,7 +170,7 @@ public class Task {
 		}  
 
 		return result;	
-	}
+	}*/
 	
 	public int getOptimistic() {	
 		return _optimistic;
@@ -415,7 +415,7 @@ public class Task {
 	
 	// Returns the total number of preceding tasks; recursive
 	// DOES NOT WORK PROPERLY YET
-	public int getTotalPrecedingTasks() {
+/*	public int getTotalPrecedingTasks() {
 		int temp = getNumberOfImmediatelyPrecedingTasks();
 		
 		if(temp == 0) {
@@ -435,10 +435,10 @@ public class Task {
 			System.out.println("final counter: " + counter);
 			return counter;
 		}
-	}
+	}*/
 	
 	// Returns the number of immediately preceding tasks, counting itself
-	public int getNumberOfImmediatelyPrecedingTasks() {
+/*	public int getNumberOfImmediatelyPrecedingTasks() {
 		ArrayList<Integer> precedingIds = this.getPrecedingIds();
 		if(precedingIds.get(0) == _id) {
 			return 1;
@@ -446,7 +446,7 @@ public class Task {
 		else {
 			return precedingIds.size();
 		}
-	}
+	}*/
 	
 	public Date getStartDate()
 	{
@@ -461,7 +461,7 @@ public class Task {
 	// Returns the duration of a path leading from the current task to the beginning, not including the current path's duration
 	// Does not reliably return the longest path, as it checks task-by-task, and not the whole thing
 	// Recursive
-	public int getLongestDuration_Alt() {
+/*	public int getLongestDuration_Alt() {
 		ArrayList<Integer> precedingIds = getPrecedingIds();
 		
 		if(precedingIds.size() > 0) {
@@ -486,7 +486,7 @@ public class Task {
 			}
 		}
 		return 0;
-	}
+	}*/
 	
 //	public Date addDaysToDate(int duration){
 //		Date end_date;	
@@ -504,10 +504,10 @@ public class Task {
 		return predecessors.size();
 	}
 	
-	public String dateToString(){
+/*	public String dateToString(){
 		String dateString = new SimpleDateFormat("dd-MM-yyyy").format(this);
 		return dateString;
-	}
+	}*/
 
 	
 }
