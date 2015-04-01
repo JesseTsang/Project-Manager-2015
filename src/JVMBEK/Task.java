@@ -261,27 +261,33 @@ public class Task {
 		try 
 		{
 			stmt = DB.getInstance().createStatement();
-			ResultSet id_set = stmt.executeQuery("SELECT preceding_task, tasks.name, tasks.task_start_date, tasks.task_end_date, tasks.progress "
+			ResultSet id_set = stmt.executeQuery("SELECT preceding_task, tasks.name, tasks.task_start_date, tasks.task_end_date, tasks.progress, "
+											   + "tasks.description, tasks.optimistic, tasks.pessimistic, tasks.estimate, tasks.variance "
 											   + "FROM task_sequence, tasks "
 											   + "WHERE task_id ==" + _id + " "
 											   + "AND preceding_task == tasks.id ");
 			
 			while(id_set.next())
 			{
-				//preceding_tasks += (id_set.getInt;("preceding_task") + " ");
-				
 				int taskID = id_set.getInt("preceding_task");
 				String taskName = id_set.getString("name");
+				String taskDescription = id_set.getString("description");
+				
 				String taskProgressString = id_set.getString("progress");
 				TaskProgress taskProgress = StringToProgress(taskProgressString);
-				int taskDuration = id_set.getInt("duration");
+				
+				Date startDateFromDB = id_set.getDate("task_start_date");
+				Date endDateFromDB   = id_set.getDate("task_end_date");
+				int optimisticFromDB = id_set.getInt("optimistic");
+				int pessimisticFromDB = id_set.getInt("pessimistic");
+				int estimateFromDB = id_set.getInt("estimate");
+				int varianceFromDB = id_set.getInt("variance");
 				
 				//Task(int id, String name, String description, TaskProgress progress, Date startDate, Date endDate, int optimistic, int pessimistic, double estimate, double variance)
-				Task taskFromDB = new Task(taskID, taskName, null, taskProgress, _start_date, _end_date, taskDuration, taskDuration, _estimate, _estimate);
+				Task taskFromDB = new Task(taskID, taskName, taskDescription, taskProgress, 
+										   startDateFromDB, endDateFromDB, optimisticFromDB, pessimisticFromDB, estimateFromDB, varianceFromDB);
 				
-				
-				
-				//preceding_tasks.add()
+				preceding_tasks_list.add(taskFromDB);
 			}	
 		} 
 		catch (Exception e) 
