@@ -51,11 +51,26 @@ public class CriticalPathView extends JFrame
     	for(JVMBEK.Task t : tasks) 
     	{
     		String taskName    = t.getName();
+    		
     		Long startDateTime = t.getStartDate().getTime();
     		Long endDateTime   = t.getEndDate().getTime();
     		SimpleTimePeriod duration = new SimpleTimePeriod(startDateTime, endDateTime);
+    		 		
+    		System.out.println("Getting Predecessor List for : " + taskName);
+    		ArrayList<JVMBEK.Task> testList = t.getPredecessors();
     		
-    		System.out.println("Name: " + taskName + " Duration: " + duration.toString());
+    		if (testList.size() != 0)
+    		{
+    			int k = 0;
+    			for(JVMBEK.Task predecessorTask : testList)
+        		{			
+        			String predecessorTaskName = predecessorTask.getName();
+        			
+        			System.out.println("Predecessor " + k + " : " + predecessorTaskName);
+        			k++;        			
+        		}			
+    		}
+    			
     		s1.add(new Task(taskName, duration));
     	}
     	
@@ -70,18 +85,6 @@ public class CriticalPathView extends JFrame
     public static IntervalCategoryDataset createDataset(ArrayList<JVMBEK.Task> tasks) {
     	
     	final TaskSeries s1 = getTaskSeries(tasks);
-    	
-//    	final TaskSeries s1 = new TaskSeries("Scheduled");
-//    	 	
-//    	for(JVMBEK.Task t : tasks) 
-//    	{
-//    		String taskName    = t.getName();
-//    		Long startDateTime = t.getStartDate().getTime();
-//    		Long endDateTime   = t.getEndDate().getTime();
-//    		SimpleTimePeriod duration = new SimpleTimePeriod(startDateTime, endDateTime);
-//    		
-//    		s1.add(new Task(taskName, duration));
-//    	}
     	
     	criticalPath = new CriticalPath(s1);
     	criticalPath.createPath();
