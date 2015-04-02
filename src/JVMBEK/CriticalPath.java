@@ -1,5 +1,6 @@
 package JVMBEK;
 
+import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -71,15 +72,8 @@ public class CriticalPath
 	 */
 	private void CreateEdges()
 	{
-		//List tasks = taskseries.getTasks();
-		//List tasks = tasksList;
-		
-		
-		//for(Object t: tasks)
 		for(Task t: tasksList)
 		{
-			//Task task = (Task)t;
-			//CriticalPathEdge edge =  new CriticalPathEdge(task);
 			CriticalPathEdge edge =  new CriticalPathEdge(t);
 			edges.add(edge);
 		}	
@@ -91,11 +85,12 @@ public class CriticalPath
 	private void CreateRoot()
 	{
 		for(CriticalPathEdge edge: edges)
-		{
+		{		
+			edge.getTask().getPredecessors();
+				
 			if(edge.getTask().getPredecessorCount() == 0)
 			{
-				//Does that mean only 1 task should have no predecessor?
-				System.out.println("CriticalPath.java - edge.getTask().getName() - root edge: " + edge.getTask().getName());
+				System.out.println("CriticalPath.java - CreateRoot()- edge.getTask().getName() - root edge: " + edge.getTask().getName());
 				edge.setPrevious(root);
 				root.addNext(edge);
 			}
@@ -105,27 +100,28 @@ public class CriticalPath
 	/**
 	 * Cycles through the rest of the edges in the graph and connects all dependent
 	 * edges by either placing a new node in between them or connecting them via an existing node
-	 * 
-	 * 
 	 */
 	private void CreateRestOfPath()
 	{
-		CreateRoot();
-		
+		System.out.println("CriticalPath.java - CreateRestOfPath() - Starting: ");
+	
 		int nodecounter = 1;
 		
-		for(CriticalPathEdge edge: edges)
+		for(CriticalPathEdge edge: edges)//edges contains all the tasks in this project
 		{
 			Task task = edge.getTask();
-			if(task.getPredecessorCount() > 0)
+			
+			if(task.getPredecessorCount() > 0) //If a task has 1 or more predecessor (looping from all the tasks in this project)
 			{
-				List predecessors = task.getPredecessors();
-				for(Object next: predecessors)
+				List predecessors = task.getPredecessors(); //Then, get the list of the predecessors, call it predecessorsList
+				
+				for(Object next: predecessors)//For each object in this predecessorsList 
 				{
-					Task predecessor = (Task)next;
-					for(CriticalPathEdge predecessoredge: edges)
+					Task predecessor = (Task)next;//We cast the object as Task. call it predecessorTask
+					
+					for(CriticalPathEdge predecessoredge: edges) //looping all the tasks from this project again
 					{
-						if(predecessoredge.getTask() == predecessor)
+						if(predecessoredge.getTask() == predecessor) //if the task is equal to predecessorTask
 						{
 							// only create a new node if neither has a connection
 							if(predecessoredge.getNext() == null && edge.getPrevious() == null)
@@ -266,10 +262,35 @@ public class CriticalPath
 	public ArrayList<JVMBEK.Task> getCriticalPath()
 	{
 		ArrayList<JVMBEK.Task> criticalPath = new ArrayList();
+		
 		for(CriticalPathEdge edge: edges)
 		{
+			//System.out.println("CriticalPath.java - getCriticalPath(): " + "Fuck up starts here");
+			System.out.println("CriticalPath.java - getCriticalPath() - Task name: " + edge.getTask().getName());
+			
 			long latestStartDate = edge.getNext().getLatestStartDate();
-			long earliestStartDate = edge.getPrevious().getEarliestStartDate();
+			Date testDate = new Date(latestStartDate);
+			String testDateString = DateUtils.getDateString(testDate);
+			
+			System.out.println("CriticalPath.java - getCriticalPath() - latestStartDate: " + testDateString); //Okay
+
+			long earliestStartDate = 0;
+			
+			if(edge.getPrevious() == null)
+			{
+				System.out.println("CriticalPath.java - getCriticalPath() - earliestStartDate: " + null + " -- setting 0.");
+				earliestStartDate = 0;			
+			}
+			else
+			{
+				earliestStartDate = edge.getPrevious().getEarliestStartDate();			
+			}
+			
+			testDate = new Date(latestStartDate);
+			testDateString = DateUtils.getDateString(testDate);
+			
+			System.out.println("CriticalPath.java - getCriticalPath() - earliestStartDate: " + testDateString);
+			
 			long duration = edge.getDuration();
 			
 			long taskfloat =  latestStartDate - earliestStartDate - duration;
