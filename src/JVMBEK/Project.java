@@ -98,7 +98,6 @@ public class Project {
 								  task_set.getString("name"),
 								  task_set.getString("description"), 
 								  prog,						
-								  //task_set.getInt("duration"),
 								  startDatefromDB,
 								  endDatefromDB,
 								  task_set.getInt("optimistic"),
@@ -199,7 +198,6 @@ public class Project {
 		}
 	}
 
-	//public void addTask(String name, String description, int duration, int optimistic, int pessimistic, double estimate, double variance) {
 	public void addTask(String name, String description, Date taskStartDate, Date taskEndDate, int optimistic, int pessimistic, double estimate, double variance) {
 		Statement stmt = null;
 		try {
