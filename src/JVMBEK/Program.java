@@ -1,15 +1,15 @@
 package JVMBEK;
 
 /*=============================================================================
-|	Project:		COMP 354 Assignment, Iteration 2
-|	Developers:		Mark Le, Edward Chiang 
-|	Documenters:	Benjamin Slapcoff, Vinh Truong
-|	Testers:		Jesse Tsang, Karim Atwa
+|	Project:		COMP 354 Assignment, Iteration 3
+|	Developers:		Jesse Tsang, Karim Atwa
+|	Documenters:	Mark Le, Edward Chiang 
+|	Testers:		Benjamin Slapcoff, Vinh Truong
 |	Course:			COMP 354
 |	Instructor:		Gregory Butler
-|	Due Date:		March 11 2015
+|	Due Date:		April 01 2015
 |
-|	Description:	The second iteration of a Project Management software system. This program
+|	Description:	The third and lase iteration of a Project Management software system. This program
 |					uses an SQLite Database (stored in a file called "jvmbek" in the source directory)
 |					to maintain and manage projects and users. Managers can log into the system and
 |					create, modify and delete projects. Tasks can be added to projects as well, and assigned
