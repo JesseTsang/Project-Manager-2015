@@ -98,8 +98,8 @@ public class Task {
 			while (member_set.next()) {
 
 				User m = new User(member_set.getInt("id"),
-						member_set.getString("fname"),
-						member_set.getString("lname"), UserRole.MEMBER);
+								  member_set.getString("fname"),
+								  member_set.getString("lname"), UserRole.MEMBER);
 
 				_members.add(m);
 			}
