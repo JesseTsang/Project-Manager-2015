@@ -66,7 +66,7 @@ public class Task {
 		_estimate = estimate;
 		_variance = variance;
 		
-		_duration = getDuration();		
+		_duration = getDuration();	
 		
 		this.predecessors = new java.util.ArrayList();
 	}
@@ -253,11 +253,11 @@ public class Task {
 		return preceding_tasks;
 	}
 	
-	public ArrayList<Task> getPredecessors()
+	public List getPredecessors()
 	{
-		//ArrayList<Task> preceding_tasks_list = new ArrayList<Task>();
-		
+		predecessors = new java.util.ArrayList();	
 		Statement stmt = null;
+		
 		try 
 		{
 			stmt = DB.getInstance().createStatement();
@@ -283,11 +283,13 @@ public class Task {
 				int estimateFromDB = id_set.getInt("estimate");
 				int varianceFromDB = id_set.getInt("variance");
 				
-				//Task(int id, String name, String description, TaskProgress progress, Date startDate, Date endDate, int optimistic, int pessimistic, double estimate, double variance)
-				Task taskFromDB = new Task(taskID, taskName, taskDescription, taskProgress, 
-										   startDateFromDB, endDateFromDB, optimisticFromDB, pessimisticFromDB, estimateFromDB, varianceFromDB);
-				
-				predecessors.add(taskFromDB);
+				if (_id != taskID)
+				{
+					Task taskFromDB = new Task(taskID, taskName, taskDescription, taskProgress, 
+							   				   startDateFromDB, endDateFromDB, optimisticFromDB, pessimisticFromDB, estimateFromDB, varianceFromDB);
+					
+					predecessors.add(taskFromDB);
+				}
 			}	
 		} 
 		catch (Exception e) 
@@ -295,8 +297,8 @@ public class Task {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
 		}
-		
-		return (ArrayList<Task>) predecessors;
+
+		return predecessors;
 	}
 	
 	public boolean updateTaskSequence(){
@@ -315,8 +317,7 @@ public class Task {
 					+ _id);
 				//Find if the current task have a preceding task, skips when it is preceding itself
 				//(Find if the current task have a task after it)
-
-			
+	
 			while( id_set.next() ) {
 			    // ResultSet processing here
 			    hasNoFollowingTask = false;
@@ -501,8 +502,6 @@ public class Task {
 	
 	public int getPredecessorCount() 
 	{
-		//getPredecessors();
-		System.out.println("Task.java - predecessors.size(): " + predecessors.size());
 		return predecessors.size();
 	}
 	
