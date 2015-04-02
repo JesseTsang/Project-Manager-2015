@@ -30,13 +30,6 @@ public class MemberTaskInformationScreen extends Screen {
 	public static final int WIDTH = 300;
 	public static final int HEIGHT = 400;
 
-	/*
-	 * private JLabel lblProjectNameVal; private JLabel lblTaskIDVal; private
-	 * JLabel lblTaskNameVal; private JLabel lblStartDateVal; private JLabel
-	 * lblDueDateVal; private JLabel lblDurationVal; private JTextArea
-	 * taDescription; private JLabel lblProgressVal;
-	 */
-
 	private JPanel northPanel, centerPanel;
 
 	public MemberTaskInformationScreen(ScreenManager manager) {
@@ -230,8 +223,6 @@ public class MemberTaskInformationScreen extends Screen {
 
 		JScrollPane scroll = new JScrollPane(taDescription);
 		scroll.setOpaque(true);
-		// scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		// scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
 		centerPanel.removeAll();
 		centerPanel.add(lblDescription);
