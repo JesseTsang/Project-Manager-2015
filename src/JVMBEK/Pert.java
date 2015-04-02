@@ -26,7 +26,6 @@ public class Pert extends Screen {
 	private JTable tblPert;
 	private DefaultTableModel model;
 
-
 	public Pert(ScreenManager manager) {
 		super(manager);
 	}
@@ -52,7 +51,6 @@ public class Pert extends Screen {
 		// Members are shown here
 		JScrollPane scroll = new JScrollPane(tblPert);
 		scroll.setOpaque(true);
-//		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		centerPanel.add(scroll);
 
 		southPanel.add(btnBack);
