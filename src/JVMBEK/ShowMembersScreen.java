@@ -59,7 +59,6 @@ public class ShowMembersScreen extends Screen {
 		// Members are shown here
 		JScrollPane scroll = new JScrollPane(tblMembers);
 		scroll.setOpaque(true);
-//		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		centerPanel.add(scroll);
 
 		southPanel.add(btnAdd);
