@@ -106,7 +106,6 @@ public class LoadScreen extends Screen {
 		comboPanel.add(lblDescription);
 		comboPanel.add(lblStartDate);
 
-
 		for (Project proj : _manager.getProjectManager().getProjects().values())
 		{
 			cmbProjects.addItem(proj);
