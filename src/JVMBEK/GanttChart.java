@@ -42,8 +42,6 @@ package JVMBEK;
  *
  */
 
-
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -104,14 +102,7 @@ public class GanttChart extends JFrame {
     				// Thus, numbers out of range (too large, whether positive or negative) could cause a crash
     	               new SimpleTimePeriod(t.getStartDate().getTime(), t.getEndDate().getTime())));
     	}
-    	
-/*    	final TaskSeries s2 = new TaskSeries("Actual");
-    	for(JVMBEK.Task t : tasks) {
-    		s1.add(new Task(t.getName(),
-    	               new SimpleTimePeriod(t.getStartDate(), 
-    	            		   t.getEndDate())));
-    	}*/
-    	
+    	 	
         final TaskSeriesCollection collection = new TaskSeriesCollection();
         collection.add(s1);
     	
@@ -133,7 +124,6 @@ public class GanttChart extends JFrame {
         calendar.set(year, month, day);
         final Date result = calendar.getTime();
         return result;
-
     }
         
     /**
@@ -153,7 +143,7 @@ public class GanttChart extends JFrame {
             true,                // tooltips
             false                // urls
         );    
-//        chart.getCategoryPlot().getDomainAxis().setMaxCategoryLabelWidthRatio(10.0f);
+
         return chart;    
     }
 }
