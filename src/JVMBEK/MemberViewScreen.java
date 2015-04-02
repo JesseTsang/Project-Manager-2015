@@ -42,7 +42,6 @@ public class MemberViewScreen extends Screen {
 
 		JScrollPane scroll = new JScrollPane(tblTasks);
 		scroll.setOpaque(true);
-		// scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
 		northPanel.add(lblAssignedTasks);
 		centerPanel.add(scroll);
