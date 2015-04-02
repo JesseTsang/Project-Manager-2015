@@ -289,6 +289,8 @@ public class Task {
 							   				   startDateFromDB, endDateFromDB, optimisticFromDB, pessimisticFromDB, estimateFromDB, varianceFromDB);
 					
 					predecessors.add(taskFromDB);
+					
+					System.out.println("Task.java - getPredecessors() - List added: " + taskFromDB.getName());
 				}
 			}	
 		} 
