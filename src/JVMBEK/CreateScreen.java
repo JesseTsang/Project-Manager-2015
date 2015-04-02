@@ -48,8 +48,6 @@ public class CreateScreen extends Screen {
 		textFieldProjectStartDate = new JTextField();
 		
 		JScrollPane scroll = new JScrollPane(textAreaDescription);
-//		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-//		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
 		JButton btnCreate = new JButton("Create Project");
 		JButton btnCancel = new JButton("Cancel");
@@ -130,5 +128,4 @@ public class CreateScreen extends Screen {
 		textFieldProjectName.setText("");
 		textAreaDescription.setText("");
 	}
-
 }
