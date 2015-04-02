@@ -65,7 +65,6 @@ public class CreateTaskScreen extends Screen {
 		JLabel lblTaskStartDate = new JLabel("Start Date (DD-MM-YYYY):");
 		JLabel lblTaskEndDate = new JLabel("End Date (DD-MM-YYYY):");
 		
-
 		tblTasks = new JTable();
 		tblTasks.setPreferredScrollableViewportSize(new Dimension(490, 210));//350, 150
 		tblTasks.setFillsViewportHeight(true);
@@ -143,7 +142,7 @@ public class CreateTaskScreen extends Screen {
 					    cal.setTime(formatter.parse(startDateString));
 					    taskStartDate = formatter.parse(startDateString);
 					    taskEndDate = formatter.parse(endDateString);
-					    
+				    
 					    // > 0 means later, < 0 means earlier 
 					    if (taskStartDate.compareTo(taskEndDate) > 0)
 					    {
