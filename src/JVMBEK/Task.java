@@ -38,21 +38,6 @@ public class Task {
 	ArrayList<User> _members = new ArrayList<User>(); //Storage for project members list
 	private List predecessors; //Storage for the task that this task depends on.
 	
-	
-/*	public Task(int id, String name, String description, TaskProgress progress, int dur, int optimistic, int pessimistic, double estimate, double variance) {
-		_id = id;
-		_name = name;
-		_description = description;
-		_progress = progress;
-		_duration = dur;
-		_optimistic = optimistic;
-		_pessimistic = pessimistic;
-		_estimate = estimate;
-		_variance = variance;
-		 
-		this.predecessors = new java.util.ArrayList();
-	}*/
-	
 	public Task(int id, String name, String description, TaskProgress progress, Date startDate, Date endDate, int optimistic, int pessimistic, double estimate, double variance)
 	{
 		_id = id;
@@ -149,28 +134,6 @@ public class Task {
 	{
 		return _duration;
 	}
-	
-/*	public long calcDuration()
-	{		
-		// turn the Date objects into Calendar objects
-		Calendar endCal = Calendar.getInstance();
-		endCal.setTime(_end_date);  
-		Calendar startCal = Calendar.getInstance();
-		startCal.setTime(_start_date);
-				
-		// Count from the start date to the end date to calculate duration
-		Calendar date = (Calendar) startCal.clone();  
-		
-		long result = 0;  
-		
-		while (date.before(endCal)) 
-		{  
-			date.add(Calendar.DAY_OF_MONTH, 1);  
-			result++;  
-		}  
-
-		return result;	
-	}*/
 	
 	public int getOptimistic() {	
 		return _optimistic;
@@ -289,8 +252,6 @@ public class Task {
 							   				   startDateFromDB, endDateFromDB, optimisticFromDB, pessimisticFromDB, estimateFromDB, varianceFromDB);
 					
 					predecessors.add(taskFromDB);
-					
-					System.out.println("Task.java - getPredecessors() - List added: " + taskFromDB.getName());
 				}
 			}	
 		} 
@@ -399,58 +360,6 @@ public class Task {
 		}
 	}
 	
-	// Returns the duration of the longest task chain, counting the current task's duration
-/*	public int getLongestChain() {
-		ArrayList<Integer> precedingIds = this.getPrecedingIds();
-		
-		// Checking if it actually has any preceding tasks, return 0 if it doesn't
-		if(precedingIds.get(0) == _id) {
-			return _duration;
-		}
-		else {
-			ArrayList<Integer> longestChain = new ArrayList<Integer>();
-			Task[] t = new Task[precedingIds.size()];
-			for(int i = 0; i < t.length; i++) {
-				t[i].getLongestChain();
-			}
-		}
-	}*/
-	
-	// Returns the total number of preceding tasks; recursive
-	// DOES NOT WORK PROPERLY YET
-/*	public int getTotalPrecedingTasks() {
-		int temp = getNumberOfImmediatelyPrecedingTasks();
-		
-		if(temp == 0) {
-			return temp;
-		}
-		else if(temp == 1) {
-			return temp = 1;//this.getProject().getTaskById(0).getTotalPrecedingTasks();
-		}
-		else {
-			int counter = 0;
-			ArrayList<Integer> precedingIds = this.getPrecedingIds();
-			for(int i: precedingIds) {
-				counter += this.getProject().getTaskById(i).getTotalPrecedingTasks();
-			System.out.println("counter: " + counter);
-			}
-			
-			System.out.println("final counter: " + counter);
-			return counter;
-		}
-	}*/
-	
-	// Returns the number of immediately preceding tasks, counting itself
-/*	public int getNumberOfImmediatelyPrecedingTasks() {
-		ArrayList<Integer> precedingIds = this.getPrecedingIds();
-		if(precedingIds.get(0) == _id) {
-			return 1;
-		}
-		else {
-			return precedingIds.size();
-		}
-	}*/
-	
 	public Date getStartDate()
 	{
 		return _start_date;
@@ -460,57 +369,9 @@ public class Task {
 	{
 		return _end_date;
 	}
-	
-	// Returns the duration of a path leading from the current task to the beginning, not including the current path's duration
-	// Does not reliably return the longest path, as it checks task-by-task, and not the whole thing
-	// Recursive
-/*	public int getLongestDuration_Alt() {
-		ArrayList<Integer> precedingIds = getPrecedingIds();
-		
-		if(precedingIds.size() > 0) {
-			// If no preceding task, return 0
-			if(precedingIds.get(0) == _id) {
-				return 0;
-			}
-//			// If one preceding task, return duration of preceding task
-//			else if(precedingIds.size() == 1 && precedingIds.get(0) != _id) {
-//				return getProject().getTaskById(precedingIds.get(0)).getDuration();
-//			}
-			else {
-				int longest = 0;
-				int longestId = -1;
-				for(int i : precedingIds) {
-					if(longest < getProject().getTaskById(i).getDuration()) {
-						longest = getProject().getTaskById(i).getDuration();
-						longestId = i;
-					}
-				}
-				return longest + getProject().getTaskById(longestId).getLongestDuration_Alt();
-			}
-		}
-		return 0;
-	}*/
-	
-//	public Date addDaysToDate(int duration){
-//		Date end_date;	
-//	
-//		Calendar cal = Calendar.getInstance();
-//		cal.setTime(this._start_date);
-//		cal.add(Calendar.DATE, duration);//add duration to the saved date
-//		 
-//		end_date = cal.getTime();
-//		return end_date;
-//	}
-	
+
 	public int getPredecessorCount() 
 	{
 		return predecessors.size();
 	}
-	
-/*	public String dateToString(){
-		String dateString = new SimpleDateFormat("dd-MM-yyyy").format(this);
-		return dateString;
-	}*/
-
-	
 }
