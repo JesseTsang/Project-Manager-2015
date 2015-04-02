@@ -68,11 +68,8 @@ public class CriticalPathView extends JFrame
      *
      * @return The dataset.
      */
-    public static IntervalCategoryDataset createDataset(ArrayList<JVMBEK.Task> tasks) {
-    	
-    	//final TaskSeries s1 = getTaskSeries(tasks);
-    	//criticalPath = new CriticalPath(s1);
-    	
+    public static IntervalCategoryDataset createDataset(ArrayList<JVMBEK.Task> tasks) 
+    {
     	criticalPath = new CriticalPath(tasks);
     	criticalPath.createPath();
     	ArrayList<JVMBEK.Task> criticalPathList = criticalPath.getCriticalPath();
@@ -99,7 +96,6 @@ public class CriticalPathView extends JFrame
      */
     private static Date date(final int day, final int month, final int year) 
     {
-
         final Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day);
         final Date result = calendar.getTime();
