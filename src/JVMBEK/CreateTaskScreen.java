@@ -72,14 +72,11 @@ public class CreateTaskScreen extends Screen {
 		
 		JScrollPane tasksScrollPane = new JScrollPane(tblTasks);
 		tasksScrollPane.setOpaque(true);
-		// tasksScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
 		tfTaskName = new JTextField(10);
 		taDescription = new JTextArea();
 		JScrollPane descriptionScrollPane = new JScrollPane(taDescription);
 		descriptionScrollPane.setOpaque(true);
-		// descriptionScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		// descriptionScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		tfDuration = new JTextField(10);
 		tfOptimistic = new JTextField(10);
 		tfPessimistic = new JTextField(10);
@@ -94,8 +91,6 @@ public class CreateTaskScreen extends Screen {
 		northPanel.add(tfTaskStartDate);
 		northPanel.add(lblTaskEndDate);
 		northPanel.add(tfTaskEndDate);
-		//northPanel.add(lblDuration);
-		//northPanel.add(tfDuration);
 		northPanel.add(lblOptimistic);
 		northPanel.add(tfOptimistic);
 		northPanel.add(lblPessimistic);
@@ -133,16 +128,6 @@ public class CreateTaskScreen extends Screen {
 					return;
 				}
 
-/*				if (tfDuration.getText().isEmpty() ||
-						// Accepting positive integers only; anything else is rejected
-						!tfDuration.getText().matches("\\d+") || Integer.parseInt(tfDuration.getText()) < 1) 
-				{
-					JOptionPane.showMessageDialog(null,
-							"Please enter a valid duration (# of days).",
-							"Incorrect duration", JOptionPane.ERROR_MESSAGE);
-					return;
-				}*/
-							
 				//Extract StartDate -> String, then store as a Date variable.
 				DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy"/*, Locale.ENGLISH*/);
 				formatter.setLenient(false);
@@ -322,26 +307,6 @@ public class CreateTaskScreen extends Screen {
 		});
 	}
 	
-//	public long getDuration()
-//	{		
-//		// turn the Date objects into Calendar objects
-//		Calendar endCal = Calendar.getInstance();
-//		endCal.setTime(taskEndDate);  
-//		Calendar startCal = Calendar.getInstance();
-//		startCal.setTime(taskStartDate);
-//		
-//		// Count from the start date to the end date to calculate duration
-//		Calendar date = (Calendar) startCal.clone();  
-//		long daysBetween = 0;  
-//		while (date.before(endCal)) 
-//		{  
-//			date.add(Calendar.DAY_OF_MONTH, 1);  
-//			daysBetween++;  
-//		}  
-//	
-//		return daysBetween; 
-//	}
-
 	@Override
 	public void Update() 
 	{
