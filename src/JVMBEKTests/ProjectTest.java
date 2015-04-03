@@ -1,12 +1,15 @@
 package JVMBEKTests;
 
+
 import static org.junit.Assert.*;
+
 
 import org.junit.Test;
 
 import JVMBEK.Project;
 import JVMBEK.ProjectManager;
 import JVMBEK.Task;
+import JVMBEK.TaskProgress;
 import JVMBEK.User;
 import JVMBEK.UserRole;
 
@@ -48,7 +51,15 @@ public class ProjectTest {
 		Project tester = new Project(0, "test", "", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
 		assertEquals("test", tester.toString());		
 	}
-	
+	@Test
+	public void addProjectShouldReturnAddedProjects(){
+		final TaskProgress test = TaskProgress.valueOf("FINISHED");
+		Project tester = new Project(0,"","",new Date(System.currentTimeMillis()),new Date(System.currentTimeMillis()));
+		tester.addTask("", "", new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), 0, 0, 0, 0);
+		System.out.println(tester.getTasks().toString());
+		Task dummy  = new Task(0, "","", test,  new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), 0, 0, 0, 0);
+			assertEquals(dummy,tester.getTasks().get(0));
+	}
 	/*Iteration 2 Tests*/
 	
 	//US3 Test Idea: If we assign person1 to task1, then task1 should have person1.
