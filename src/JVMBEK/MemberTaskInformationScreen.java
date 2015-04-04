@@ -12,6 +12,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -86,26 +87,38 @@ public class MemberTaskInformationScreen extends Screen {
 		ArrayList<Task> tasks = Project.getAssignedTasks(_manager.getUser()
 				.getId());
 
-		DateFormat formatter = new SimpleDateFormat("d-MM-yyyy");
+		DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 		formatter.setLenient(false);
 		Calendar cal = Calendar.getInstance();
 		String formattedStart, formattedEnd;
 		Task temp = null;
 
-		for (int i = 0; i < tasks.size(); i++) {
-			if (tasks.get(i).getId() == Project.selectedTaskId) {
+		for (int i = 0; i < tasks.size(); i++) 
+		{
+			if (tasks.get(i).getId() == Project.selectedTaskId) 
+			{
 				temp = tasks.get(i);
 				Task t = tasks.get(i);
+				
+				Date taskStartDate = t.getStartDate();
+				Date taskEndDate = t.getEndDate();
+				
+				String taskStartDateString = DateUtils.getDateString(taskStartDate);
+				String taskEndDateString = DateUtils.getDateString(taskEndDate);
+				
+				int taskDuration = (int) DateUtils.getDuration(taskStartDate, taskEndDate);
+				
 				cal.setTime(t.getTaskStart());
 				formattedStart = formatter.format(cal.getTime());
 				cal.add(Calendar.DATE, t.getDuration());
 				formattedEnd = formatter.format(cal.getTime());
+				
 				lblProjectNameVal = new JLabel(t.getProject().getName());
 				lblTaskIDVal = new JLabel(Integer.toString(t.getId()));
 				lblTaskNameVal = new JLabel(t.getName());
-				lblStartDateVal = new JLabel(formattedStart);
-				lblDueDateVal = new JLabel(formattedEnd);
-				lblDurationVal = new JLabel(Integer.toString(t.getDuration()));
+				lblStartDateVal = new JLabel(taskStartDateString);
+				lblDueDateVal = new JLabel(taskEndDateString);
+				lblDurationVal = new JLabel(Integer.toString(taskDuration));
 				taDescription = new JTextArea(t.getDescription());
 				taDescription.setEditable(false);
 				cmbProgressVal.setSelectedItem(Task.PROGRESS_STRINGS[t
