@@ -92,6 +92,9 @@ public class Project {
 			while (task_set.next()) {
 
 				TaskProgress prog = Task.StringToProgress(task_set.getString("progress"));
+				
+				startDatefromDB = task_set.getDate("task_start_date");
+				endDatefromDB   = task_set.getDate("task_end_date");
 
 				// TODO: get dates such as task_set.getDate("start_date"),
 				Task t = new Task(task_set.getInt("id"),
