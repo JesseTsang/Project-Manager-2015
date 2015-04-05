@@ -125,6 +125,42 @@ public class Task {
 			System.exit(0);
 		}
 	}
+	
+	public void setTaskFinishedDate (Date date)
+	{
+		Statement stmt = null;
+		try 
+		{
+			stmt = DB.getInstance().createStatement();
+			String sql = "UPDATE tasks SET task_finished_date= '" + date.getTime() 
+					   + "'WHERE id='" + _id + "';";
+			stmt.executeUpdate(sql);
+		} 
+		catch (Exception e) 
+		{
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.exit(0);
+		}	
+	}
+	
+	public void setTaskFinishedDateToNull()
+	{
+		Statement stmt = null;
+		try 
+		{
+			stmt = DB.getInstance().createStatement();
+			String sql = "UPDATE tasks SET task_finished_date= '" + "NULL " 
+					   + "'WHERE id='" + _id + "';";
+			stmt.executeUpdate(sql);
+		} 
+		catch (Exception e) 
+		{
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.exit(0);
+		}	
+	}
+	
+	
 
 	public int getId() {
 		return _id;
