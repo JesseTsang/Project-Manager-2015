@@ -34,12 +34,20 @@ public class TaskScreen extends Screen {
 		JButton btnGenerate = new JButton("Generate GANTT Chart");
 		JButton btnGenerate2 = new JButton("Pert Analysis");
 		JButton btnCriticalPath = new JButton("Generate Critical Path");
-		JButton btnBack = new JButton("Back");
+		JButton btnEarnedValueAnalysis  = new JButton("Earned Value Analysis");
 		JButton btnShow = new JButton("Show Members");
+		
+		JButton btnFiller = new JButton("");
+		JButton btnBack = new JButton("Back");
+		
+		//Settings so that btnFiller will be invisible
+		btnFiller.setOpaque(false);
+		btnFiller.setContentAreaFilled(false);
+		btnFiller.setBorderPainted(false);
 
 		JPanel northPanel = new JPanel();
 		JPanel centerPanel = new JPanel();
-		JPanel buttonPanel = new JPanel(new GridLayout(2, 2));
+		JPanel buttonPanel = new JPanel(new GridLayout(3, 2));
 
 		tblTasks = new JTable();
 		tblTasks.setPreferredScrollableViewportSize(new Dimension(500, 150));
@@ -56,12 +64,16 @@ public class TaskScreen extends Screen {
 		buttonPanel.add(btnGenerate);
 		buttonPanel.add(btnGenerate2);
 		buttonPanel.add(btnCriticalPath);
-		buttonPanel.add(btnBack);
+		buttonPanel.add(btnEarnedValueAnalysis);
 		buttonPanel.add(btnShow);
+	
+		buttonPanel.add(btnFiller);
+		buttonPanel.add(btnBack);
 
 		add(BorderLayout.NORTH, northPanel);
 		add(BorderLayout.CENTER, centerPanel);
 		add(BorderLayout.SOUTH, buttonPanel);
+
 
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
@@ -148,13 +160,24 @@ public class TaskScreen extends Screen {
 				{
 					public void actionPerformed(ActionEvent ae) 
 					{
-						String title = _manager.getProjectManager().getSelectedProject().getName() + "Critical Path";
+						String title = _manager.getProjectManager().getSelectedProject().getName() + " Critical Path";
 						
 						final CriticalPathView criticalPathView = new CriticalPathView(title, _manager);
 						criticalPathView.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 						criticalPathView.pack();
 						RefineryUtilities.centerFrameOnScreen(criticalPathView);
 						criticalPathView.setVisible(true);
+					}
+				}
+		);
+		
+		btnEarnedValueAnalysis.addActionListener
+		(
+				new ActionListener()
+				{
+					public void actionPerformed(ActionEvent ae) 
+					{
+						_manager.showAndResize(EarnedValueView.IDENTIFIER, EarnedValueView.WIDTH,	EarnedValueView.HEIGHT);
 					}
 				}
 		);
