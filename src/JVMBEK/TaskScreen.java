@@ -177,7 +177,7 @@ public class TaskScreen extends Screen {
 				{
 					public void actionPerformed(ActionEvent ae) 
 					{
-						_manager.showAndResize(EarnedValueView.IDENTIFIER, EarnedValueView.WIDTH,	EarnedValueView.HEIGHT);
+						_manager.showAndResize(EarnedValueView.IDENTIFIER, EarnedValueView.WIDTH, EarnedValueView.HEIGHT);
 					}
 				}
 		);
