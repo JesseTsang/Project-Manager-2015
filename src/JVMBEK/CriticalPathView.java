@@ -77,31 +77,30 @@ public class CriticalPathView extends JFrame
     	System.out.println("CriticalPathView.java - criticalPathList.size() : " + criticalPathList.size());
     	
     	final TaskSeries s2 = getTaskSeries(criticalPathList);
-    	
-    	 	  	 	
+    	  	 	  	 	
         final TaskSeriesCollection collection = new TaskSeriesCollection();
         collection.add(s2);
     	
         return collection;
     }
 
-    /**
-     * Utility method for creating <code>Date</code> objects.
-     *
-     * @param day  the date.
-     * @param month  the month.
-     * @param year  the year.
-     *
-     * @return a date.
-     */
-    private static Date date(final int day, final int month, final int year) 
-    {
-        final Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month, day);
-        final Date result = calendar.getTime();
-        
-        return result;
-    }
+//    /**
+//     * Utility method for creating <code>Date</code> objects.
+//     *
+//     * @param day  the date.
+//     * @param month  the month.
+//     * @param year  the year.
+//     *
+//     * @return a date.
+//     */
+//    private static Date date(final int day, final int month, final int year) 
+//    {
+//        final Calendar calendar = Calendar.getInstance();
+//        calendar.set(year, month, day);
+//        final Date result = calendar.getTime();
+//        
+//        return result;
+//    }
         
     /**
      * Creates a chart.
