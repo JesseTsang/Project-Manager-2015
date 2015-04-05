@@ -35,8 +35,24 @@ public class Task {
 	private double _variance;
 	private Date _start_date; 		//Task Start Date
 	private Date _end_date; 		//Task End Date
+	private Date _finished_date; //Actual task finish date
+	
 	ArrayList<User> _members = new ArrayList<User>(); //Storage for project members list
 	private List predecessors; //Storage for the task that this task depends on.
+	
+	//Stats for a task
+	private int plannedValue; //PV: in terms of duration (in days) of a given task
+	private int earnedValue; //EV
+	private int actualCost; //AC
+	
+	//Stats for a task
+	private int scheduleVariance; //SV
+	private int costVariance; //CV
+	private int costPerformanceIndex; //CPI
+	private int schedulePerformanceIndex; //SP
+	private int estimateAtCompletion; //EAC
+	private int estimateToComplete; //ETC
+	private int varianceAtCompletion; //VAC
 	
 	public Task(int id, String name, String description, TaskProgress progress, Date startDate, Date endDate, int optimistic, int pessimistic, double estimate, double variance)
 	{
@@ -140,7 +156,9 @@ public class Task {
 		{
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
-		}	
+		}
+		
+		set_finished_date(date);
 	}
 	
 	public void setTaskFinishedDateToNull()
@@ -157,7 +175,9 @@ public class Task {
 		{
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
-		}	
+		}
+		
+		set_finished_date(null);
 	}
 	
 	
@@ -168,6 +188,8 @@ public class Task {
 	
 	public int getDuration() 
 	{
+		_duration = (int) DateUtils.getDuration(_start_date, _end_date);
+		
 		return _duration;
 	}
 	
@@ -396,6 +418,11 @@ public class Task {
 		}
 	}
 	
+	
+	public TaskProgress get_progress() {
+		return _progress;
+	}
+
 	public Date getStartDate()
 	{
 		return _start_date;
@@ -409,5 +436,122 @@ public class Task {
 	public int getPredecessorCount() 
 	{
 		return predecessors.size();
+	}
+
+	public int getPlannedValue() {
+		return plannedValue;
+	}
+
+	public void setPlannedValue(int plannedValue) {
+		this.plannedValue = plannedValue;
+	}
+
+	public int getEarnedValue() {
+		return earnedValue;
+	}
+
+	public void setEarnedValue(int earnedValue) {
+		this.earnedValue = earnedValue;
+	}
+
+	public int getActualCost() {
+		return actualCost;
+	}
+
+	public void setActualCost(int actualCost) {
+		this.actualCost = actualCost;
+	}
+
+	public int getScheduleVariance() {
+		return scheduleVariance;
+	}
+
+	public void setScheduleVariance(int scheduleVariance) {
+		this.scheduleVariance = scheduleVariance;
+	}
+
+	public int getCostVariance() {
+		return costVariance;
+	}
+
+	public void setCostVariance(int costVariance) {
+		this.costVariance = costVariance;
+	}
+
+	public int getCostPerformanceIndex() {
+		return costPerformanceIndex;
+	}
+
+	public void setCostPerformanceIndex(int costPerformanceIndex) {
+		this.costPerformanceIndex = costPerformanceIndex;
+	}
+
+	public int getSchedulePerformanceIndex() {
+		return schedulePerformanceIndex;
+	}
+
+	public void setSchedulePerformanceIndex(int schedulePerformanceIndex) {
+		this.schedulePerformanceIndex = schedulePerformanceIndex;
+	}
+
+	public Date get_finished_date() 
+	{
+		Statement stmt = null;
+		
+		try 
+		{
+			stmt = DB.getInstance().createStatement();
+
+			ResultSet id_set = stmt.executeQuery("SELECT task_finished_date "
+											   + "FROM tasks "
+											   + "WHERE id == " 
+											   + _id);
+			
+			while(id_set.next()) 
+			{
+			    if(id_set.getDate("task_finished_date") == null)
+			    {
+			    	System.out.println("Task.java - get_finished_date() - task_finished_date is null");    	
+			    }
+			    else
+			    {
+			    	set_finished_date(id_set.getDate("task_finished_date"));
+			    }
+			}
+
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.exit(0);
+		}
+		
+		return _finished_date;
+	}
+
+	public void set_finished_date(Date _finished_date) {
+		this._finished_date = _finished_date;
+	}
+	
+	public int getEstimateAtCompletion() {
+		return estimateAtCompletion;
+	}
+
+	public void setEstimateAtCompletion(int estimateAtCompletion) {
+		this.estimateAtCompletion = estimateAtCompletion;
+	}
+
+	public int getEstimateToComplete() {
+		return estimateToComplete;
+	}
+
+	public void setEstimateToComplete(int estimateToComplete) {
+		this.estimateToComplete = estimateToComplete;
+	}
+
+	public int getVarianceAtCompletion() {
+		return varianceAtCompletion;
+	}
+
+	public void setVarianceAtCompletion(int varianceAtCompletion) {
+		this.varianceAtCompletion = varianceAtCompletion;
 	}
 }
