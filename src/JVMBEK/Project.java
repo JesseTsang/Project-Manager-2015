@@ -21,6 +21,8 @@ public class Project {
 	static Date startDatefromDB;
 	static Date endDatefromDB;
 	
+	private int budgetAtCompletion; //BAC: Budget at Completion (Sum of all PV) value.
+
 	// For member use, when selecting a task to view information for
 	public static int selectedTaskId;
 
@@ -277,4 +279,21 @@ public class Project {
 		}
 		return true;
 	}
+	
+	//Start Earned Value Analysis
+	public void earnedValueAnalysis()
+	{
+		EarnedValue eva = new EarnedValue(_tasks);
+		setBudgetAtCompletion(eva.getBAC());
+	}
+
+	public int getBudgetAtCompletion() {
+		return budgetAtCompletion;
+	}
+
+	public void setBudgetAtCompletion(int budgetAtCompletion) {
+		this.budgetAtCompletion = budgetAtCompletion;
+	}
+
+
 }
