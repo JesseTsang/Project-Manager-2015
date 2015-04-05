@@ -86,6 +86,9 @@ public class GanttChart extends JFrame {
         setContentPane(chartPanel);
     }
     
+    //For testing purpose.
+    public GanttChart(){}
+    
     /**
      * Creates a sample dataset for a Gantt chart.
      *

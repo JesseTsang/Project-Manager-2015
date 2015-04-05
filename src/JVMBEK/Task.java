@@ -23,6 +23,9 @@ public class Task {
 				return TaskProgress.values()[i];
 		return TaskProgress.IN_QUEUE;
 	}
+	
+	//For Testing purpose
+	public Task(){}
 
 	private int _id; 				//Task ID
 	private String _name; 			//Task Name
