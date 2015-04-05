@@ -16,12 +16,13 @@ import javax.swing.table.DefaultTableModel;
 public class EarnedValueView extends Screen 
 {
 	public final static String IDENTIFIER = "EarnedValueView";
-	public static final int WIDTH = 650;
-	public static final int HEIGHT = 300;
+	public static final int WIDTH = 1463;//650
+	public static final int HEIGHT = 400;
 
 	private JLabel lblProjectHeader;
-	private JTable tblPert;
+	private JTable tblEVA;
 	private DefaultTableModel model;
+
 
 	public EarnedValueView(ScreenManager manager) 
 	{
@@ -41,13 +42,13 @@ public class EarnedValueView extends Screen
 
 		northPanel.add(lblProjectHeader);
 
-		tblPert = new JTable();
-		tblPert.setPreferredScrollableViewportSize(new Dimension(600, 150));
-		tblPert.setFillsViewportHeight(true);
-		tblPert.setEnabled(false);
+		tblEVA = new JTable();
+		tblEVA.setPreferredScrollableViewportSize(new Dimension(1330, 250));
+		tblEVA.setFillsViewportHeight(true);
+		tblEVA.setEnabled(false);
 
 		// Members are shown here
-		JScrollPane scroll = new JScrollPane(tblPert);
+		JScrollPane scroll = new JScrollPane(tblEVA);
 		scroll.setOpaque(true);
 		centerPanel.add(scroll);
 
@@ -74,21 +75,47 @@ public class EarnedValueView extends Screen
 		String title = _manager.getProjectManager().getSelectedProject().getName().toUpperCase() + " Earned Value Analysis";
 		lblProjectHeader.setText(title);
 
-		String[] columnNames = { " Task Name ", " Planned Value - PV (BCWS) ", " Earned Value - EV (BCWP) ", " SV ", " CV ", " EAC ", " BAC ", " BAC " };
+		String[] columnNames = { " Task Name ", " PV ", " EV ", " AC ", " BAC ", " SV ", " CV ", " CPI ", " SPI ", " ETC ", " VAC " };
 
-		ArrayList<Task> tasks = _manager.getProjectManager()
-										.getSelectedProject().getTasks();
+		ArrayList<Task> tasksList = _manager.getProjectManager().getSelectedProject().getTasks();
+
+		_manager.getProjectManager().getSelectedProject().earnedValueAnalysis();
 		
-		Object[][] data = new Object[tasks.size()][];	
-
-		for (int i = 0; i < tasks.size(); i++) 
-		{
-			Task t = tasks.get(i);
+		int pv;
+		int ev;
+		int ac;
+		int bac = _manager.getProjectManager().getSelectedProject().getBudgetAtCompletion();	
+		int sv;
+		int cv;
+		int cpi;
+		int spi;
+		int eac;
+		int etc;
+		int vac;
+		
 			
-			data[i] = new Object[] { t.getName(), t.getDuration(), t.getOptimistic(), t.getPessimistic(), t.getEstimate(), t.getVariance() };
+		Object[][] data = new Object[tasksList.size()][];	
+
+		for (int i = 0; i < tasksList.size(); i++) 
+		{
+			Task t = tasksList.get(i);
+			
+			pv = t.getPlannedValue();
+			ev = t.getEarnedValue();
+			ac = t.getActualCost();
+			sv = t.getScheduleVariance();
+			cv = t.getCostVariance();
+			cpi = t.getCostPerformanceIndex();
+			spi = t.getSchedulePerformanceIndex();
+			eac = t.getEstimateAtCompletion();
+			etc = t.getEstimateToComplete();
+			vac = t.getVarianceAtCompletion();
+			
+			data[i] = new Object[] { t.getName(), pv, ev, ac, bac, sv, cv, cpi, spi, eac, etc, vac};
 		}
 
 		model = new DefaultTableModel(data, columnNames);
-		tblPert.setModel(model);
+		tblEVA.setModel(model);
 	}
+
 }
