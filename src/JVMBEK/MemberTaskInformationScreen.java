@@ -170,32 +170,8 @@ public class MemberTaskInformationScreen extends Screen {
 					{
 						Date finishedDate = new Date();
 						assignedTask.setTaskFinishedDate(finishedDate);
-						
-						//Test
-						Statement stmt = null;
-						
-						try 
-						{
-							stmt = DB.getInstance().createStatement();
-							ResultSet id_set = stmt.executeQuery("SELECT name, task_finished_date FROM tasks "
-															   + "WHERE id =="
-															   + assignedTask.getId());
-
-							while (id_set.next()) 
-							{
-								Date taskFinishedDate = id_set.getDate("task_finished_date");
-								String taskFinishedDateString = DateUtils.getDateString(taskFinishedDate);
-								
-								System.out.println("Task finished date added: " + taskFinishedDateString);
-							}
-						} 
-						catch (Exception e) 
-						{
-							System.err.println(e.getClass().getName() + ": " + e.getMessage());
-							System.exit(0);
-						}
-					}
-					
+												
+					}			
 					
 					// Making sure that there are no following tasks that are in
 					// progress or finished if setting the task back to incomplete
