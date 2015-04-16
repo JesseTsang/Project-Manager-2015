@@ -7,12 +7,12 @@ import java.util.Calendar;
 import org.jfree.util.ObjectUtilities;
 import org.jfree.util.PublicCloneable;
 
+
 /**
- * Represents an edge in the dependency graph
- * Holds a specific task
+ * This class represents an edge in the dependency graph. Each object holds a specific task.
+ * This is a modification and originally developed by Chris Katz.
  * 
- * @author Chris Katz (ckatz2009@gmail.com)
- *
+ * @author Chris Katz and Jesse Tsang
  */
 public class CriticalPathEdge implements Cloneable, PublicCloneable, Serializable   {
 	
@@ -95,8 +95,9 @@ public class CriticalPathEdge implements Cloneable, PublicCloneable, Serializabl
 	public long getDuration()
 	{
 		// turn the Task's duration into a Date object
-		Date endDate = task.getDuration().getEnd();
-		Date startDate = task.getDuration().getStart();
+
+		Date endDate = task.getEndDate();
+		Date startDate = task.getStartDate();
 		
 		// turn the Date objects into Calendar objects
 		Calendar endCal = Calendar.getInstance();
@@ -107,7 +108,8 @@ public class CriticalPathEdge implements Cloneable, PublicCloneable, Serializabl
 		// Count from the start date to the end date to calculate duration
 		Calendar date = (Calendar) startCal.clone();  
 		long daysBetween = 0;  
-		while (date.before(endCal)) {  
+		while (date.before(endCal)) 
+		{  
 			date.add(Calendar.DAY_OF_MONTH, 1);  
 			daysBetween++;  
 		}  

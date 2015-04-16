@@ -12,6 +12,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -29,13 +30,6 @@ public class MemberTaskInformationScreen extends Screen {
 	public final static String IDENTIFIER = "TASKINFO";
 	public static final int WIDTH = 300;
 	public static final int HEIGHT = 400;
-
-	/*
-	 * private JLabel lblProjectNameVal; private JLabel lblTaskIDVal; private
-	 * JLabel lblTaskNameVal; private JLabel lblStartDateVal; private JLabel
-	 * lblDueDateVal; private JLabel lblDurationVal; private JTextArea
-	 * taDescription; private JLabel lblProgressVal;
-	 */
 
 	private JPanel northPanel, centerPanel;
 
@@ -93,26 +87,38 @@ public class MemberTaskInformationScreen extends Screen {
 		ArrayList<Task> tasks = Project.getAssignedTasks(_manager.getUser()
 				.getId());
 
-		DateFormat formatter = new SimpleDateFormat("d-MM-yyyy");
+		DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 		formatter.setLenient(false);
 		Calendar cal = Calendar.getInstance();
 		String formattedStart, formattedEnd;
 		Task temp = null;
 
-		for (int i = 0; i < tasks.size(); i++) {
-			if (tasks.get(i).getId() == Project.selectedTaskId) {
+		for (int i = 0; i < tasks.size(); i++) 
+		{
+			if (tasks.get(i).getId() == Project.selectedTaskId) 
+			{
 				temp = tasks.get(i);
 				Task t = tasks.get(i);
+				
+				Date taskStartDate = t.getStartDate();
+				Date taskEndDate = t.getEndDate();
+				
+				String taskStartDateString = DateUtils.getDateString(taskStartDate);
+				String taskEndDateString = DateUtils.getDateString(taskEndDate);
+				
+				int taskDuration = (int) DateUtils.getDuration(taskStartDate, taskEndDate);
+				
 				cal.setTime(t.getTaskStart());
 				formattedStart = formatter.format(cal.getTime());
 				cal.add(Calendar.DATE, t.getDuration());
 				formattedEnd = formatter.format(cal.getTime());
+				
 				lblProjectNameVal = new JLabel(t.getProject().getName());
 				lblTaskIDVal = new JLabel(Integer.toString(t.getId()));
 				lblTaskNameVal = new JLabel(t.getName());
-				lblStartDateVal = new JLabel(formattedStart);
-				lblDueDateVal = new JLabel(formattedEnd);
-				lblDurationVal = new JLabel(Integer.toString(t.getDuration()));
+				lblStartDateVal = new JLabel(taskStartDateString);
+				lblDueDateVal = new JLabel(taskEndDateString);
+				lblDurationVal = new JLabel(Integer.toString(taskDuration));
 				taDescription = new JTextArea(t.getDescription());
 				taDescription.setEditable(false);
 				cmbProgressVal.setSelectedItem(Task.PROGRESS_STRINGS[t
@@ -124,30 +130,30 @@ public class MemberTaskInformationScreen extends Screen {
 		final Task assignedTask = temp;
 
 		cmbProgressVal.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
+			public void actionPerformed(ActionEvent ae) 
+			{
 				String strProgress = (String) cmbProgressVal.getSelectedItem();
 
 				// Checking if the selection for the progress is the same as the
 				// task's current progress status
 				// Only do something if it is different
-				if (!Task.PROGRESS_STRINGS[assignedTask.getProgress().ordinal()]
-						.equals(strProgress)) {
-
+				if (!Task.PROGRESS_STRINGS[assignedTask.getProgress().ordinal()].equals(strProgress))
+				{
 					// Making sure that the previous tasks are done if starting
 					// or finishing this task
-					if (strProgress.equals("In Progress")
-							|| strProgress.equals("Finished")) {
-						ArrayList<Integer> precedingIds = assignedTask
-								.getPrecedingIds();
-						for (int i : precedingIds) {
-							TaskProgress test = assignedTask.getProject()
-									.getTaskById(i).getProgress();
-							if (i != assignedTask.getId()
-									&& test != TaskProgress.FINISHED) {
+					if (strProgress.equals("In Progress") || strProgress.equals("Finished")) 
+					{
+						ArrayList<Integer> precedingIds = assignedTask.getPrecedingIds();
+						
+						for (int i : precedingIds) 
+						{
+							TaskProgress test = assignedTask.getProject().getTaskById(i).getProgress();
+							
+							if (i != assignedTask.getId() && test != TaskProgress.FINISHED) 
+							{
 								// Can't start or finish a task if previous ones
 								// are still in queue
-								JOptionPane
-										.showMessageDialog(
+								JOptionPane.showMessageDialog(
 												null,
 												"Cannot mark this task as \"In Progress\" or \"Finished\" because there "
 														+ "is a preceding task that has not been completed.",
@@ -157,39 +163,50 @@ public class MemberTaskInformationScreen extends Screen {
 							}
 						}
 					}
+					
+					//If the selected option is "Finished" and passed the previous check
+					//Then, we add the current date as the finished date of the task.
+					if (strProgress.equals("Finished")) 
+					{
+						Date finishedDate = new Date();
+						assignedTask.setTaskFinishedDate(finishedDate);
+												
+					}			
+					
 					// Making sure that there are no following tasks that are in
-					// progress or finished if setting the task back to
-					// incomplete
-					if (strProgress.equals("In Queue")
-							|| strProgress.equals("In Progress")) {
+					// progress or finished if setting the task back to incomplete
+					if (strProgress.equals("In Queue") || strProgress.equals("In Progress")) 
+					{
 						ArrayList<Integer> followingTasksIds = new ArrayList<Integer>();
+						
 						Statement stmt = null;
+						
 						try {
-							stmt = DB.getInstance().createStatement();
-							ResultSet id_set = stmt
-									.executeQuery("SELECT task_id FROM task_sequence "
-											+ "WHERE preceding_task =="
-											+ Project.selectedTaskId);
+								stmt = DB.getInstance().createStatement();
+								ResultSet id_set = stmt.executeQuery("SELECT task_id FROM task_sequence "
+																   + "WHERE preceding_task =="
+																   + Project.selectedTaskId);
 
-							while (id_set.next()) {
-								followingTasksIds.add(id_set.getInt("task_id"));
+								while (id_set.next()) 
+								{
+									followingTasksIds.add(id_set.getInt("task_id"));
+								}
+							} 
+							catch (Exception e) 
+							{
+								System.err.println(e.getClass().getName() + ": " + e.getMessage());
+								System.exit(0);
 							}
-						} catch (Exception e) {
-							System.err.println(e.getClass().getName() + ": "
-									+ e.getMessage());
-							System.exit(0);
-						}
 
-						for (int i : followingTasksIds) {
-							TaskProgress test = assignedTask.getProject()
-									.getTaskById(i).getProgress();
-							if (i != assignedTask.getId()
-									&& test == TaskProgress.FINISHED) {
+						for (int i : followingTasksIds) 
+						{
+							TaskProgress test = assignedTask.getProject().getTaskById(i).getProgress();
+							
+							if (i != assignedTask.getId() && test == TaskProgress.FINISHED) 
+							{
 								// Can't set this task as "In Queue" if there
-								// are following tasks
-								// that are in progress or are finished
-								JOptionPane
-										.showMessageDialog(
+								// are following tasks that are in progress or are finished
+								JOptionPane.showMessageDialog(
 												null,
 												"Cannot mark this task as \"In Queue\" or \"In Progress\" because there "
 														+ "is a following task that has already been started.",
@@ -198,12 +215,16 @@ public class MemberTaskInformationScreen extends Screen {
 								return;
 							}
 						}
+						
+						//If the selected option is NOT "Finished" and passed the previous check
+						//Then, we set to finished date as .
+						if (strProgress.equals("In Queue") || strProgress.equals("In Progress")) 
+						{
+							assignedTask.setTaskFinishedDateToNull();
+						}
 					}
 
 					assignedTask.setTaskProgress(strProgress);
-					
-					//TEST
-					//System.out.println(assignedTask.getTotalPrecedingTasks());
 
 					_manager.showAndResize(MemberViewScreen.IDENTIFIER,
 							MemberViewScreen.WIDTH, MemberViewScreen.HEIGHT);
@@ -230,8 +251,6 @@ public class MemberTaskInformationScreen extends Screen {
 
 		JScrollPane scroll = new JScrollPane(taDescription);
 		scroll.setOpaque(true);
-		// scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		// scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
 		centerPanel.removeAll();
 		centerPanel.add(lblDescription);

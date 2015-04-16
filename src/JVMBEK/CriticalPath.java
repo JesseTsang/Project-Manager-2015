@@ -1,21 +1,22 @@
 package JVMBEK;
 
+import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 
 import org.jfree.data.gantt.TaskSeries;
 
 /**
- * A Representation of the critical path of a TaskSeries
- * @author Chris Katz (ckatz2009@gmail.com)
+ * This is a modification of the critical path algorithm originally by Chris Katz.
+ * @author Chris Katz and Jesse Tsang
  */
-public class CriticalPath {
-	
+public class CriticalPath 
+{	
 	/** The root node of the critical path */
 	private CriticalPathNode root;
 	
 	/** The TaskSeries object that this critical path refers to */
-	private TaskSeries taskseries;
+	private ArrayList<Task> tasksList;
 	
 	/** The List of nodes in the dependency graph */
 	private List<CriticalPathNode> nodes;
@@ -31,10 +32,10 @@ public class CriticalPath {
 	 * 
 	 * @param series The TaskSeries object whose critical path needs to be calculated
 	 */
-	public CriticalPath(TaskSeries series)
+	public CriticalPath(ArrayList<Task> tasksListFromProject)
 	{
 		root = new CriticalPathNode(0);
-		taskseries = series;
+		tasksList = tasksListFromProject;
 		
 		nodes = new ArrayList<CriticalPathNode>();
 		nodes.add(root);
@@ -55,7 +56,7 @@ public class CriticalPath {
 	 */
 	private void CreatePath()
 	{
-		CreateEdges();
+		CreateEdges();//So all the tasks will be first cast to edge objects, then add to "edges" list.
 		CreateRoot();
 		CreateRestOfPath();
 		CalculateEarliestStartDate();
@@ -67,15 +68,11 @@ public class CriticalPath {
 	 */
 	private void CreateEdges()
 	{
-		List tasks = taskseries.getTasks();
-		
-		for(Object t: tasks)
+		for(Task t: tasksList)
 		{
-			Task task = (Task)t;
-			CriticalPathEdge edge =  new CriticalPathEdge(task);
+			CriticalPathEdge edge =  new CriticalPathEdge(t);
 			edges.add(edge);
-		}
-		
+		}	
 	}
 	
 	/** 
@@ -84,43 +81,59 @@ public class CriticalPath {
 	private void CreateRoot()
 	{
 		for(CriticalPathEdge edge: edges)
-		{
+		{		
+			edge.getTask().getPredecessors();
+				
 			if(edge.getTask().getPredecessorCount() == 0)
 			{
+				System.out.println("CriticalPath.java - CreateRoot()- edge.getTask().getName() - root edge: " + edge.getTask().getName());
 				edge.setPrevious(root);
 				root.addNext(edge);
 			}
 		}
+		
+		System.out.println("CriticalPath.java - CreateRoot()- Done");
 	}
 	
 	/**
 	 * Cycles through the rest of the edges in the graph and connects all dependent
 	 * edges by either placing a new node in between them or connecting them via an existing node
-	 * 
-	 * 
 	 */
 	private void CreateRestOfPath()
 	{
-		CreateRoot();
-		
+		System.out.println("CriticalPath.java - CreateRestOfPath() - Starting: ");
+	
 		int nodecounter = 1;
 		
-		for(CriticalPathEdge edge: edges)
+		for(CriticalPathEdge edge: edges)//First, extract all the tasks in this project, called it taskFromList.
 		{
 			Task task = edge.getTask();
-			if(task.getPredecessorCount() > 0)
+			
+			System.out.println("CriticalPath.java - CreateRestOfPath() - Edge: " + task.getName());
+			
+			if(task.getPredecessorCount() > 0) //If a task (taskFromList) has 1 or more predecessor
 			{
-				List predecessors = task.getPredecessors();
-				for(Object next: predecessors)
+				List predecessors = task.getPredecessors(); //Then, get the list of the predecessors, call it predecessorsList
+				
+				System.out.println("CriticalPath.java - CreateRestOfPath() - PredecessorCount > 0: Yes");
+				
+				for(Object next: predecessors)//For each object in this predecessorsList 
 				{
-					Task predecessor = (Task)next;
-					for(CriticalPathEdge predecessoredge: edges)
+					Task predecessor = (Task)next;//We cast the object as Task. call it predecessorTask
+					
+					System.out.println("CriticalPath.java - CreateRestOfPath() - Predecessor name: " + predecessor.getName());
+					
+					for(CriticalPathEdge predecessoredge: edges) //looping all the tasks from this project again, call it predecessoredge
 					{
-						if(predecessoredge.getTask() == predecessor)
+						if(predecessoredge.getTask().getId() == predecessor.getId()) //if the task (predecessoredge) is equal to predecessorTask (from predecessorsList)
 						{
+							System.out.println("CriticalPath.java - CreateRestOfPath() - Predecessor found.");
+							
 							// only create a new node if neither has a connection
 							if(predecessoredge.getNext() == null && edge.getPrevious() == null)
 							{
+								System.out.println("CriticalPath.java - CreateRestOfPath() - null && null");
+								
 								CriticalPathNode nodebetween = new CriticalPathNode(nodecounter);
 								nodebetween.addNext(edge);
 								nodebetween.addPrevious(predecessoredge);
@@ -135,6 +148,8 @@ public class CriticalPath {
 							 */
 							else if(predecessoredge.getNext() == null && edge.getPrevious() != null)
 							{
+								System.out.println("CriticalPath.java - CreateRestOfPath() - null && !null");
+								
 								CriticalPathNode nodebetween = edge.getPrevious();
 								nodebetween.addPrevious(predecessoredge);
 								predecessoredge.setNext(nodebetween);
@@ -146,12 +161,15 @@ public class CriticalPath {
 							 */
 							else if(predecessoredge.getNext() != null && edge.getPrevious() == null)
 							{
+								System.out.println("CriticalPath.java - CreateRestOfPath() - !null && null");
+								
 								CriticalPathNode nodebetween = predecessoredge.getNext();
 								nodebetween.addNext(edge);
 								edge.setPrevious(nodebetween);
 							}
 						}
 					}
+					
 				}
 			}
 		}
@@ -181,7 +199,12 @@ public class CriticalPath {
 	 */
 	private void CalculateEarliestStartDate()
 	{
-		root.setEarliestStartDate(0);
+		CriticalPathEdge firstTask = (CriticalPathEdge) root.getNext().get(0);
+		String firstTaskStartDateString = DateUtils.getDateString(firstTask.getTask().getStartDate());
+		
+		System.out.println("CriticalPath.java - CalculateEarliestStartDate() - rootEarliestStartDate " + firstTaskStartDateString);
+		
+		root.setEarliestStartDate(firstTask.getTask().getStartDate().getTime());
 		
 		long time = 0;
 		
@@ -195,14 +218,17 @@ public class CriticalPath {
 				CriticalPathEdge edge = (CriticalPathEdge)prevs.get(j);
 				if(edge != null)
 				{
+					long edgeDuration = DateUtils.getDuration(edge.getTask().getStartDate(), edge.getTask().getEndDate());
+					
 					if(edge.getPrevious() == null)
 					{
-						time = edge.getDuration();
+						time = edgeDuration;
 					}
 					else
 					{
-						time = edge.getDuration() + edge.getPrevious().getEarliestStartDate();
+						time = edgeDuration + edge.getPrevious().getEarliestStartDate();
 					}
+					
 					if(time >= nodes.get(i).getEarliestStartDate())
 					{
 						nodes.get(i).setEarliestStartDate(time);
@@ -254,15 +280,22 @@ public class CriticalPath {
 	 * 
 	 * @return the list of Task objects that make up the critical path 
 	 */
-	public List getCriticalPath()
+	public ArrayList<JVMBEK.Task> getCriticalPath()
 	{
-		List criticalPath = new ArrayList();
+		ArrayList<JVMBEK.Task> criticalPath = new ArrayList();
+		
 		for(CriticalPathEdge edge: edges)
 		{
-			long taskfloat =  edge.getNext().getLatestStartDate()-edge.getPrevious().getEarliestStartDate()-edge.getDuration();
+			System.out.println("CriticalPath.java - getCriticalPath() - Task name: " + edge.getTask().getName());
+			
+			long latestStartDate = edge.getNext().getLatestStartDate();		
+			long earliestStartDate = edge.getPrevious().getEarliestStartDate();		
+			long duration = edge.getDuration();		
+			long taskfloat =  latestStartDate - earliestStartDate - duration;
+			
 			if(taskfloat == 0)
 			{
-				criticalPath.add(edge);
+				criticalPath.add(edge.getTask());
 			}
 		}
 		

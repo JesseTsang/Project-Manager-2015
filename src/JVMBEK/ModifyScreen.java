@@ -21,7 +21,6 @@ public class ModifyScreen extends Screen {
 	
 	private JTextField tfProjectName;
 	private JTextArea taDescription;
-	//private JTextField _durField;
 
 	public ModifyScreen(ScreenManager manager) {
 		super(manager);
@@ -40,8 +39,7 @@ public class ModifyScreen extends Screen {
 		taDescription = new JTextArea();
 		JScrollPane scroll = new JScrollPane(taDescription);
 		scroll.setOpaque(true);
-//		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-//		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
 		
 		JButton btnUpdate = new JButton("Update Project");
 		JButton btnCancel = new JButton("Cancel");
@@ -92,11 +90,9 @@ public class ModifyScreen extends Screen {
 		 });
 	}
 
-	
 	@Override
 	public void Update() {
 		tfProjectName.setText(_manager.getProjectManager().getSelectedProject().getName());
 		taDescription.setText(_manager.getProjectManager().getSelectedProject().getDescription());
 	}
-
 }

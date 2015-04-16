@@ -7,38 +7,72 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 //A class that encapsulates all data from one row of the "tasks" table
 public class Task {
 	public static final String[] PROGRESS_STRINGS = { "In Queue",
 			"In Progress", "Finished" };
 
+	//Because the status of the progress we retrive from database will be in String,
+	//therefore, we would need a function to convert that string result back to TaskProgress object.
 	public static TaskProgress StringToProgress(String str) {
 		for (int i = 0; i < PROGRESS_STRINGS.length; i++)
 			if (PROGRESS_STRINGS[i].equalsIgnoreCase(str))
 				return TaskProgress.values()[i];
 		return TaskProgress.IN_QUEUE;
 	}
-
-	private int _id;
-	private String _name;
-	private int _duration;
-	private String _description;
-	private String _comment;
-	private TaskProgress _progress;
-//	private Date _start_date;
-//	private Date _end_date;
-	ArrayList<User> _members = new ArrayList<User>();
 	
+	//For Testing purpose
+	public Task(){}
 
-
-	public Task(int id, String name, String description, TaskProgress progress, int dur) {
+	private int _id; 				//Task ID
+	private String _name; 			//Task Name
+	private int _duration; 			//Task Duration
+	private String _description; 	//Task Description
+	private TaskProgress _progress; //Task Progress status variable
+	private int _optimistic;
+	private int _pessimistic;
+	private double _estimate;
+	private double _variance;
+	private Date _start_date; 		//Task Start Date
+	private Date _end_date; 		//Task End Date
+	private Date _finished_date; //Actual task finish date
+	
+	ArrayList<User> _members = new ArrayList<User>(); //Storage for project members list
+	private List predecessors; //Storage for the task that this task depends on.
+	
+	//Stats for a task
+	private int plannedValue; //PV: in terms of duration (in days) of a given task
+	private int earnedValue; //EV
+	private int actualCost; //AC
+	
+	//Stats for a task
+	private int scheduleVariance; //SV
+	private int costVariance; //CV
+	private int costPerformanceIndex; //CPI
+	private int schedulePerformanceIndex; //SP
+	private int estimateAtCompletion; //EAC
+	private int estimateToComplete; //ETC
+	private int varianceAtCompletion; //VAC
+	
+	public Task(int id, String name, String description, TaskProgress progress, Date startDate, Date endDate, int optimistic, int pessimistic, double estimate, double variance)
+	{
 		_id = id;
 		_name = name;
 		_description = description;
 		_progress = progress;
-		// _comment = comment;
-		_duration = dur;
+		_start_date = startDate;
+		_end_date = endDate;
+		_optimistic = optimistic;
+		_pessimistic = pessimistic;
+		_estimate = estimate;
+		_variance = variance;
+		
+		_duration = getDuration();	
+		
+		this.predecessors = new java.util.ArrayList();
 	}
 
 	public Project getProject() {
@@ -83,8 +117,8 @@ public class Task {
 			while (member_set.next()) {
 
 				User m = new User(member_set.getInt("id"),
-						member_set.getString("fname"),
-						member_set.getString("lname"), UserRole.MEMBER);
+								  member_set.getString("fname"),
+								  member_set.getString("lname"), UserRole.MEMBER);
 
 				_members.add(m);
 			}
@@ -110,15 +144,74 @@ public class Task {
 			System.exit(0);
 		}
 	}
+	
+	public void setTaskFinishedDate (Date date)
+	{
+		Statement stmt = null;
+		try 
+		{
+			stmt = DB.getInstance().createStatement();
+			String sql = "UPDATE tasks SET task_finished_date= '" + date.getTime() 
+					   + "'WHERE id='" + _id + "';";
+			stmt.executeUpdate(sql);
+		} 
+		catch (Exception e) 
+		{
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.exit(0);
+		}
+		
+		set_finished_date(date);
+	}
+	
+	public void setTaskFinishedDateToNull()
+	{
+		Statement stmt = null;
+		try 
+		{
+			stmt = DB.getInstance().createStatement();
+			String sql = "UPDATE tasks SET task_finished_date= '" + "NULL " 
+					   + "'WHERE id='" + _id + "';";
+			stmt.executeUpdate(sql);
+		} 
+		catch (Exception e) 
+		{
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.exit(0);
+		}
+		
+		set_finished_date(null);
+	}
+	
+	
 
 	public int getId() {
 		return _id;
 	}
 	
-	public int getDuration() {
+	public int getDuration() 
+	{
+		_duration = (int) DateUtils.getDuration(_start_date, _end_date);
+		
 		return _duration;
 	}
-
+	
+	public int getOptimistic() {	
+		return _optimistic;
+	}
+	
+	public int getPessimistic() {
+		return _pessimistic;
+	}
+	
+	public double getEstimate() {
+		return _estimate;
+	}
+	
+	public double getVariance() {
+		return _variance;
+	}
+	
 	public String getName() {
 		return _name;
 	}
@@ -127,28 +220,29 @@ public class Task {
 		return _description;
 	}
 
-	public String getComment() {
-		return _comment;
-	}
-
 	public TaskProgress getProgress() {
 		return _progress;
 	}
 	
-	public ArrayList<Integer> getPrecedingIds(){
+	public ArrayList<Integer> getPrecedingIds()
+	{
 		ArrayList<Integer> preceding_tasks = new ArrayList<Integer>();
 		Statement stmt = null;
-		try {
+		
+		try 
+		{
 			stmt = DB.getInstance().createStatement();
 			ResultSet id_set = stmt.executeQuery("SELECT preceding_task FROM task_sequence "
 					+ "WHERE task_id ==" + _id);
 			
-			while(id_set.next()){
+			while(id_set.next())
+			{
 				preceding_tasks.add(id_set.getInt("preceding_task"));
 			}
-			
-			
-		} catch (Exception e) {
+					
+		}
+		catch (Exception e)
+		{
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
 		}
@@ -156,25 +250,79 @@ public class Task {
 		return preceding_tasks;
 	}
 	
-	public String getPrecedingIdsAsString(){
+	public String getPrecedingIdsAsString()
+	{
 		String preceding_tasks = "";
 		Statement stmt = null;
-		try {
+		
+		try 
+		{
 			stmt = DB.getInstance().createStatement();
 			ResultSet id_set = stmt.executeQuery("SELECT preceding_task FROM task_sequence "
 					+ "WHERE task_id ==" + _id);
 			
-			while(id_set.next()){
+			while(id_set.next())
+			{
 				preceding_tasks += (id_set.getInt("preceding_task") + " ");
 			}
 			
 			
-		} catch (Exception e) {
+		} 
+		catch (Exception e)
+		{
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
 		}
 		
 		return preceding_tasks;
+	}
+	
+	public List getPredecessors()
+	{
+		predecessors = new java.util.ArrayList();	
+		Statement stmt = null;
+		
+		try 
+		{
+			stmt = DB.getInstance().createStatement();
+			ResultSet id_set = stmt.executeQuery("SELECT preceding_task, tasks.name, tasks.task_start_date, tasks.task_end_date, tasks.progress, "
+											   + "tasks.description, tasks.optimistic, tasks.pessimistic, tasks.estimate, tasks.variance "
+											   + "FROM task_sequence, tasks "
+											   + "WHERE task_id ==" + _id + " "
+											   + "AND preceding_task == tasks.id ");
+			
+			while(id_set.next())
+			{
+				int taskID = id_set.getInt("preceding_task");
+				String taskName = id_set.getString("name");
+				String taskDescription = id_set.getString("description");
+				
+				String taskProgressString = id_set.getString("progress");
+				TaskProgress taskProgress = StringToProgress(taskProgressString);
+				
+				Date startDateFromDB = id_set.getDate("task_start_date");
+				Date endDateFromDB   = id_set.getDate("task_end_date");
+				int optimisticFromDB = id_set.getInt("optimistic");
+				int pessimisticFromDB = id_set.getInt("pessimistic");
+				int estimateFromDB = id_set.getInt("estimate");
+				int varianceFromDB = id_set.getInt("variance");
+				
+				if (_id != taskID)
+				{
+					Task taskFromDB = new Task(taskID, taskName, taskDescription, taskProgress, 
+							   				   startDateFromDB, endDateFromDB, optimisticFromDB, pessimisticFromDB, estimateFromDB, varianceFromDB);
+					
+					predecessors.add(taskFromDB);
+				}
+			}	
+		} 
+		catch (Exception e) 
+		{
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.exit(0);
+		}
+
+		return predecessors;
 	}
 	
 	public boolean updateTaskSequence(){
@@ -193,8 +341,7 @@ public class Task {
 					+ _id);
 				//Find if the current task have a preceding task, skips when it is preceding itself
 				//(Find if the current task have a task after it)
-
-			
+	
 			while( id_set.next() ) {
 			    // ResultSet processing here
 			    hasNoFollowingTask = false;
@@ -215,14 +362,6 @@ public class Task {
 
 	}
 	
-//	public Date getStartDate(){
-//		return _start_date;
-//	}
-//	
-//	public Date getEndDate(){
-//		return _end_date;
-//	}
-
 	public ArrayList<User> getAssignedMembers() {
 		loadMembers();
 		return _members;
@@ -282,130 +421,140 @@ public class Task {
 		}
 	}
 	
-	// Returns the duration of the longest task chain, counting the current task's duration
-/*	public int getLongestChain() {
-		ArrayList<Integer> precedingIds = this.getPrecedingIds();
-		
-		// Checking if it actually has any preceding tasks, return 0 if it doesn't
-		if(precedingIds.get(0) == _id) {
-			return _duration;
-		}
-		else {
-			ArrayList<Integer> longestChain = new ArrayList<Integer>();
-			Task[] t = new Task[precedingIds.size()];
-			for(int i = 0; i < t.length; i++) {
-				t[i].getLongestChain();
-			}
-		}
-	}*/
 	
-	// Returns the total number of preceding tasks; recursive
-	// DOES NOT WORK PROPERLY YET
-	public int getTotalPrecedingTasks() {
-		int temp = getNumberOfImmediatelyPrecedingTasks();
-		
-		if(temp == 0) {
-			return temp;
-		}
-		else if(temp == 1) {
-			return temp = 1;//this.getProject().getTaskById(0).getTotalPrecedingTasks();
-		}
-		else {
-			int counter = 0;
-			ArrayList<Integer> precedingIds = this.getPrecedingIds();
-			for(int i: precedingIds) {
-				counter += this.getProject().getTaskById(i).getTotalPrecedingTasks();
-			System.out.println("counter: " + counter);
-			}
-			
-			System.out.println("final counter: " + counter);
-			return counter;
-		}
-	}
-	
-	// Returns the number of immediately preceding tasks, counting itself
-	public int getNumberOfImmediatelyPrecedingTasks() {
-		ArrayList<Integer> precedingIds = this.getPrecedingIds();
-		if(precedingIds.get(0) == _id) {
-			return 1;
-		}
-		else {
-			return precedingIds.size();
-		}
-	}
-	
-	// Returns the start date of the task
-	// Note: Currently uses the "getLongestDuration_Alt" method, which is not always accurate
-	public Date getStartDate() {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(getProject().getStartDate());
-		cal.add(Calendar.DATE, getLongestDuration_Alt());
-		
-//		System.out.println("project start date: " + getProject().getStartDate());
-//		System.out.println("task test days: " + getLongestDuration_Alt());
-//		System.out.println("task start date: " + cal.getTime());
-//		System.out.println("can we add project start date and task start date as long: below");
-//		System.out.println(getProject().getStartDate().getTime());
-//		System.out.println(cal.getTime().getTime());
-//		System.out.println("yay");
-		
-		return cal.getTime();
-	}
-	
-	// Returns the end date of the task
-	// Note: Currently uses the "getLongestDuration_Alt" method, which is not always accurate
-	public Date getEndDate() {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(getProject().getStartDate());
-		cal.add(Calendar.DATE, getLongestDuration_Alt() + getDuration());
-		
-		return cal.getTime();
-	}
-	
-	// Returns the duration of a path leading from the current task to the beginning, not including the current path's duration
-	// Does not reliably return the longest path, as it checks task-by-task, and not the whole thing
-	// Recursive
-	public int getLongestDuration_Alt() {
-		ArrayList<Integer> precedingIds = getPrecedingIds();
-		
-		if(precedingIds.size() > 0) {
-			// If no preceding task, return 0
-			if(precedingIds.get(0) == _id) {
-				return 0;
-			}
-//			// If one preceding task, return duration of preceding task
-//			else if(precedingIds.size() == 1 && precedingIds.get(0) != _id) {
-//				return getProject().getTaskById(precedingIds.get(0)).getDuration();
-//			}
-			else {
-				int longest = 0;
-				int longestId = -1;
-				for(int i : precedingIds) {
-					if(longest < getProject().getTaskById(i).getDuration()) {
-						longest = getProject().getTaskById(i).getDuration();
-						longestId = i;
-					}
-				}
-				return longest + getProject().getTaskById(longestId).getLongestDuration_Alt();
-			}
-		}
-		return 0;
-	}
-	
-//	public Date addDaysToDate(int duration){
-//		Date end_date;	
-//	
-//		Calendar cal = Calendar.getInstance();
-//		cal.setTime(this._start_date);
-//		cal.add(Calendar.DATE, duration);//add duration to the saved date
-//		 
-//		end_date = cal.getTime();
-//		return end_date;
-//	}
-	
-	public String dateToString(){
-		String dateString = new SimpleDateFormat("dd-MM-yyyy").format(this);
-		return dateString;
+	public TaskProgress get_progress() {
+		return _progress;
 	}
 
+	public Date getStartDate()
+	{
+		return _start_date;
+	}
+	
+	public Date getEndDate()
+	{
+		return _end_date;
+	}
+
+	public int getPredecessorCount() 
+	{
+		return predecessors.size();
+	}
+
+	public int getPlannedValue() {
+		return plannedValue;
+	}
+
+	public void setPlannedValue(int plannedValue) {
+		this.plannedValue = plannedValue;
+	}
+
+	public int getEarnedValue() {
+		return earnedValue;
+	}
+
+	public void setEarnedValue(int earnedValue) {
+		this.earnedValue = earnedValue;
+	}
+
+	public int getActualCost() {
+		return actualCost;
+	}
+
+	public void setActualCost(int actualCost) {
+		this.actualCost = actualCost;
+	}
+
+	public int getScheduleVariance() {
+		return scheduleVariance;
+	}
+
+	public void setScheduleVariance(int scheduleVariance) {
+		this.scheduleVariance = scheduleVariance;
+	}
+
+	public int getCostVariance() {
+		return costVariance;
+	}
+
+	public void setCostVariance(int costVariance) {
+		this.costVariance = costVariance;
+	}
+
+	public int getCostPerformanceIndex() {
+		return costPerformanceIndex;
+	}
+
+	public void setCostPerformanceIndex(int costPerformanceIndex) {
+		this.costPerformanceIndex = costPerformanceIndex;
+	}
+
+	public int getSchedulePerformanceIndex() {
+		return schedulePerformanceIndex;
+	}
+
+	public void setSchedulePerformanceIndex(int schedulePerformanceIndex) {
+		this.schedulePerformanceIndex = schedulePerformanceIndex;
+	}
+
+	public Date get_finished_date() 
+	{
+		Statement stmt = null;
+		
+		try 
+		{
+			stmt = DB.getInstance().createStatement();
+
+			ResultSet id_set = stmt.executeQuery("SELECT task_finished_date "
+											   + "FROM tasks "
+											   + "WHERE id == " 
+											   + _id);
+			
+			while(id_set.next()) 
+			{
+			    if(id_set.getDate("task_finished_date") == null)
+			    {
+			    	System.out.println("Task.java - get_finished_date() - task_finished_date is null");    	
+			    }
+			    else
+			    {
+			    	set_finished_date(id_set.getDate("task_finished_date"));
+			    }
+			}
+
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.exit(0);
+		}
+		
+		return _finished_date;
+	}
+
+	public void set_finished_date(Date _finished_date) {
+		this._finished_date = _finished_date;
+	}
+	
+	public int getEstimateAtCompletion() {
+		return estimateAtCompletion;
+	}
+
+	public void setEstimateAtCompletion(int estimateAtCompletion) {
+		this.estimateAtCompletion = estimateAtCompletion;
+	}
+
+	public int getEstimateToComplete() {
+		return estimateToComplete;
+	}
+
+	public void setEstimateToComplete(int estimateToComplete) {
+		this.estimateToComplete = estimateToComplete;
+	}
+
+	public int getVarianceAtCompletion() {
+		return varianceAtCompletion;
+	}
+
+	public void setVarianceAtCompletion(int varianceAtCompletion) {
+		this.varianceAtCompletion = varianceAtCompletion;
+	}
 }

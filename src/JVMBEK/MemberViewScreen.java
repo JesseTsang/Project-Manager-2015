@@ -8,6 +8,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -42,7 +43,6 @@ public class MemberViewScreen extends Screen {
 
 		JScrollPane scroll = new JScrollPane(tblTasks);
 		scroll.setOpaque(true);
-		// scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
 		northPanel.add(lblAssignedTasks);
 		centerPanel.add(scroll);
@@ -87,20 +87,35 @@ public class MemberViewScreen extends Screen {
 				.getId());
 		Object[][] data = new Object[tasks.size()][];
 		
-		DateFormat formatter = new SimpleDateFormat("d-MM-yyyy");
+		DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 		formatter.setLenient(false);
 		Calendar cal = Calendar.getInstance();
 		String formattedStart, formattedEnd;
 
-		for (int i = 0; i < tasks.size(); i++) {
+		for (int i = 0; i < tasks.size(); i++) 
+		{
 			Task t = tasks.get(i);
+			
+			Date taskStartDate = t.getStartDate();
+			Date easkEndDate = t.getEndDate();
+			
 			cal.setTime(t.getTaskStart());
-			formattedStart = formatter.format(cal.getTime());
 			cal.add(Calendar.DATE, t.getDuration());
+			
+			formattedStart = formatter.format(cal.getTime());
 			formattedEnd = formatter.format(cal.getTime());
-			data[i] = new Object[] { t.getProject().getName(), t.getId(),
-					t.getName(), formattedStart, formattedEnd, /*t.getDescription(),*/ 
-					Task.PROGRESS_STRINGS[t.getProgress().ordinal()] };
+			
+			data[i] = new Object[] { 
+								   	   t.getProject().getName(), 
+								   	   t.getId(),
+								   	   t.getName(), 
+								   	   //formattedStart, 
+								   	   //formattedEnd,
+								   	   taskStartDate,
+								   	   easkEndDate,
+								   	   /*t.getDescription(),*/ 
+								   	   Task.PROGRESS_STRINGS[t.getProgress().ordinal()] 
+								   };
 		}
 
 		model = new DefaultTableModel(data, columnNames);

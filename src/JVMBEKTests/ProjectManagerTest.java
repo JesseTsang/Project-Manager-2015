@@ -1,8 +1,10 @@
 package JVMBEKTests;
 
+
 import JVMBEK.*;
 import static org.junit.Assert.*;
 
+import java.util.Date;
 import java.util.HashMap;
 
 import org.junit.Test;
@@ -31,20 +33,22 @@ public class ProjectManagerTest {
 	}
 	
 	@Test
-	public void getOwnerShouldReturnUser() {
-		
-		User dummy = new User(0, "", "", UserRole.MANAGER);
-		ProjectManager tester = new ProjectManager(dummy);
-		assertEquals(dummy, tester.getOwner());
-		
-	}
-
-	@Test
 	public void hasSelectedShouldReturnTrue() {
 		
 		ProjectManager tester = new ProjectManager(new User(10, "", "", UserRole.MANAGER));
 		assertEquals(false, tester.hasSelected());
 		
 	}
+	@Test
+	public void addProjectShouldReturnAddedProjects(){
+		
+		ProjectManager tester = new ProjectManager(new User(0,"","",UserRole.MANAGER));
+		tester.addNewProject("testing", "", new Date(System.currentTimeMillis()));
+		System.out.println(tester.getProjects().toString());
+		Project dummy = new Project(0, "", "",  new Date(System.currentTimeMillis()),  new Date(System.currentTimeMillis()));
+		assertEquals(dummy,tester.getProjects().get(1));
+  }
 
-}
+		
+		
+ }

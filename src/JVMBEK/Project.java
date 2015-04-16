@@ -18,7 +18,11 @@ public class Project {
 	private Date _created_date;
 	private Date _start_date;
 	private ArrayList<Task> _tasks;
+	static Date startDatefromDB;
+	static Date endDatefromDB;
 	
+	private int budgetAtCompletion; //BAC: Budget at Completion (Sum of all PV) value.
+
 	// For member use, when selecting a task to view information for
 	public static int selectedTaskId;
 
@@ -47,13 +51,21 @@ public class Project {
 			while (task_set.next()) {
 				TaskProgress prog = Task.StringToProgress(task_set
 						.getString("progress"));
-
-				// TODO: get dates such as task_set.getDate("start_date"),
+				
+				startDatefromDB = task_set.getDate("task_start_date");
+				endDatefromDB   = task_set.getDate("task_end_date");
+			
 				Task t = new Task(task_set.getInt("id"),
 						task_set.getString("name"),
 						task_set.getString("description"), 
 						prog,
-						task_set.getInt("duration")
+						//task_set.getInt("duration"),
+						startDatefromDB,
+						endDatefromDB,
+						task_set.getInt("optimistic"),
+						task_set.getInt("pessimistic"),
+						task_set.getInt("estimate"),
+						task_set.getInt("variance")
 						);
 
 				_tasks.add(t);
@@ -76,21 +88,28 @@ public class Project {
 			Statement member_stmt = DB.getInstance().createStatement();
 			ResultSet task_set = member_stmt
 					.executeQuery("SELECT * FROM tasks_members, tasks "
-							+ "WHERE user_id == " + user_id
-							+ " AND task_id = id");
+								+ "WHERE user_id == " + user_id
+								+ " AND task_id = id");
 
 			while (task_set.next()) {
 
-				TaskProgress prog = Task.StringToProgress(task_set
-						.getString("progress"));
+				TaskProgress prog = Task.StringToProgress(task_set.getString("progress"));
+				
+				startDatefromDB = task_set.getDate("task_start_date");
+				endDatefromDB   = task_set.getDate("task_end_date");
 
 				// TODO: get dates such as task_set.getDate("start_date"),
 				Task t = new Task(task_set.getInt("id"),
-						task_set.getString("name"),
-						task_set.getString("description"), 
-						prog,
-//						task_set.getDate("start_date"),
-						task_set.getInt("duration"));
+								  task_set.getString("name"),
+								  task_set.getString("description"), 
+								  prog,						
+								  startDatefromDB,
+								  endDatefromDB,
+								  task_set.getInt("optimistic"),
+								  task_set.getInt("pessimistic"),
+								  task_set.getInt("estimate"),
+								  task_set.getInt("variance")
+						);
 
 				assignedTasks.add(t);
 			}
@@ -134,10 +153,12 @@ public class Project {
 	public Date getCreatedDate(){
 		return _created_date;
 	}
+	
 	public void setDescription(String desc) {
+		
 		_description = desc;
 	}
-
+	
 	public ArrayList<Task> getTasks() {
 		return _tasks;
 	}
@@ -150,15 +171,14 @@ public class Project {
 	public String getStartDateString(){
 		String dateString = new SimpleDateFormat("dd-MM-yyyy").format(_start_date);
 		return dateString;
-
 	}
 	
-//	public Date stringToDate(){
-//		DateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-//		Date date = format.parse(this);
-//		return date;
-//	}
-
+	public String getDateString(Date date)
+	{
+		String dateString = new SimpleDateFormat("dd-MM-yyyy").format(date);
+		return dateString;
+	}
+	
 	// **********************************************************************
 	// TASK DATABASE FUNCTIONS
 	// **********************************************************************
@@ -183,22 +203,27 @@ public class Project {
 		}
 	}
 
-	public void addTask(String name, String description, int duration) {
-		Date date = new Date();
+	public void addTask(String name, String description, Date taskStartDate, Date taskEndDate, int optimistic, int pessimistic, double estimate, double variance) {
 		Statement stmt = null;
 		try {
 			stmt = DB.getInstance().createStatement();
-			String sql = "INSERT INTO tasks  (name, description, duration, progress) VALUES ('"
+			String sql = "INSERT INTO tasks  (name, description, progress, optimistic, pessimistic, estimate, variance, task_start_date, task_end_date) VALUES ('"
 					+ name
 					+ "', '"
-					+ description
-					+ "', "
-//					+ date.getTime()
-//					+ ", " 
-					+ duration
-					
-					// Tasks are set as "In Queue" by default
-					+ ", 'In Queue');";
+					+ description					
+					+ "', 'In Queue','" // Tasks are set as "In Queue" by default
+					+ optimistic
+					+ "', '"
+					+ pessimistic
+					+ "', '"
+					+ estimate
+					+ "', '"
+					+ variance
+					+ "', '"
+					+ taskStartDate.getTime()
+					+ "', '"
+					+ taskEndDate.getTime()
+					+ "');";
 			stmt.executeUpdate(sql);
 
 			// Grab latest autoincrement id
@@ -217,7 +242,7 @@ public class Project {
 			stmt.executeUpdate(sql);
 
 			_tasks.add(new Task(task_id, name, description,
-					TaskProgress.IN_QUEUE, /*date, */duration));
+					TaskProgress.IN_QUEUE, taskStartDate, taskEndDate, optimistic, pessimistic, estimate, variance));
 
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -254,4 +279,21 @@ public class Project {
 		}
 		return true;
 	}
+	
+	//Start Earned Value Analysis
+	public void earnedValueAnalysis()
+	{
+		EarnedValue eva = new EarnedValue(_tasks);
+		setBudgetAtCompletion(eva.getBAC());
+	}
+
+	public int getBudgetAtCompletion() {
+		return budgetAtCompletion;
+	}
+
+	public void setBudgetAtCompletion(int budgetAtCompletion) {
+		this.budgetAtCompletion = budgetAtCompletion;
+	}
+
+
 }
