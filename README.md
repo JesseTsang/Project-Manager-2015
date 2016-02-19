@@ -6,10 +6,10 @@ The objective of this project is to apply software engineering best practices to
 
 The focus of the project is on learning the software process and the inter-relatedness of the activities in a project. The process emphasizes:
 
- test-driven development, to ensure good understanding of requirements, and working software;
- agile development, to encourage iteration, to divide the work into small chunks, and to allow students to improve their skills from one iteration to the next;
- object-oriented software development, in particular software systems as collections of collaborating objects, with a focus on responsibility-driven design, an emphasis of separating interfaces from implementations, and the use of patterns; and 
- communication, by being team-based, and requiring basic documentation using UML for domain model, use cases, architecture and design, and testing.
+* test-driven development, to ensure good understanding of requirements, and working software;
+* agile development, to encourage iteration, to divide the work into small chunks, and to allow students to improve their skills from one iteration to the next;
+* object-oriented software development, in particular software systems as collections of collaborating objects, with a focus on responsibility-driven design, an emphasis of separating interfaces from implementations, and the use of patterns; and 
+* communication, by being team-based, and requiring basic documentation using UML for domain model, use cases, architecture and design, and testing.
 
 2 Project Description and Expected Features
 Your team has been hired to develop a Project Management application to help project managers and project members to model and analyze the various activities and resources involved in their projects via a graphical user interface (GUI). A preliminary interaction with your client determined that the application shall support the following user stories and constraints:
