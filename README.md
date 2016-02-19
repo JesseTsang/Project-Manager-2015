@@ -25,9 +25,9 @@ US 7: As a project manager, I want to be able to perform PERT analysis.
 US 8: As a project manager, I want to be able to perform earned value analysis.
 
 Constraints:
- Standalone JAVA application
- JAVA SWING GUI
- SQLite DB
+* Standalone JAVA application
+* JAVA SWING GUI
+* SQLite DB
 
 3 Team Formation and Oragnization
 The project is team-based. Each team consists of approximately 6 students and is organized into three subteams of size 2 to 3. There are three roles on the project:
@@ -44,10 +44,10 @@ Every team is responsible for establishing "ground rules" in order to minimize c
 
 4 Development Environment
 The following standard development tools shall be used:
- Java as the programming language;
- Eclipse as the integrated development environment (IDE);
- JUnit for unit testing in Java; and
- Rational Rose for UML modeling.
+* Java as the programming language;
+* Eclipse as the integrated development environment (IDE);
+* JUnit for unit testing in Java; and
+* Rational Rose for UML modeling.
 
 5 Project Plan and Deliverables
 The Project Management application is to be developed in three iterations. Each iteration will produce a running system. Starting with a set of core features, with each iteration additional features will be added and/or the implementation of existing features will be
