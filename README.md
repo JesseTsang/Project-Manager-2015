@@ -16,12 +16,19 @@ Your team has been hired to develop a Project Management application to help pro
 
 User Stories:
 US 1: As a project manager, I want to manage all my projects with the application.
+
 US 2: As a project manager, I want to associate multiple interdependent activities with my project.
+
 US 3: As a project manager, I want to assign resources (project members) and project-relevant properties to my activities.
-US 4: As a project member, I want to be able to see which tasks have been assigned to me.
-US 5: As a project manager, I want to generate GANTT charts.
-US 6: As a project manager, I want to perform a critical path analysis.
-US 7: As a project manager, I want to be able to perform PERT analysis.
+
+US 4: As a project member, I want to be able to see which tasks have been assigned to me. 
+
+US 5: As a project manager, I want to generate GANTT charts. 
+
+US 6: As a project manager, I want to perform a critical path analysis. 
+
+US 7: As a project manager, I want to be able to perform PERT analysis. 
+
 US 8: As a project manager, I want to be able to perform earned value analysis.
 
 Constraints:
